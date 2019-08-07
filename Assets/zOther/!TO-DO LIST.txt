@@ -1,0 +1,38 @@
+Internal:
+- All items equally probable in item boxes for all places (no rubber-banding yet).
+- Keyboard controls may need reworking.
+- No way to know if projectiles are coming from behind.
+- CPUs use items and weapons immediately, not strategically.
+- CPUs can jump while turning without accidentally doing tricks, giving unfair advantage.
+- All courses available from beginning.
+- Turning speed not quite like SBK2 (no "edge").
+- Tricks not adding up points for combos correctly.
+- Camera still unhappy with looking backward (disabled for now).
+- Player leaves the set path in HubTown after a couple orbits.
+
+Worlds and Maps:
+- More of a reminder when building courses: Walls meeting tracks from bottom need to be dropped -0.15m to prevent bumping from above. (Possibly fixed after moving to Blender instead of ProBuilder?)
+- All 5 tracks are in Blender but need drastic changes and updates (and themes).
+
+UI:
+- Minimaps slightly offset (possibly due to origin point not being centered in Blender).
+- Blue item sprites need better graphics.
+- Red item sprites unfinished.
+- Typing doesn't work with controller. Make on-screen text selection.
+- Maybe make a way to import custom face sprites? Or generate based on customization.
+
+VFX:
+- Daycycle working, but courses need night-lights.
+- "Rolling" particle effect kind of vague, but should be replaced with animation anyway.
+- Rocket particles kinda weird.
+- Characters still only have one model and skin.
+
+Audio:
+- Missing movement and snow sounds.
+- Missing player sounds (except tricks, but those need to be replaced).
+- Audio listener only for one player. Find workaround? Currently sorta works.
+
+Animation:
+- All player animations.
+- UI features.
+- Replace coin/item box spin script with coin/itembox spin animation?

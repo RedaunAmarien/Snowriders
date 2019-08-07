@@ -1,0 +1,1 @@
+{"name":"Speed Lv. 1","description":"A fast board.","boardNumber":2,"level":1,"speed":2,"turn":0,"jump":0,"price":0,"specialAbility":""}

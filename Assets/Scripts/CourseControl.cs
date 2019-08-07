@@ -1,0 +1,492 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class CourseControl : MonoBehaviour {
+
+	public string courseName;
+	public int courseIndex, defaultLapCount;
+	public int[] defaultCpu, defaultCpuBoard, prize;
+	public GameObject firstCheckpoint;
+	int t1, t2, t3, t4, t5;
+	public int totalTimer;
+	public string printTimer;
+	public bool timerOn;
+	int playersFinished, totalFinished;
+	public Vector2 miniMapAnchorMinDefault, miniMapAnchorMaxDefault, miniMapAnchorMin1p, miniMapAnchorMax1p, miniMapAnchorMin3p, miniMapAnchorMax3p;
+	GameObject[] player, cameras;
+	GameObject[] items, weapons, coins;
+	CharacterData[] charData;
+	GameObject[] spriteHead;
+	Image miniMap;
+	RectTransform mapPan;
+	GameObject resultsPanel;
+	Text[] rankBarName, rankBarTime, rankBarReward;
+	Image[] spriteHeadImage;
+	float mapScale, mapRef, miniMapRef;
+	public bool mapRotated;
+	GameObject track;
+	PlayerRaceControls[] pCon;
+	PlayerUI[] pUI;
+	AIControls[] aI;
+	RacerPhysics[] rPhys;
+
+	void Awake () {
+		// Initialize Minimap settings.
+		track = GameObject.FindGameObjectWithTag("Track");
+		mapRef = track.GetComponent<Collider>().bounds.size.z;
+
+		spriteHead = new GameObject[4];
+		spriteHead[0] = GameObject.Find("SpriteHead 0");
+		spriteHead[1] = GameObject.Find("SpriteHead 1");
+		spriteHead[2] = GameObject.Find("SpriteHead 2");
+		spriteHead[3] = GameObject.Find("SpriteHead 3");
+
+		spriteHeadImage = new Image[4];
+		spriteHeadImage[0] = spriteHead[0].GetComponent<Image>();
+		spriteHeadImage[1] = spriteHead[1].GetComponent<Image>();
+		spriteHeadImage[2] = spriteHead[2].GetComponent<Image>();
+		spriteHeadImage[3] = spriteHead[3].GetComponent<Image>();
+
+		miniMap = GameObject.Find("MiniMap").GetComponent<Image>();
+		mapPan = GameObject.Find("MapPanel").GetComponent<RectTransform>();
+		if (GameVar.playerCount == 1) {
+			mapPan.anchorMax = miniMapAnchorMax1p;
+			mapPan.anchorMin = miniMapAnchorMin1p;
+		}
+		else if (GameVar.playerCount == 3) {
+			mapPan.anchorMax = miniMapAnchorMax3p;
+			mapPan.anchorMin = miniMapAnchorMin3p;
+		}
+		else {
+			mapPan.anchorMax = miniMapAnchorMaxDefault;
+			mapPan.anchorMin = miniMapAnchorMinDefault;
+		}
+		Debug.Log("Map size: " + mapRef);
+		Debug.Log("Minimap size: "+ miniMap.rectTransform.rect.height + ", " + miniMap.rectTransform.rect.width);
+
+		// Ready the Results Screen
+		resultsPanel = GameObject.Find("ResultsPanel");
+		rankBarName = new Text[4];
+		rankBarTime = new Text[4];
+		rankBarReward = new Text[4];
+		for (int i = 0; i < 4; i++) {
+				rankBarName[i] = GameObject.Find("Rank"+i+"Name").GetComponent<Text>();
+				rankBarTime[i] = GameObject.Find("Rank"+i+"Time").GetComponent<Text>();
+				rankBarReward[i] = GameObject.Find("Rank"+i+"Reward").GetComponent<Text>();
+		}
+		resultsPanel.SetActive(false);
+
+		// Check custom settings: Coins, Items, and Lap Count.
+		if (GameVar.lapCount == 0) {
+			GameVar.lapCount = defaultLapCount;
+		}
+		if (GameVar.itemsOn == false) {
+			items = GameObject.FindGameObjectsWithTag("RedBox");
+			for (int i = 0; i < items.Length; i++){
+				items[i].SetActive(false);
+			}
+			weapons = GameObject.FindGameObjectsWithTag("BlueBox");
+			for (int i = 0; i < weapons.Length; i++){
+				weapons[i].SetActive(false);
+			}
+		}
+		if (GameVar.coinsOn == false) {
+			coins = GameObject.FindGameObjectsWithTag("Coin");
+			for (int i = 0; i < coins.Length; i++) {
+				coins[i].SetActive(false);
+			}
+		}
+
+		// Initialize cameras and players.
+		player = new GameObject[4];
+		pCon = new PlayerRaceControls[4];
+		pUI = new PlayerUI[4];
+		aI = new AIControls[4];
+		rPhys = new RacerPhysics[4];
+
+		for (int i = 0; i < 4; i++) {
+			player[i] = GameObject.Find("Player" + (i+1));
+			pCon[i] = player[i].GetComponent<PlayerRaceControls>();
+			pUI[i] = player[i].GetComponent<PlayerUI>();
+			aI[i] = player[i].GetComponent<AIControls>();
+			rPhys[i] = player[i].GetComponent<RacerPhysics>();
+		}
+
+		cameras = new GameObject[7];
+		cameras[0] = GameObject.Find("CameraPositioner1/1");
+		cameras[1] = GameObject.Find("CameraPositioner1/2");
+		cameras[2] = GameObject.Find("CameraPositioner2/2");
+		cameras[3] = GameObject.Find("CameraPositioner1/4");
+		cameras[4] = GameObject.Find("CameraPositioner2/4");
+		cameras[5] = GameObject.Find("CameraPositioner3/4");
+		cameras[6] = GameObject.Find("CameraPositioner4/4");
+
+		// Remove other racers in Challenge Mode.
+		if (GameVar.gameMode == 2) {
+			for (int i = 1; i < 4; i++) {
+				Destroy(player[i]);
+				spriteHeadImage[i].enabled = false;
+			}
+		}
+
+		// Assign cameras to players and deactivate unused ones.
+		if (GameVar.playerCount == 1) {
+			for (int i = 1; i < cameras.Length; i++) {
+				cameras[i].SetActive(false);
+			}
+			pUI[0].assignedCam = cameras[0];
+		}
+		else if (GameVar.playerCount == 2) {
+			cameras[0].SetActive(false);
+			pUI[0].assignedCam = cameras[1];
+			pUI[1].assignedCam = cameras[2];
+			cameras[3].SetActive(false);
+			cameras[4].SetActive(false);
+			cameras[5].SetActive(false);
+			cameras[6].SetActive(false);
+		}
+		else if (GameVar.playerCount == 3) {
+			cameras[0].SetActive(false);
+			cameras[1].SetActive(false);
+			cameras[2].SetActive(false);
+			pUI[0].assignedCam = cameras[3];
+			pUI[1].assignedCam = cameras[4];
+			pUI[2].assignedCam = cameras[5];
+			cameras[6].SetActive(false);
+		}
+		else {
+			// Assume 4 player if 1-3 is not correct
+			cameras[0].SetActive(false);
+			cameras[1].SetActive(false);
+			cameras[2].SetActive(false);
+			pUI[0].assignedCam = cameras[3];
+			pUI[1].assignedCam = cameras[4];
+			pUI[2].assignedCam = cameras[5];
+			pUI[3].assignedCam = cameras[6];
+		}
+		
+		// Initialize Controller, UI, and AI scripts, and destroy unused scripts.
+		for (int i = 0; i < GameVar.playerCount; i++) {
+			pUI[i].playerNum = i;
+			pCon[i].conNum = GameVar.controlp[i];
+			Destroy(aI[i]);
+		}
+		for (int i = GameVar.playerCount; i < player.Length; i++) {
+			GameVar.charForP[i] = defaultCpu[i-1];
+			GameVar.boardForP[i] = defaultCpuBoard[i-1];
+			Destroy(pCon[i]);
+			Destroy(pUI[i]);
+		}
+
+		for (int i = 0; i < 4; i++) {
+			// Initialize character stats from data.
+			// Speed: Max 18, Min 15.
+			rPhys[i].speed = 14f + (2f/3f) + (GameVar.allCharData[GameVar.charForP[i]].speed + GameVar.boardData[GameVar.boardForP[i]].speed)/3f;
+			// Traction: Max .04, Min .015.
+			rPhys[i].traction = (11f/900f) + (GameVar.allCharData[GameVar.charForP[i]].turn + GameVar.boardData[GameVar.boardForP[i]].turn)/360f;
+			// Jump: Max 250, Min 175.
+			rPhys[i].jumpForce.y = 166f + (2f/3f) + (GameVar.allCharData[GameVar.charForP[i]].jump + GameVar.boardData[GameVar.boardForP[i]].jump) * (8f+(1f/3f));
+			rPhys[i].charName = GameVar.allCharData[GameVar.charForP[i]].name;
+			rPhys[i].boardName = GameVar.boardData[GameVar.boardForP[i]].name;
+			// rPhys[i].GetComponentInChildren<MeshRenderer>().material = GameVar.allCharData[GameVar.charForP[i]].skinCol;
+		}
+
+		// Set Laps
+		for (int i = 0; i < 4; i++) {
+			rPhys[i].totalLaps = GameVar.lapCount;
+			rPhys[i].playerNum = i;
+		}
+	}
+	void Start() {
+		StartCoroutine(Countdown());
+	}
+	
+	void Update () {
+		// Run timer.
+		if (timerOn) {
+			totalTimer += 2;
+			t1 += 2;
+			if (t1 >= 10) {
+				t1 -= 10;
+				t2 ++;
+			}
+			if (t2 >= 10) {
+				t2 -= 10;
+				t3 ++;
+			}
+			if (t3 >= 10) {
+				t3 -= 10;
+				t4 ++;
+			}
+			if (t4 >= 6) {
+				t4 -= 6;
+				t5 ++;
+			}
+		}
+		printTimer = t5 + ":" + t4+t3 + "." + t2+t1;
+
+		// Check who is in first place.
+		if (GameVar.gameMode < 2) {
+			for (int i = 0; i < player.Length; i++) {
+				rPhys[i].place = 4;
+			}
+			for (int i = 0; i < player.Length; i++) {
+				for (int j = 0; j < player.Length; j++) {
+					if (rPhys[i].currentLap > rPhys[j].currentLap) {
+						rPhys[i].place --;
+					}
+					else if (rPhys[i].currentLap == rPhys[j].currentLap) {
+						if (rPhys[i].nextCheckVal > rPhys[j].nextCheckVal) {
+							rPhys[i].place --;
+						}
+						else if (rPhys[i].nextCheckVal == rPhys[j].nextCheckVal) {
+							if (rPhys[i].checkDist > rPhys[j].checkDist) {
+								rPhys[i].place --;
+							}
+						}
+					}
+				}	
+			}
+		}
+		
+		// Update Minimap
+		if (mapRotated) miniMapRef = miniMap.rectTransform.rect.width;
+		else miniMapRef = miniMap.rectTransform.rect.height;
+		mapScale = miniMapRef/mapRef;
+		if (GameVar.gameMode == 2) {
+			Vector2 sHL = new Vector2(player[0].transform.position.x, player[0].transform.position.z);
+			spriteHeadImage[0].rectTransform.anchoredPosition = sHL*mapScale;
+		}
+		else {
+			for (int i = 0; i < player.Length; i++) {
+				Vector2 sHL = new Vector2(player[i].transform.position.x, player[i].transform.position.z);
+				spriteHeadImage[i].rectTransform.anchoredPosition = sHL*mapScale;
+			}
+		}
+	}
+
+	public IEnumerator Countdown (bool boostable = true) {
+		rPhys[0].spotLock = true;
+		if (GameVar.gameMode < 2) {
+			rPhys[1].spotLock = true;
+			rPhys[2].spotLock = true;
+			rPhys[3].spotLock = true;
+		}
+		yield return new WaitForSeconds(1);
+		print("Ready");
+		// if (Input.GetButton(bBut)) {
+		// 	boostable = false;
+		// }
+		yield return new WaitForSeconds(1);
+		print("Set");
+		// if (Input.GetButton(bBut)) {
+		// 	boostable = false;
+		// }
+
+		yield return new WaitForSeconds(1);
+		print("Go!");
+		// if (Input.GetButton(bBut) && boostable) {
+		// 	pUI.itemType = 9;
+		// 	pUI.Item();
+		// }
+		rPhys[0].SetGo();
+		if (GameVar.gameMode < 2) {
+			rPhys[1].SetGo();
+			rPhys[2].SetGo();
+			rPhys[3].SetGo();
+		}
+		timerOn = true;
+		yield return new WaitForSeconds(1);
+		// Clear countdown graphics.
+	}
+
+	public void UseSteal(int userIndex) {
+		int coinTotal = 0;
+		for (int i = 0; i < 4; i++) {
+			if (i != userIndex) {
+				if (totalFinished == 0) {
+					if (rPhys[i].place == 1) {
+						Debug.Log("Stealing from 1st place.");
+						coinTotal = rPhys[i].coins;
+						rPhys[i].coins = 0;
+					}
+					else if (rPhys[userIndex].place == 1 && rPhys[i].place == 2) {
+						Debug.Log("Stealing from 2nd place.");
+						coinTotal = rPhys[i].coins;
+						rPhys[i].coins = 0;
+					}
+				}
+				else if (totalFinished == 1) {
+					if (rPhys[i].place == 2) {
+						Debug.Log("Stealing from 2nd place.");
+						coinTotal = rPhys[i].coins;
+						rPhys[i].coins = 0;
+					}
+					else if (rPhys[userIndex].place == 2 && rPhys[i].place == 3) {
+						Debug.Log("Stealing from 3rd place.");
+						coinTotal = rPhys[i].coins;
+						rPhys[i].coins = 0;
+					}
+				}
+				else if (totalFinished == 2) {
+					if (rPhys[i].place == 3) {
+						Debug.Log("Stealing from 3rd place.");
+						coinTotal = rPhys[i].coins;
+						rPhys[i].coins = 0;
+					}
+					else if (rPhys[i].place == 4) {
+						Debug.Log("Stealing from 4th place.");
+						coinTotal = rPhys[i].coins;
+						rPhys[i].coins = 0;
+					}
+				}
+			}
+		}
+		rPhys[userIndex].coins += coinTotal;
+	}
+
+	public void UseTripleSteal(int userIndex) {
+		int coinTotal = 0;
+		for (int i = 0; i < 4; i++) {
+			if (i != userIndex && !rPhys[i].finished) {
+				coinTotal += rPhys[i].coins/2;
+				rPhys[i].coins = rPhys[i].coins/2;
+			}
+		}
+		rPhys[userIndex].coins += coinTotal;
+	}
+
+	public void UseTripleStop(int userIndex) {
+		for (int i = 0; i < 4; i++) {
+			if (i != userIndex) StartCoroutine(rPhys[i].Trip());
+		}
+	}
+
+	public void UseSlow(int userIndex) {
+		for (int i = 0; i < 4; i++) {
+			if (i != userIndex) {
+				if (totalFinished == 0) {
+					if (rPhys[i].place == 1) {
+						StartCoroutine(rPhys[i].GetSlowed());
+					}
+					else if (rPhys[userIndex].place == 1 && rPhys[i].place == 2) {
+						StartCoroutine(rPhys[i].GetSlowed());
+					}
+				}
+				else if (totalFinished == 1) {
+					if (rPhys[i].place == 2) {
+						StartCoroutine(rPhys[i].GetSlowed());
+					}
+					else if (rPhys[userIndex].place == 2 && rPhys[i].place == 3) {
+						StartCoroutine(rPhys[i].GetSlowed());
+					}
+				}
+				else if (totalFinished == 2) {
+					if (rPhys[i].place == 3) {
+						StartCoroutine(rPhys[i].GetSlowed());
+					}
+					else if (rPhys[i].place == 4) {
+						StartCoroutine(rPhys[i].GetSlowed());
+					}
+				}
+			}
+		}
+	}
+
+	public void UseTripleSlow(int userIndex) {
+		for (int i = 0; i < 4; i++) {
+			if (i != userIndex) {
+				StartCoroutine(rPhys[i].GetSlowed());
+			}
+		}
+	}
+
+	public void Finish(int userIndex) {
+		int savePlace = rPhys[userIndex].finalPlace;
+		if (GameVar.gameMode < 2) {
+			rankBarName[savePlace-1].text = rPhys[userIndex].charName;
+			rankBarTime[savePlace-1].text = printTimer;
+			rPhys[userIndex].coins += prize[savePlace-1];
+			rankBarReward[savePlace-1].text = rPhys[userIndex].coins.ToString();
+			Debug.Log(rPhys[userIndex].charName + " finished in " + savePlace + " at " + printTimer + ".");
+		}
+		else {
+			rankBarName[0].text = rPhys[0].charName;
+			rankBarTime[0].text = printTimer;
+			rankBarReward[0].text = rPhys[0].coins.ToString();
+			for (int i = 1; i < 4; i++) {
+				rankBarName[i].text = "";
+				rankBarTime[i].text = "";
+				rankBarReward[i].text = "";
+			}
+			// Debug.Log(rPhys[userIndex].charName + " finished at " + printTimer + " with " rPhys[userIndex].coins + " points.");
+		}
+
+		if (GameVar.gameMode == 1 && userIndex == 0) {
+			if (GameVar.currentSaveFile.courseGrade[courseIndex] == 0) {
+				GameVar.currentSaveFile.courseGrade[courseIndex] = savePlace;
+			}
+			else if (savePlace < GameVar.currentSaveFile.courseGrade[courseIndex]) {
+				GameVar.currentSaveFile.courseGrade[courseIndex] = savePlace;
+			}
+		}
+
+		if (userIndex < GameVar.playerCount) {
+			playersFinished ++;
+		}
+		totalFinished ++;
+		if (playersFinished >= GameVar.playerCount) {
+			FinishRace();
+		}
+	}
+
+	public void FinishRace() {
+
+		//Results Panel
+		resultsPanel.SetActive(true);
+		for (int i = 0; i < GameVar.playerCount; i++) {
+			pCon[i].raceOver = true;;
+		}
+
+		// Battle Mode
+		if (GameVar.gameMode == 0) {
+			int coinTotal = 0;
+			for (int i = 0; i < GameVar.playerCount; i++) {
+				coinTotal += (rPhys[i].coins + prize[i]);	
+			}
+			GameVar.currentSaveFile.coins += coinTotal;
+		}
+
+		// Adventure Mode
+		else if (GameVar.gameMode == 1) {
+			GameVar.currentSaveFile.coins += rPhys[0].coins;
+		}
+
+		// Challenge Mode
+		else if (GameVar.gameMode == 2) {
+			//Save Challenge Mode files.
+		}
+
+		//Save File
+		Debug.LogWarning("Autosaving to file " + GameVar.saveSlot + " " + GameVar.currentSaveFile.fileName);
+		SaveFile(GameVar.currentSaveFile, GameVar.currentSaveDirectory);
+		GameVar.currentSaveFile = LoadFile(GameVar.currentSaveDirectory);
+	}
+    
+	static SaveFileData LoadFile (string path) {
+		using (StreamReader streamReader = File.OpenText (path)) {
+			string jsonString = streamReader.ReadToEnd();
+			return JsonUtility.FromJson<SaveFileData> (jsonString);
+		}
+	}
+
+	static void SaveFile (SaveFileData saveData, string path) {
+		string jsonString = JsonUtility.ToJson (saveData);
+		using (StreamWriter streamWriter = File.CreateText(path)) {
+			streamWriter.Write (jsonString);
+		}
+	}
+}

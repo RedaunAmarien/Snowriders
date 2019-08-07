@@ -1,0 +1,1 @@
+{"name":"Trick Lv. 1","description":"A bouncy board.","boardNumber":3,"level":1,"speed":0,"turn":0,"jump":2,"price":0,"specialAbility":""}

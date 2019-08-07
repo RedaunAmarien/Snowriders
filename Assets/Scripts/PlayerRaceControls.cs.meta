@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 29dfdd2280b514b45aa72c192122681f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - rigid: {instanceID: 0}
+  - spinAnim: {instanceID: 0}
+  - childBoard: {instanceID: 0}
+  - reflectSound: {fileID: 8300000, guid: 02db5893cf164c24aa80902658762dbc, type: 3}
+  - trickFailSound: {instanceID: 0}
+  - trickSound: {fileID: 8300000, guid: 384d725c164d7dd409e49f684912ab3f, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
