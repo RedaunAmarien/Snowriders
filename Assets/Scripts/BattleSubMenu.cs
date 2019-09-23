@@ -26,6 +26,8 @@ public class BattleSubMenu : MonoBehaviour {
         charText.gameObject.SetActive(false);
         boardText.gameObject.SetActive(false);
         charPort.gameObject.SetActive(false);
+        lArrow.gameObject.SetActive(false);
+        rArrow.gameObject.SetActive(false);
 	}
 
     public void Restart() {
@@ -38,6 +40,8 @@ public class BattleSubMenu : MonoBehaviour {
         charText.gameObject.SetActive(false);
         boardText.gameObject.SetActive(false);
         charPort.gameObject.SetActive(false);
+        lArrow.gameObject.SetActive(false);
+        rArrow.gameObject.SetActive(false);
         
     }
 

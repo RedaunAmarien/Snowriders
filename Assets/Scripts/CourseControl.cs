@@ -16,18 +16,19 @@ public class CourseControl : MonoBehaviour {
 	public bool timerOn;
 	int playersFinished, totalFinished;
 	public Vector2 miniMapAnchorMinDefault, miniMapAnchorMaxDefault, miniMapAnchorMin1p, miniMapAnchorMax1p, miniMapAnchorMin3p, miniMapAnchorMax3p;
-	GameObject[] player, cameras;
-	GameObject[] items, weapons, coins;
+	public GameObject[] player, cameras;
+	List<GameObject> items, weapons, coins;
 	CharacterData[] charData;
 	GameObject[] spriteHead;
 	Image miniMap;
 	RectTransform mapPan;
 	GameObject resultsPanel;
-	Text[] rankBarName, rankBarTime, rankBarReward;
+	Dictionary <string, Text> rankBar = new Dictionary <string, Text>();
 	Image[] spriteHeadImage;
 	float mapScale, mapRef, miniMapRef;
 	public bool mapRotated;
 	GameObject track;
+	Dictionary <string, ScriptableObject> pScripts = new Dictionary <string, ScriptableObject>();
 	PlayerRaceControls[] pCon;
 	PlayerUI[] pUI;
 	AIControls[] aI;
@@ -69,13 +70,11 @@ public class CourseControl : MonoBehaviour {
 
 		// Ready the Results Screen
 		resultsPanel = GameObject.Find("ResultsPanel");
-		rankBarName = new Text[4];
-		rankBarTime = new Text[4];
-		rankBarReward = new Text[4];
 		for (int i = 0; i < 4; i++) {
-				rankBarName[i] = GameObject.Find("Rank"+i+"Name").GetComponent<Text>();
-				rankBarTime[i] = GameObject.Find("Rank"+i+"Time").GetComponent<Text>();
-				rankBarReward[i] = GameObject.Find("Rank"+i+"Reward").GetComponent<Text>();
+			rankBar.Add("Name"+i, GameObject.Find("Rank"+i+"Name").GetComponent<Text>());
+			rankBar.Add("Time"+i, GameObject.Find("Rank"+i+"Time").GetComponent<Text>());
+			rankBar.Add("Reward"+i, GameObject.Find("Rank"+i+"Reward").GetComponent<Text>());
+			Debug.Log(rankBar["Name"+i]);
 		}
 		resultsPanel.SetActive(false);
 
@@ -84,45 +83,45 @@ public class CourseControl : MonoBehaviour {
 			GameVar.lapCount = defaultLapCount;
 		}
 		if (GameVar.itemsOn == false) {
-			items = GameObject.FindGameObjectsWithTag("RedBox");
-			for (int i = 0; i < items.Length; i++){
+			items.AddRange(GameObject.FindGameObjectsWithTag("RedBox"));
+			for (int i = 0; i < items.Count; i++){
 				items[i].SetActive(false);
 			}
-			weapons = GameObject.FindGameObjectsWithTag("BlueBox");
-			for (int i = 0; i < weapons.Length; i++){
+			weapons.AddRange(GameObject.FindGameObjectsWithTag("BlueBox"));
+			for (int i = 0; i < weapons.Count; i++){
 				weapons[i].SetActive(false);
 			}
 		}
 		if (GameVar.coinsOn == false) {
-			coins = GameObject.FindGameObjectsWithTag("Coin");
-			for (int i = 0; i < coins.Length; i++) {
+			coins.AddRange(GameObject.FindGameObjectsWithTag("Coin"));
+			for (int i = 0; i < coins.Count; i++) {
 				coins[i].SetActive(false);
 			}
 		}
 
 		// Initialize cameras and players.
-		player = new GameObject[4];
+		// player = new GameObject[4];
 		pCon = new PlayerRaceControls[4];
 		pUI = new PlayerUI[4];
 		aI = new AIControls[4];
 		rPhys = new RacerPhysics[4];
 
 		for (int i = 0; i < 4; i++) {
-			player[i] = GameObject.Find("Player" + (i+1));
+			// player[i] = GameObject.Find("Player" + (i+1));
 			pCon[i] = player[i].GetComponent<PlayerRaceControls>();
 			pUI[i] = player[i].GetComponent<PlayerUI>();
 			aI[i] = player[i].GetComponent<AIControls>();
 			rPhys[i] = player[i].GetComponent<RacerPhysics>();
 		}
 
-		cameras = new GameObject[7];
-		cameras[0] = GameObject.Find("CameraPositioner1/1");
-		cameras[1] = GameObject.Find("CameraPositioner1/2");
-		cameras[2] = GameObject.Find("CameraPositioner2/2");
-		cameras[3] = GameObject.Find("CameraPositioner1/4");
-		cameras[4] = GameObject.Find("CameraPositioner2/4");
-		cameras[5] = GameObject.Find("CameraPositioner3/4");
-		cameras[6] = GameObject.Find("CameraPositioner4/4");
+		// cameras = new GameObject[7];
+		// cameras[0] = GameObject.Find("CameraPositioner1/1");
+		// cameras[1] = GameObject.Find("CameraPositioner1/2");
+		// cameras[2] = GameObject.Find("CameraPositioner2/2");
+		// cameras[3] = GameObject.Find("CameraPositioner1/4");
+		// cameras[4] = GameObject.Find("CameraPositioner2/4");
+		// cameras[5] = GameObject.Find("CameraPositioner3/4");
+		// cameras[6] = GameObject.Find("CameraPositioner4/4");
 
 		// Remove other racers in Challenge Mode.
 		if (GameVar.gameMode == 2) {
@@ -175,7 +174,7 @@ public class CourseControl : MonoBehaviour {
 			Destroy(aI[i]);
 		}
 		for (int i = GameVar.playerCount; i < player.Length; i++) {
-			GameVar.charForP[i] = defaultCpu[i-1];
+			GameVar.charForP[i] = defaultCpu[i-1]+GameVar.charDataCustom.Length;
 			GameVar.boardForP[i] = defaultCpuBoard[i-1];
 			Destroy(pCon[i]);
 			Destroy(pUI[i]);
@@ -407,20 +406,21 @@ public class CourseControl : MonoBehaviour {
 	public void Finish(int userIndex) {
 		int savePlace = rPhys[userIndex].finalPlace;
 		if (GameVar.gameMode < 2) {
-			rankBarName[savePlace-1].text = rPhys[userIndex].charName;
-			rankBarTime[savePlace-1].text = printTimer;
+			rankBar["Name"+(savePlace-1)].text = rPhys[userIndex].charName;
+			rankBar["Time"+(savePlace-1)].text = printTimer;
 			rPhys[userIndex].coins += prize[savePlace-1];
-			rankBarReward[savePlace-1].text = rPhys[userIndex].coins.ToString();
+			rankBar["Reward"+(savePlace-1)].text = rPhys[userIndex].coins.ToString();
+			Debug.Log(rankBar["Name"+(savePlace-1)]);
 			Debug.Log(rPhys[userIndex].charName + " finished in " + savePlace + " at " + printTimer + ".");
 		}
 		else {
-			rankBarName[0].text = rPhys[0].charName;
-			rankBarTime[0].text = printTimer;
-			rankBarReward[0].text = rPhys[0].coins.ToString();
+			rankBar["Name0"].text = rPhys[0].charName;
+			rankBar["Time0"].text = printTimer;
+			rankBar["Reward0"].text = rPhys[0].coins.ToString();
 			for (int i = 1; i < 4; i++) {
-				rankBarName[i].text = "";
-				rankBarTime[i].text = "";
-				rankBarReward[i].text = "";
+				rankBar["Name"+i].text = "";
+				rankBar["Time"+i].text = "";
+				rankBar["Reward"+i].text = "";
 			}
 			// Debug.Log(rPhys[userIndex].charName + " finished at " + printTimer + " with " rPhys[userIndex].coins + " points.");
 		}

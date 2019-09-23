@@ -72,14 +72,14 @@ public class RacerPhysics : MonoBehaviour {
 		finished = false;
 		rigid.maxAngularVelocity = 0.05f;
 
-		// Reflect Character Choice.
+		// Become character.
 		if (GameVar.charForP[playerNum] >= GameVar.charDataCustom.Length) {
-			headSprite.sprite = headSpriteSrc[GameVar.charForP[playerNum-GameVar.charDataCustom.Length]];
+			headSprite.sprite = headSpriteSrc[GameVar.charForP[playerNum]-GameVar.charDataCustom.Length];
 		}
 		else headSprite.sprite = headSpriteSrc[headSpriteSrc.Length-1];
 		if (playerNum < GameVar.playerCount) headSprite.gameObject.SetActive(false);
         
-        //Initialize items.
+        // Initialize items.
 		blankWeap = pUI.weaponSprite.Length-1;
 		weapType = blankWeap;
 		blankItem = pUI.itemSprite.Length-1;

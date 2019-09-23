@@ -50,6 +50,7 @@ MonoBehaviour:
   defaultCpu: 000000000000000000000000
   defaultCpuBoard: 000000000000000000000000
   prize: 1027000070170000b80b000000000000
+  firstCheckpoint: {fileID: 0}
   totalTimer: 0
   printTimer: 
   timerOn: 0
@@ -59,6 +60,19 @@ MonoBehaviour:
   miniMapAnchorMax1p: {x: 0.95, y: 0.8}
   miniMapAnchorMin3p: {x: 0.5, y: 0}
   miniMapAnchorMax3p: {x: 1, y: 0.5}
+  player:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  cameras:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   mapRotated: 0
 --- !u!1 &3669739400724152965
 GameObject:

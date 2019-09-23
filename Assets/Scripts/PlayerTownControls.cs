@@ -7,16 +7,19 @@ using System.IO;
 
 public class PlayerTownControls : MonoBehaviour {
 
-	public float moveSpeed;
-	public int conNum;
-	public Transform cam;
+	public float moveTime;
+	int conNum;
+	public GameObject cam;
 	public GameObject loadSet;
+	public List <GameObject> place;
+	public int currentPlace;
 	public Slider progressBar;
 	// public SaveFileData saveData;
 	// public CustomCharacterData charData;
 	string lStickH, aBut;
 	// string bBut, lStickV, rStickH, rStickV, xBut, yBut;
 	bool selected = false;
+	bool bump = false;
 
 	void Start() {
 		conNum = GameVar.controlp[0];
@@ -28,14 +31,34 @@ public class PlayerTownControls : MonoBehaviour {
 		// lStickV = (conNum+" Axis 2");
 		// rStickH = (conNum+" Axis 4");
 		// rStickV = (conNum+" Axis 5");
-		aBut = (conNum +" Button 0");
+		aBut = (conNum + " Button 0");
 		// bBut = (conNum +" Button 1");
 		// xBut = (conNum +" Button 2"); //Button 2 or Axis 9
 		// yBut = (conNum +" Button 3"); //Button 3 or Axis 10
 	}
 	void Update () {
-		Vector3 dirRight = transform.TransformDirection(Vector3.Cross(Vector3.up, cam.forward));
-		transform.Translate(Input.GetAxis(lStickH) * dirRight * Time.deltaTime * moveSpeed);
+		Vector3 a = Vector3.zero;
+		transform.SetPositionAndRotation(Vector3.SmoothDamp(transform.position, place[currentPlace].transform.position, ref a, moveTime), transform.rotation);
+		if (Input.GetAxisRaw(lStickH) == 0) {
+			bump = false;
+		}
+		if (!bump && Input.GetAxisRaw(lStickH) > 0.5f) {
+			currentPlace += 1;
+			if (currentPlace >= place.Count) {
+				currentPlace = 0;
+			}
+			bump = true;
+		}
+		if (!bump && Input.GetAxisRaw(lStickH) < -0.5f) {
+			currentPlace -= 1;
+			if (currentPlace <= -1) {
+				currentPlace = place.Count-1;
+			}
+			bump = true;
+		}
+	}
+	void LateUpdate() {
+		cam.transform.LookAt(transform.position);
 	}
 	void OnTriggerStay (Collider other) {
 		if (Input.GetButton(aBut) && !selected) {
