@@ -174,87 +174,39 @@ public class MainMenu : MonoBehaviour {
 				saveData[i] = LoadFile(Path.Combine(dir, "Save_"+i+".sbsv"));
 				fileName[i].text = saveData[i].fileName;
 				fileCoins[i].text = saveData[i].coins.ToString() + "P";
-				if (i == 0) {
-					for (int m = 0; m < 12; m++) {
-						if (saveData[0].courseGrade[m] == 0) {
-							file0Medal[m].sprite = medalSource[3];
-							file0Medal[m].color = Color.clear;
-						}
-						if (saveData[0].courseGrade[m] == 1) {
-							file0Medal[m].sprite = medalSource[0];
-						}
-						if (saveData[0].courseGrade[m] == 2) {
-							file0Medal[m].sprite = medalSource[1];
-						}
-						if (saveData[0].courseGrade[m] == 3) {
-							file0Medal[m].sprite = medalSource[2];
-						}
-						if (saveData[0].courseGrade[m] == 4) {
-							file0Medal[m].sprite = medalSource[3];
-						}
-					}
-				}
-				else if (i == 1) {
-					for (int m = 0; m < 12; m++) {
-						if (saveData[1].courseGrade[m] == 0) {
-							file1Medal[m].sprite = medalSource[3];
-							file1Medal[m].color = Color.clear;
-						}
-						if (saveData[1].courseGrade[m] == 1) {
-							file1Medal[m].sprite = medalSource[0];
-						}
-						if (saveData[1].courseGrade[m] == 2) {
-							file1Medal[m].sprite = medalSource[1];
-						}
-						if (saveData[1].courseGrade[m] == 3) {
-							file1Medal[m].sprite = medalSource[2];
-						}
-						if (saveData[1].courseGrade[m] == 4) {
-							file1Medal[m].sprite = medalSource[3];
-						}
-					}
-
-				}
-				else if (i == 2) {
-					for (int m = 0; m < 12; m++) {
-						if (saveData[2].courseGrade[m] == 0) {
-							file2Medal[m].sprite = medalSource[3];
-							file2Medal[m].color = Color.clear;
-						}
-						if (saveData[2].courseGrade[m] == 1) {
-							file2Medal[m].sprite = medalSource[0];
-						}
-						if (saveData[2].courseGrade[m] == 2) {
-							file2Medal[m].sprite = medalSource[1];
-						}
-						if (saveData[2].courseGrade[m] == 3) {
-							file2Medal[m].sprite = medalSource[2];
-						}
-						if (saveData[2].courseGrade[m] == 4) {
-							file2Medal[m].sprite = medalSource[3];
-						}
-					}
-
+				for (int c = 0; c < 12; c++) {
+					SortMedal(i, c, saveData[i].courseGrade[c]);
 				}
 			}
+		}
+	}
+
+	void SortMedal(int file, int course, int grade) {
+		if (file == 0) {
+			if (grade == 0) {
+				file0Medal[course].sprite = medalSource[3];
+				file0Medal[course].color = Color.clear;
+			}
 			else {
-				fileName[i].text = "New File";
-				fileCoins[i].text = "";
-				if (i == 0) {
-					for (int m = 0; m < 12; m++) {
-						file0Medal[m].gameObject.SetActive(false);
-					}
-				}
-				else if (i == 1) {
-					for (int m = 0; m < 12; m++) {
-						file1Medal[m].gameObject.SetActive(false);
-					}
-				}
-				else if (i == 2) {
-					for (int m = 0; m < 12; m++) {
-						file2Medal[m].gameObject.SetActive(false);
-					}
-				}
+				file0Medal[course].sprite = medalSource[grade - 1];
+			}
+		}
+		else if (file == 1) {
+			if (grade == 0) {
+				file1Medal[course].sprite = medalSource[3];
+				file1Medal[course].color = Color.clear;
+			}
+			else {
+				file1Medal[course].sprite = medalSource[grade - 1];
+			}
+		}
+		else if (file == 2) {
+			if (grade == 0) {
+				file2Medal[course].sprite = medalSource[3];
+				file2Medal[course].color = Color.clear;
+			}
+			else {
+				file2Medal[course].sprite = medalSource[grade - 1];
 			}
 		}
 	}

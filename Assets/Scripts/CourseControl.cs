@@ -17,7 +17,7 @@ public class CourseControl : MonoBehaviour {
 	int playersFinished, totalFinished;
 	public Vector2 miniMapAnchorMinDefault, miniMapAnchorMaxDefault, miniMapAnchorMin1p, miniMapAnchorMax1p, miniMapAnchorMin3p, miniMapAnchorMax3p;
 	public GameObject[] player, cameras;
-	List<GameObject> items, weapons, coins;
+	GameObject[] items, weapons, coins;
 	CharacterData[] charData;
 	GameObject[] spriteHead;
 	Image miniMap;
@@ -79,23 +79,30 @@ public class CourseControl : MonoBehaviour {
 		resultsPanel.SetActive(false);
 
 		// Check custom settings: Coins, Items, and Lap Count.
-		if (GameVar.lapCount == 0) {
+		if (GameVar.playerCount == 0) {
 			GameVar.lapCount = defaultLapCount;
 		}
-		if (GameVar.itemsOn == false) {
-			items.AddRange(GameObject.FindGameObjectsWithTag("RedBox"));
-			for (int i = 0; i < items.Count; i++){
-				items[i].SetActive(false);
+		else {
+			if (GameVar.lapCount == 0) {
+				GameVar.lapCount = defaultLapCount;
 			}
-			weapons.AddRange(GameObject.FindGameObjectsWithTag("BlueBox"));
-			for (int i = 0; i < weapons.Count; i++){
-				weapons[i].SetActive(false);
+			if (GameVar.itemsOn == false) {
+				Debug.Log("Finding red item boxes");
+				items = GameObject.FindGameObjectsWithTag("RedBox");
+				Debug.Log("Listing red item boxes");
+				for (int i = 0; i < items.Length; i++){
+					items[i].SetActive(false);
+				}
+				weapons = GameObject.FindGameObjectsWithTag("BlueBox");
+				for (int i = 0; i < weapons.Length; i++){
+					weapons[i].SetActive(false);
+				}
 			}
-		}
-		if (GameVar.coinsOn == false) {
-			coins.AddRange(GameObject.FindGameObjectsWithTag("Coin"));
-			for (int i = 0; i < coins.Count; i++) {
-				coins[i].SetActive(false);
+			if (GameVar.coinsOn == false) {
+				coins = GameObject.FindGameObjectsWithTag("Coin");
+				for (int i = 0; i < coins.Length; i++) {
+					coins[i].SetActive(false);
+				}
 			}
 		}
 
@@ -168,16 +175,28 @@ public class CourseControl : MonoBehaviour {
 		}
 		
 		// Initialize Controller, UI, and AI scripts, and destroy unused scripts.
-		for (int i = 0; i < GameVar.playerCount; i++) {
-			pUI[i].playerNum = i;
-			pCon[i].conNum = GameVar.controlp[i];
-			Destroy(aI[i]);
+		if (GameVar.playerCount == 0) {
+			GameVar.charForP[0] = Random.Range(0,GameVar.charDataCustom.Length+GameVar.charDataPermanent.Length);
+			GameVar.boardForP[0] = Random.Range(0,GameVar.boardData.Length);
+			Destroy(pCon[0]);
+			for (int i = 1; i < 4; i++) {
+				GameVar.charForP[i] = defaultCpu[i-1]+GameVar.charDataCustom.Length;
+				GameVar.boardForP[i] = defaultCpuBoard[i-1];
+				Destroy(pCon[i]);
+			}
 		}
-		for (int i = GameVar.playerCount; i < player.Length; i++) {
-			GameVar.charForP[i] = defaultCpu[i-1]+GameVar.charDataCustom.Length;
-			GameVar.boardForP[i] = defaultCpuBoard[i-1];
-			Destroy(pCon[i]);
-			Destroy(pUI[i]);
+		else {
+			for (int i = 0; i < GameVar.playerCount; i++) {
+				pUI[i].playerNum = i;
+				pCon[i].conNum = GameVar.controlp[i];
+				Destroy(aI[i]);
+			}
+			for (int i = GameVar.playerCount; i < player.Length; i++) {
+				GameVar.charForP[i] = defaultCpu[i-1]+GameVar.charDataCustom.Length;
+				GameVar.boardForP[i] = defaultCpuBoard[i-1];
+				Destroy(pCon[i]);
+				Destroy(pUI[i]);
+			}
 		}
 
 		for (int i = 0; i < 4; i++) {
