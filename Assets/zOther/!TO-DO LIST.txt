@@ -5,7 +5,7 @@ Internal:
 - CPUs can jump while turning without accidentally doing tricks, giving unfair advantage.
 - All courses available from beginning.
 - Turning speed not quite like SBK2 (no "edge").
-- Tricks not adding up points for combos correctly.
+- Tricks not adding up points for combos correctly. (possibly fixed?)
 - Camera still unhappy with looking backward (disabled for now).
 - Prize vs Board Price is unbalanced (e.g. winning in Track1 allows you to buy two boards immediately).
 
@@ -15,11 +15,12 @@ Worlds and Maps:
 
 UI:
 - Maybe make a way to import custom face sprites? Or generate based on customization.
+- Character need more models.
 
 VFX:
 - Daycycle working, but courses need night-lights.
 - "Rolling" particle effect kind of vague, but should be replaced with animation anyway.
-- Rocket particles kinda weird.
+- Rocket particles give illusion of perfect sphere.
 
 Audio:
 - Missing movement and snow sounds.
@@ -29,4 +30,4 @@ Audio:
 Animation:
 - All player animations.
 - UI features.
-- Replace coin/item box spin script with coin/item box spin animation?
+- Replace coin/item box spin script with coin/item box spin animation (is this necessary?).
