@@ -14,7 +14,7 @@ public class PlayerRaceControls : MonoBehaviour {
 	public bool lockControls, raceOver, comboAble;
 	PlayerUI pUI;
 	RacerPhysics rPhys;
-	string lStickH, lStickV, rStickH, rStickV, aBut, bBut, xBut, yBut, stBut, bkBut;
+	public string lStickH, lStickV, rStickH, rStickV, aBut, bBut, xBut, yBut, stBut, bkBut;
 
 	void Start () {
 		//Find objects.

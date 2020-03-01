@@ -8,6 +8,7 @@ Internal:
 - Tricks not adding up points for combos correctly. (possibly fixed?)
 - Camera still unhappy with looking backward (disabled for now).
 - Prize vs Board Price is unbalanced (e.g. winning in Track1 allows you to buy two boards immediately).
+- Multiplayer pausing is royally F'd.
 
 Worlds and Maps:
 - More of a reminder when building courses: Walls meeting tracks from bottom need to be dropped -0.15m to prevent bumping from above. (Possibly fixed after moving to Blender instead of ProBuilder?)

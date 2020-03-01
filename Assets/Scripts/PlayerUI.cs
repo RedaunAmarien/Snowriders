@@ -108,11 +108,11 @@ public class PlayerUI : MonoBehaviour {
 		if (option == 0) {
 			Time.timeScale = 0;
 			corCon.timerOn = false;
-			paused = true;;
-			inputMod.horizontalAxis = rPhys.playerNum + " Axis 1";
-			inputMod.verticalAxis = rPhys.playerNum + " Axis 2";
-			inputMod.submitButton = rPhys.playerNum + " Button 0";
-			inputMod.cancelButton = rPhys.playerNum + " Button 1";
+			paused = true;
+			inputMod.horizontalAxis = (playerNum-1) + " Axis 1";
+			inputMod.verticalAxis = (playerNum-1) + " Axis 2";
+			inputMod.submitButton = (playerNum-1) + " Button 0";
+			inputMod.cancelButton = (playerNum-1) + " Button 1";
 			events.SetSelectedGameObject(pauseResume);
 			pauseMenu.SetActive(true);
 		}
