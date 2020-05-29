@@ -242,7 +242,7 @@ public class RacerPhysics : MonoBehaviour {
 				coins = coins - 100;
 				StartCoroutine(other.GetComponent<CoinSpin>().Respawn());
 				aUD.Play("item");
-				itemType = Random.Range(0,pUI.itemSprite.Length-1);
+				itemType = /*Needs to be rubber-banded.*/ Random.Range(0,pUI.itemSprite.Length-1);
 			}
 		}
 		// Ammo Box

@@ -1,2 +1,3 @@
 - Themed, unique lifts, not a set animation for each one, just a set time.
   - Hot air balloon level with hot air balloon lift. Big City level with subway/monorail lift. Candy-land theme? Teleporters make a return?
+  - Rewards are, instead of just cash: Trophy, board ticket (based on quality), customization cash.
