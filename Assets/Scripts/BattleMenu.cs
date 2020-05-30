@@ -5,12 +5,15 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Audio;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using System.IO;
 
 public class BattleMenu : MonoBehaviour {
 
 	public GameObject countSet, characterSet, mainSet, optionSet, courseSet, loadSet, player3And4, readySet, bypassButton;
     public GameObject[] battleSub;
+    public BattleSubMenu[] battleSubScript;
     public AudioSource[] songLayer;
     public Sprite[] charPortSrc;
     public float maxLayerVolume, volumePercentSpeed;
@@ -18,12 +21,8 @@ public class BattleMenu : MonoBehaviour {
     public Button optionButton;
 	public Toggle items, coins;
     public Slider progressBar, laps;
-	public string[] joyNames;
-    public bool[] joySlotsTaken;
     public int playersReady;
-    public BattleSubMenu[] battleSubScript;
     bool readyToGo;
-    EventSystem events;
 
     void Awake() {
         songLayer[0].volume = 0;
@@ -33,25 +32,18 @@ public class BattleMenu : MonoBehaviour {
     }
 
 	void Start () {
-        events = EventSystem.current;
+        battleSubScript = new BattleSubMenu[4];
+        battleSub = new GameObject[4];
+
         GameVar.controlp = new int[4];
         GameVar.charForP = new int[4];
         GameVar.boardForP = new int[4];
-
-        // Initialize Controllers
-        joySlotsTaken = new bool[6];
 
 		// Main Menu
         loadSet.SetActive(false);
 		mainSet.SetActive(false);
 		optionSet.SetActive(false);
 		courseSet.SetActive(false);
-
-        // Set up Battle Subs
-        battleSubScript = new BattleSubMenu[4];
-        for (int i = 0; i < 4; i++) {
-            battleSubScript[i] = battleSub[i].GetComponent<BattleSubMenu>();
-        }
 		
 		// Set defaults
         GameVar.lapCount = 0;
@@ -60,9 +52,9 @@ public class BattleMenu : MonoBehaviour {
         //Game Mode 0 = Battle (Multiplayer), 1 = Adventure, 2 = Challenge, 3 = Online (Not implemented).
         if (GameVar.gameMode == 0) {
             titleText.text = "Battle Mode";
-            countSet.SetActive(true);
-            characterSet.SetActive(false);
-            StartCoroutine(StartSong(0));
+            countSet.SetActive(false);
+            characterSet.SetActive(true);
+            StartCoroutine(StartSong(1));
             optionButton.interactable = true;
             GameVar.itemsOn = true;
             GameVar.coinsOn = true;
@@ -70,10 +62,8 @@ public class BattleMenu : MonoBehaviour {
             coins.isOn = true;
         }
         else {
-            SetPlayerCount(1);
             countSet.SetActive(false);
             characterSet.SetActive(true);
-            events.SetSelectedGameObject(bypassButton);
             StartCoroutine(StartSong(1));
             if (GameVar.gameMode == 1) {
                 titleText.text = "Adventure Mode";
@@ -95,7 +85,7 @@ public class BattleMenu : MonoBehaviour {
 	}
 
     void Update() {
-        if (playersReady == GameVar.playerCount) {
+        if (playersReady == GameVar.playerCount && GameVar.playerCount != 0) {
             readyToGo = true;
             readySet.SetActive(true);
         }
@@ -103,11 +93,6 @@ public class BattleMenu : MonoBehaviour {
             readyToGo = false;
             readySet.SetActive(false);
         }
-        
-        // Update Controllers
-		// joyNames = Input.GetJoystickNames();
-		for (int i = 0; i < joyNames.Length; i++) {
-		}
     }
 
     public void CheckGo() {
@@ -116,6 +101,8 @@ public class BattleMenu : MonoBehaviour {
             mainSet.SetActive(true);
             characterSet.SetActive(false);
             playersReady = 0;
+            battleSubScript[0].events.firstSelectedGameObject = bypassButton;
+            battleSubScript[0].events.playerRoot = null;
             for (int i = GameVar.playerCount; i < 4; i++) {
                 // Fix later to be specific levels.
                 GameVar.charForP[i] = Random.Range(0, GameVar.allCharData.Length);
@@ -130,13 +117,19 @@ public class BattleMenu : MonoBehaviour {
         StartCoroutine(LoadScene("HubTown"));
     }
 
-    public void SetPlayerCount(int count) {
-        GameVar.playerCount = count;
-        for (int i = count+1; i < 5; i++) {
-            battleSub[i-1].gameObject.SetActive(false);
-            }
-        if (count < 3) player3And4.SetActive(false);
-        battleSubScript[0].myTurn = true;
+    public void OnPlayerJoined(PlayerInput player) {
+        Debug.Log("Player " + player.user.index + " joined.");
+        GameVar.playerCount = player.user.index+1;
+        if (GameVar.playerCount > 2) {
+            player3And4.SetActive(true);
+        }
+    }
+
+    public void OnPlayerLeft(PlayerInput player) {
+        Debug.Log("Player " + player.user.index + " disconnected.");
+        GameVar.playerCount --;
+        battleSub[player.user.index].SetActive(false);
+        if (GameVar.playerCount < 3) player3And4.SetActive(false);
     }
 
 	public void SetLaps() {
