@@ -105,7 +105,7 @@ public class BattleMenu : MonoBehaviour {
         }
         
         // Update Controllers
-		joyNames = Input.GetJoystickNames();
+		// joyNames = Input.GetJoystickNames();
 		for (int i = 0; i < joyNames.Length; i++) {
 		}
     }

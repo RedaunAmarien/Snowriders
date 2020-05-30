@@ -38,4 +38,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Track5.unity
     guid: 9821b506894fa8849b2a4fe6cf8e8ed1
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: b84da0b72ac75e74080a5cbd6411b950,
+      type: 2}

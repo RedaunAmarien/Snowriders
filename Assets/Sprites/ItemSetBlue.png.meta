@@ -1,52 +1,138 @@
 fileFormatVersion: 2
 guid: 532f380d8842f2140af106c5364a517c
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: BluePowerUpSprites_0
-    21300002: BluePowerUpSprites_1
-    21300004: BluePowerUpSprites_2
-    21300006: BluePowerUpSprites_3
-    21300008: BluePowerUpSprites_4
-    21300010: BluePowerUpSprites_5
-    21300012: BluePowerUpSprites_6
-    21300014: BluePowerUpSprites_7
-    21300016: BluePowerUpSprites_8
-    21300018: BluePowerUpSprites_9
-    21300020: BluePowerUpSprites_10
-    21300022: BluePowerUpSprites_11
-    21300024: BluePowerUpSprites_12
-    21300026: BluePowerUpSprites_13
-    21300028: BluePowerUpSprites_14
-    21300030: BluePowerUpSprites_15
-    21300032: BPSprite_0
-    21300034: BPSprite_1
-    21300036: BPSprite_2
-    21300038: BPSprite_3
-    21300040: BPSprite_4
-    21300042: BPSprite_5
-    21300044: BPSprite_6
-    21300046: BPSprite_7
-    21300048: BPSprite_8
-    21300050: BPSprite_9
-    21300052: BPSprite_10
-    21300054: BPSprite_11
-    21300056: BPSprite_12
-    21300058: BPSprite_13
-    21300060: BPSprite_14
-    21300062: BPSprite_15
-    21300064: ItemSetBlue_0
-    21300066: ItemSetBlue_1
-    21300068: ItemSetBlue_2
-    21300070: ItemSetBlue_3
-    21300072: ItemSetBlue_4
-    21300074: ItemSetBlue_5
-    21300076: ItemSetBlue_6
-    21300078: ItemSetBlue_7
-    21300080: ItemSetBlue_8
-    21300082: ItemSetBlue_9
-    21300084: ItemSetBlue_10
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: BluePowerUpSprites_0
+  - first:
+      213: 21300002
+    second: BluePowerUpSprites_1
+  - first:
+      213: 21300004
+    second: BluePowerUpSprites_2
+  - first:
+      213: 21300006
+    second: BluePowerUpSprites_3
+  - first:
+      213: 21300008
+    second: BluePowerUpSprites_4
+  - first:
+      213: 21300010
+    second: BluePowerUpSprites_5
+  - first:
+      213: 21300012
+    second: BluePowerUpSprites_6
+  - first:
+      213: 21300014
+    second: BluePowerUpSprites_7
+  - first:
+      213: 21300016
+    second: BluePowerUpSprites_8
+  - first:
+      213: 21300018
+    second: BluePowerUpSprites_9
+  - first:
+      213: 21300020
+    second: BluePowerUpSprites_10
+  - first:
+      213: 21300022
+    second: BluePowerUpSprites_11
+  - first:
+      213: 21300024
+    second: BluePowerUpSprites_12
+  - first:
+      213: 21300026
+    second: BluePowerUpSprites_13
+  - first:
+      213: 21300028
+    second: BluePowerUpSprites_14
+  - first:
+      213: 21300030
+    second: BluePowerUpSprites_15
+  - first:
+      213: 21300032
+    second: BPSprite_0
+  - first:
+      213: 21300034
+    second: BPSprite_1
+  - first:
+      213: 21300036
+    second: BPSprite_2
+  - first:
+      213: 21300038
+    second: BPSprite_3
+  - first:
+      213: 21300040
+    second: BPSprite_4
+  - first:
+      213: 21300042
+    second: BPSprite_5
+  - first:
+      213: 21300044
+    second: BPSprite_6
+  - first:
+      213: 21300046
+    second: BPSprite_7
+  - first:
+      213: 21300048
+    second: BPSprite_8
+  - first:
+      213: 21300050
+    second: BPSprite_9
+  - first:
+      213: 21300052
+    second: BPSprite_10
+  - first:
+      213: 21300054
+    second: BPSprite_11
+  - first:
+      213: 21300056
+    second: BPSprite_12
+  - first:
+      213: 21300058
+    second: BPSprite_13
+  - first:
+      213: 21300060
+    second: BPSprite_14
+  - first:
+      213: 21300062
+    second: BPSprite_15
+  - first:
+      213: 21300064
+    second: ItemSetBlue_0
+  - first:
+      213: 21300066
+    second: ItemSetBlue_1
+  - first:
+      213: 21300068
+    second: ItemSetBlue_2
+  - first:
+      213: 21300070
+    second: ItemSetBlue_3
+  - first:
+      213: 21300072
+    second: ItemSetBlue_4
+  - first:
+      213: 21300074
+    second: ItemSetBlue_5
+  - first:
+      213: 21300076
+    second: ItemSetBlue_6
+  - first:
+      213: 21300078
+    second: ItemSetBlue_7
+  - first:
+      213: 21300080
+    second: ItemSetBlue_8
+  - first:
+      213: 21300082
+    second: ItemSetBlue_9
+  - first:
+      213: 21300084
+    second: ItemSetBlue_10
   externalObjects: {}
-  serializedVersion: 7
+  serializedVersion: 10
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -101,7 +187,7 @@ TextureImporter:
   compressionQualitySet: 0
   textureFormatSet: 0
   platformSettings:
-  - serializedVersion: 2
+  - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -112,7 +198,8 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - serializedVersion: 2
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -123,7 +210,8 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - serializedVersion: 2
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
     buildTarget: iPhone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -134,7 +222,8 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - serializedVersion: 2
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -145,6 +234,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -164,6 +254,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 86fa032e1591daa44b84aaea3638c670
+      internalID: 21300064
       vertices: []
       indices: 
       edges: []
@@ -184,6 +275,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 1a336c6032f01df4db8586742fc0252b
+      internalID: 21300066
       vertices: []
       indices: 
       edges: []
@@ -204,6 +296,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: dac76b5951e4a1845a8821e2d0508708
+      internalID: 21300068
       vertices: []
       indices: 
       edges: []
@@ -224,6 +317,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: af74757d367155b4088284a8921f99c5
+      internalID: 21300070
       vertices: []
       indices: 
       edges: []
@@ -244,6 +338,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 1084c1dc5474ca4478a9fce3df9e87f4
+      internalID: 21300072
       vertices: []
       indices: 
       edges: []
@@ -264,6 +359,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 499f18f468a761145afe28ff25244199
+      internalID: 21300074
       vertices: []
       indices: 
       edges: []
@@ -284,6 +380,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: d9a0fda75972bf647b451cdf6a246a97
+      internalID: 21300076
       vertices: []
       indices: 
       edges: []
@@ -304,6 +401,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: e4a94c755800e484c85b1a3192843980
+      internalID: 21300078
       vertices: []
       indices: 
       edges: []
@@ -324,6 +422,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: c19fa8a089120c44eae3a131b8e67983
+      internalID: 21300080
       vertices: []
       indices: 
       edges: []
@@ -344,6 +443,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 4e1d321ccce24fa4a97d0fb8a8e957b3
+      internalID: 21300082
       vertices: []
       indices: 
       edges: []
@@ -364,6 +464,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 7f686e05f75386843b708b29ef575329
+      internalID: 21300084
       vertices: []
       indices: 
       edges: []
@@ -372,10 +473,12 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 99488305c6dc02f42b82a4c596a4f4b0
+    internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
+    secondaryTextures: []
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

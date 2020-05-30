@@ -56,29 +56,29 @@ public class BattleSubMenu : MonoBehaviour {
             rArrow.gameObject.SetActive(false);
 
             // Assign Controller.
-            if (myTurn && Input.GetButtonDown("0 Button 0")) {
-                Debug.Log("Input detected. Determining controller...");
-                for (int i = -1; i < battleMenu.joyNames.Length+1; i++) {
-                    Debug.Log("Testing Slot " + i);
-                    if (i!=0 && Input.GetButtonDown(i+" Button 0") && !battleMenu.joySlotsTaken[i+1]) {
-                        GameVar.controlp[myNumber] = i;
-                        battleMenu.joySlotsTaken[i+1] = true;
-                        if (i == -1) {
-                            Debug.Log("Keyboard assigned to Player " + myNumber);
-                        }
-                        else {
-                            Debug.Log(battleMenu.joyNames[i-1] + " assigned to Player " + myNumber);
-                        }
-                        if (myNumber < 3) {
-                            battleMenu.battleSubScript[myNumber+1].myTurn = true;
-                            battleMenu.battleSubScript[myNumber+1].assignmentStep = 0;
-                            Debug.Log("Player " +(myNumber+1) + "'s turn");
-                        }
-                        controlText.gameObject.SetActive(false);
-                        assignmentStep = 1;
-                    }
-                }
-            }
+            // if (myTurn && Input.GetButtonDown("0 Button 0")) {
+            //     Debug.Log("Input detected. Determining controller...");
+            //     for (int i = -1; i < battleMenu.joyNames.Length+1; i++) {
+            //         Debug.Log("Testing Slot " + i);
+            //         if (i!=0 && Input.GetButtonDown(i+" Button 0") && !battleMenu.joySlotsTaken[i+1]) {
+            //             GameVar.controlp[myNumber] = i;
+            //             battleMenu.joySlotsTaken[i+1] = true;
+            //             if (i == -1) {
+            //                 Debug.Log("Keyboard assigned to Player " + myNumber);
+            //             }
+            //             else {
+            //                 Debug.Log(battleMenu.joyNames[i-1] + " assigned to Player " + myNumber);
+            //             }
+            //             if (myNumber < 3) {
+            //                 battleMenu.battleSubScript[myNumber+1].myTurn = true;
+            //                 battleMenu.battleSubScript[myNumber+1].assignmentStep = 0;
+            //                 Debug.Log("Player " +(myNumber+1) + "'s turn");
+            //             }
+            //             controlText.gameObject.SetActive(false);
+            //             assignmentStep = 1;
+            //         }
+            //     }
+            // }
         }
         
         // Character Step.

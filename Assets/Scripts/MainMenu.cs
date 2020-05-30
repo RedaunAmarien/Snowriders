@@ -22,7 +22,7 @@ public class MainMenu : MonoBehaviour {
 	int newFileNum;
 
 	void Start() {
-		firstLoad.SetActive(true);
+		mainSet.SetActive(true);
 
 		// Find Save Files.
         dir = Path.Combine(Application.persistentDataPath, "Saves");
@@ -68,45 +68,46 @@ public class MainMenu : MonoBehaviour {
 		}
 
 		// Initialize controllers.
-		GameVar.controlp = new int[4];
-		names = Input.GetJoystickNames();
-		for (int i = 0; i < names.Length; i++) {
-			print (names[i] + " in " + i);
-		}
-		assigning = true;
+		// GameVar.controlp = new int[4];
+		// names = Input.GetJoystickNames();
+		// for (int i = 0; i < names.Length; i++) {
+		// 	print (names[i] + " in " + i);
+		// }
+		// assigning = true;
 
 		// Setup Menu
 		firstLoadText.text = ("Press A or Return\nto Start");
 	}
 
-	void Update() {
-		if (assigning) {
-			if (Input.GetButtonDown("1 Button 0")) {
-				Assign(1);
-				print ("Player 1 using controller 1");
-			}
-			else if (Input.GetButtonDown("2 Button 0")) {
-				Assign(2);
-				print ("Player 1 using controller 2");
-			}
-			else if (Input.GetButtonDown("3 Button 0")) {
-				Assign(3);
-				print ("Player 1 using controller 3");
-			}
-			else if (Input.GetButtonDown("4 Button 0")) {
-				Assign(4);
-				print ("Player 1 using controller 4");
-			}
-			else if (Input.GetButtonDown("-1 Button 0")) {
-				Assign(-1);
-				print ("Player 1 using keyboard.");
-			}
-			else if (Input.GetButtonDown("0 Button 0")) {
-				Assign(0);
-				print ("Player 1 using a controller beyond 1-4");
-            }
-		}
-	}
+	// void Update() {
+	// 	if (assigning) {
+	// 		if (Input.GetButtonDown("1 Button 0")) {
+	// 			Assign(1);
+	// 			print ("Player 1 using controller 1");
+	// 		}
+	// 		else if (Input.GetButtonDown("2 Button 0")) {
+	// 			Assign(2);
+	// 			print ("Player 1 using controller 2");
+	// 		}
+	// 		else if (Input.GetButtonDown("3 Button 0")) {
+	// 			Assign(3);
+	// 			print ("Player 1 using controller 3");
+	// 		}
+	// 		else if (Input.GetButtonDown("4 Button 0")) {
+	// 			Assign(4);
+	// 			print ("Player 1 using controller 4");
+	// 		}
+	// 		else if (Input.GetButtonDown("-1 Button 0")) {
+	// 			Assign(-1);
+	// 			print ("Player 1 using keyboard.");
+	// 		}
+	// 		else if (Input.GetButtonDown("0 Button 0")) {
+	// 			Assign(0);
+	// 			print ("Player 1 using a controller beyond 1-4");
+    //         }
+	// 	}
+	// }
+	
 	void Assign(int con) {
 		assigning = false;
 		GameVar.controlp[0] = con;

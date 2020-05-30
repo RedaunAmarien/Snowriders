@@ -4,8 +4,13 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
+using UnityEngine.InputSystem;
 
 public class PlayerTownControls : MonoBehaviour {
+
+	[Header("ControlSetup")]
+    public InputAction turn;
+    public InputAction select;
 
 	public float moveTime;
 	int conNum;
@@ -21,35 +26,43 @@ public class PlayerTownControls : MonoBehaviour {
 	bool selected = false;
 	bool bump = false;
 
+	void Awake() {
+        select.performed += ctx => Select();
+        select.Enable();
+        turn.performed += ctx => Turn();
+        turn.Enable();
+	}
+
 	void Start() {
-		conNum = GameVar.controlp[0];
+		// conNum = GameVar.controlp[0];
 		// Load files.
 		// saveData = LoadFile(Path.Combine(Path.Combine(Application.persistentDataPath, "Saves"), "Save_" + GameVar.saveSlot + ".sbsv"));
 		// charData = LoadChar(Path.Combine(Path.Combine(Application.persistentDataPath, "Characters"), "_" + GameVar.saveData.charName + ".sbcc"));
 
-		lStickH = (conNum + " Axis 1");
+		// lStickH = (conNum + " Axis 1");
 		// lStickV = (conNum+" Axis 2");
 		// rStickH = (conNum+" Axis 4");
 		// rStickV = (conNum+" Axis 5");
-		aBut = (conNum + " Button 0");
+		// aBut = (conNum + " Button 0");
 		// bBut = (conNum +" Button 1");
 		// xBut = (conNum +" Button 2"); //Button 2 or Axis 9
 		// yBut = (conNum +" Button 3"); //Button 3 or Axis 10
 	}
+
 	void Update () {
 		Vector3 a = Vector3.zero;
 		transform.SetPositionAndRotation(Vector3.SmoothDamp(transform.position, place[currentPlace].transform.position, ref a, moveTime), transform.rotation);
-		if (Input.GetAxisRaw(lStickH) == 0) {
+		if (turn.ReadValue<float>() == 0) {
 			bump = false;
 		}
-		if (!bump && Input.GetAxisRaw(lStickH) > 0.5f) {
+		if (!bump && turn.ReadValue<float>() > 0.5f) {
 			currentPlace += 1;
 			if (currentPlace >= place.Count) {
 				currentPlace = 0;
 			}
 			bump = true;
 		}
-		if (!bump && Input.GetAxisRaw(lStickH) < -0.5f) {
+		if (!bump && turn.ReadValue<float>() < -0.5f) {
 			currentPlace -= 1;
 			if (currentPlace <= -1) {
 				currentPlace = place.Count-1;
@@ -57,11 +70,21 @@ public class PlayerTownControls : MonoBehaviour {
 			bump = true;
 		}
 	}
+
+	void Turn() {
+		
+	}
+
+	void Select() {
+
+	}
+
 	void LateUpdate() {
 		cam.transform.LookAt(transform.position);
 	}
+
 	void OnTriggerStay (Collider other) {
-		if (Input.GetButton(aBut) && !selected) {
+		if (select.ReadValue<float>() > 0 && !selected) {
 			switch (other.name) {
 				case "Option":
 				Debug.LogError("Unavailable");
