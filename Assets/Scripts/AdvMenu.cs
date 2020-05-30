@@ -9,13 +9,14 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using System.IO;
 
-public class BattleMenu : MonoBehaviour {
+public class AdvMenu : MonoBehaviour {
 
 	public GameObject pressStart, countSet, characterSet, mainSet, optionSet, courseSet, loadSet, player3And4, readySet, bypassButton;
-    public GameObject[] battleSub;
-    public BattleSubMenu[] battleSubScript;
+    public GameObject advSub;
+    public AdvSubMenu advSubScript;
     public AudioSource[] songLayer;
-    public Sprite[] charPortSrc, playPortSrc;
+    public Sprite[] charPortSrc;
+    public Sprite playPortSrc;
     public float maxLayerVolume, volumePercentSpeed;
     public Text lapCountText, titleText;
     public Button optionButton;
@@ -32,9 +33,6 @@ public class BattleMenu : MonoBehaviour {
     }
 
 	void Start () {
-        battleSubScript = new BattleSubMenu[4];
-        battleSub = new GameObject[4];
-
         GameVar.controlp = new int[4];
         GameVar.charForP = new int[4];
         GameVar.boardForP = new int[4];
@@ -49,8 +47,9 @@ public class BattleMenu : MonoBehaviour {
         GameVar.lapCount = 0;
         playersReady = 0;
 
-        //Game Mode 0 = Battle(Multiplayer), 1 = Adventure, 2 = Challenge, 3 = Online(Unused).
+        //Game Mode 0 = Battle (Multiplayer), 1 = Adventure, 2 = Challenge, 3 = Online(Unused).
         if (GameVar.gameMode == 0) {
+            Debug.LogError("Trying to play multiplayer gamemode through singleplayer menu. Code will not work.");
             titleText.text = "Battle Mode";
             countSet.SetActive(false);
             characterSet.SetActive(true);
@@ -62,7 +61,6 @@ public class BattleMenu : MonoBehaviour {
             coins.isOn = true;
         }
         else {
-            Debug.LogError("Trying to play singleplayer mode through multiplayer menu. Code will not work.");
             countSet.SetActive(false);
             characterSet.SetActive(true);
             StartCoroutine(StartSong(1));
@@ -98,18 +96,10 @@ public class BattleMenu : MonoBehaviour {
 
     public void CheckGo() {
         if (readyToGo) {
-            for (int i = 0; i < GameVar.playerCount; i++)
-            {
-                battleSubScript[i].mpEvents = gameObject.GetComponent<MultiplayerEventSystem>();
-                battleSubScript[i].mpEvents.firstSelectedGameObject = bypassButton;
-                battleSubScript[i].mpEvents.playerRoot = null;
-            }
             readySet.SetActive(false);
+            advSubScript.spEvents.firstSelectedGameObject = bypassButton;
+            advSub.transform.localPosition = new Vector3 (transform.position.x, transform.position.y, 350);
             mainSet.SetActive(true);
-            for (int i = 0; i < GameVar.playerCount; i++)
-            {
-                battleSub[i].transform.localPosition = new Vector3 (transform.position.x, transform.position.y, 350);
-            }
             playersReady = 0;
             for (int i = GameVar.playerCount; i < 4; i++) {
                 // Fix later to be specific levels.
@@ -136,8 +126,7 @@ public class BattleMenu : MonoBehaviour {
     public void OnPlayerLeft(PlayerInput player) {
         Debug.Log("Player " + player.user.index + " disconnected.");
         GameVar.playerCount --;
-        battleSub[player.user.index].SetActive(false);
-        if (GameVar.playerCount < 3) player3And4.SetActive(false);
+        // advSub.SetActive(false);
     }
 
 	public void SetLaps() {

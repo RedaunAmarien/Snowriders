@@ -5,6 +5,7 @@ using UnityEngine.Animations;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class PlayerRaceControls : MonoBehaviour {
 
@@ -49,8 +50,6 @@ public class PlayerRaceControls : MonoBehaviour {
 		if (!pUI.paused && Input.GetButtonDown(stBut)) {
 			pUI.Pause(0);
 		}
-		// Treat Right Stick as four buttons.
-		if (Input.GetAxisRaw(rStickH) == 0 && Input.GetAxisRaw(rStickV) == 0) rightStickinUse = false;
 
 		// Make sure items will be shot one at a time.
 		if (Input.GetButtonUp(bBut)) fire1Down = false;
@@ -133,28 +132,55 @@ public class PlayerRaceControls : MonoBehaviour {
 						else if (Input.GetAxisRaw(lStickV) < 0) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
 					}
 				}
-
-				// Do board grabs.
-				if (!rPhys.grabbing) {
-					if (Input.GetAxisRaw(rStickH) < 0 && !rightStickinUse) {
-						StartCoroutine(rPhys.BoardGrab(7, rPhys.lgdr));
-						rightStickinUse = true;
-					}
-					else if (Input.GetAxisRaw(rStickH) > 0 && !rightStickinUse) {
-						StartCoroutine(rPhys.BoardGrab(3, rPhys.lgdr));
-						rightStickinUse = true;
-					}
-					if (Input.GetAxisRaw(rStickV) < 0 && !rightStickinUse) {
-						StartCoroutine(rPhys.BoardGrab(5, rPhys.lgdr));
-						rightStickinUse = true;
-					}
-					else if (Input.GetAxisRaw(rStickV) > 0 && !rightStickinUse) {
-						StartCoroutine(rPhys.BoardGrab(1, rPhys.lgdr));
-						rightStickinUse = true;
-					}
-				}
 			}
 		}
+	}
+
+	public void OnLookBack() {
+		Debug.Log("Pressing Lookback.");
+	}
+
+	public void OnJump() {
+		Debug.Log("Pressing Jump.");
+
+	}
+
+	public void OnShoot() {
+		Debug.Log("Pressing Shoot.");
+
+	}
+
+	public void OnItem() {
+		Debug.Log("Pressing Item.");
+
+	}
+
+	public void OnTurn(InputValue val) {
+	}
+
+	public void OnGrab(InputValue val) {
+		Vector2 d = val.Get<Vector2>();
+		
+		// Do board grabs.
+		if (!rPhys.grabbing && !rPhys.finished && !rPhys.grounded && !lockControls && !rightStickinUse) {
+			if (d.x < 0) {
+				StartCoroutine(rPhys.BoardGrab(7, rPhys.lgdr));
+				rightStickinUse = true;
+			}
+			else if (d.x > 0) {
+				StartCoroutine(rPhys.BoardGrab(3, rPhys.lgdr));
+				rightStickinUse = true;
+			}
+			if (d.y < 0) {
+				StartCoroutine(rPhys.BoardGrab(5, rPhys.lgdr));
+				rightStickinUse = true;
+			}
+			else if (d.y > 0) {
+				StartCoroutine(rPhys.BoardGrab(1, rPhys.lgdr));
+				rightStickinUse = true;
+			}
+		}
+		if (d.x == 0 && d.y == 0) rightStickinUse = false;
 	}
 
 	IEnumerator LoadScene(string sceneToLoad) {

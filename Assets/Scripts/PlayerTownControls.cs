@@ -97,7 +97,7 @@ public class PlayerTownControls : MonoBehaviour {
 				break;
 				case "Story":
 				GameVar.gameMode = 1;
-				StartCoroutine(LoadScene("BattleMenu"));
+				StartCoroutine(LoadScene("AdvChallMenu"));
 				break;
 				case "Battle":
 				GameVar.gameMode = 0;
@@ -108,7 +108,7 @@ public class PlayerTownControls : MonoBehaviour {
 				break;
 				case "Challenge":
 				GameVar.gameMode = 2;
-				StartCoroutine(LoadScene("BattleMenu"));
+				StartCoroutine(LoadScene("AdvChallMenu"));
 				break;
 				case "Exit":
 				StartCoroutine(LoadScene("MainMenu"));

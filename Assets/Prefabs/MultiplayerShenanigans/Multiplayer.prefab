@@ -803,12 +803,15 @@ MonoBehaviour:
   charText: {fileID: 4880193728799603686}
   boardText: {fileID: 4880193729685950370}
   charPort: {fileID: 4880193729241594469}
+  playPort: {fileID: 4880193729920848314}
   speedGauge: {fileID: 4880193729187865586}
   turnGauge: {fileID: 4880193730738693521}
   jumpGauge: {fileID: 4880193728695658013}
   rArrow: {fileID: 4880193730750071657}
   lArrow: {fileID: 4880193730391622084}
+  thissun: {fileID: 0}
   playInput: {fileID: 0}
+  events: {fileID: 0}
 --- !u!114 &4880193729677376777
 MonoBehaviour:
   m_ObjectHideFlags: 0

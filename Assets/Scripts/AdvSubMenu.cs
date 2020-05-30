@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.EventSystems;
 
-public class BattleSubMenu : MonoBehaviour {
+public class AdvSubMenu : MonoBehaviour {
 
 	public int myNumber;
 	public Text controlText, charText, boardText;
@@ -14,44 +14,34 @@ public class BattleSubMenu : MonoBehaviour {
     public RectTransform rArrow, lArrow, thissun;
     int assignmentStep;
     bool charStickMove, pressingSubmit;
-    BattleMenu battleMenu;
+    AdvMenu advMenu;
     public PlayerInput playInput;
-    public MultiplayerEventSystem mpEvents;
+    public EventSystem spEvents;
 
 	void Start () {
         // Initialize
         assignmentStep = 1;
         thissun = GetComponent<RectTransform>();
         playInput = GetComponent<PlayerInput>();
-        if (playInput == null) Debug.LogError("PlayerInput component not found.");
-        playInput.uiInputModule = GetComponent<InputSystemUIInputModule>();
         myNumber = playInput.user.index;
-        battleMenu = GameObject.Find("EventSystem").GetComponent<BattleMenu>();
-        battleMenu.battleSub[myNumber] = gameObject;
-        battleMenu.battleSubScript[myNumber] = GetComponent<BattleSubMenu>();
-        mpEvents = GetComponent<MultiplayerEventSystem>();
+        advMenu = GameObject.Find("EventSystem").GetComponent<AdvMenu>();
+        advMenu.advSub = gameObject;
+        advMenu.advSubScript = GetComponent<AdvSubMenu>();
+        spEvents = GameObject.Find("EventSystem").GetComponent<EventSystem>();
+        playInput.uiInputModule = spEvents.GetComponent<InputSystemUIInputModule>();
         
-        battleMenu.pressStart.SetActive(false);
-        if (myNumber < 2) {
-            transform.SetParent(GameObject.Find("Grid1").transform);
-        }
-        else {
-            GameObject.Find("Grid2").SetActive(true);
-            transform.SetParent(GameObject.Find("Grid2").transform);
-        }
-        
+        //Update Visuals
+        advMenu.pressStart.SetActive(false);
+        transform.SetParent(GameObject.Find("Grid1").transform);
+        playPort.sprite = advMenu.playPortSrc;
         thissun.localScale = new Vector3(1,1,1);
         thissun.localPosition = new Vector3 (transform.position.x, transform.position.y, 0);
-
-        playPort.sprite = battleMenu.playPortSrc[myNumber];
 
         charText.gameObject.SetActive(false);
         boardText.gameObject.SetActive(false);
         charPort.gameObject.SetActive(false);
         lArrow.gameObject.SetActive(false);
         rArrow.gameObject.SetActive(false);
-
-        // playMan.JoinPlayer().ActivateInput();
 	}
 
     public void OnSubmit() {
@@ -66,13 +56,13 @@ public class BattleSubMenu : MonoBehaviour {
             if (GameVar.currentSaveFile.boardOwned[GameVar.boardForP[myNumber]]) {
                 boardText.color = Color.green;
                 assignmentStep = 3;
-                battleMenu.playersReady ++;
+                advMenu.playersReady ++;
                 pressingSubmit = true;
                 StartCoroutine(ResetPress(.25f));
             }
         }
         if (assignmentStep == 3 && !pressingSubmit) {
-            battleMenu.CheckGo();
+            advMenu.CheckGo();
             pressingSubmit = true;
             StartCoroutine(ResetPress(.25f));
         }
@@ -84,7 +74,7 @@ public class BattleSubMenu : MonoBehaviour {
             assignmentStep = 1;
         }
         if (assignmentStep == 3) {
-            battleMenu.playersReady --;
+            advMenu.playersReady --;
             boardText.color = Color.white;
             assignmentStep = 2;
         }

@@ -313,7 +313,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1819236997}
+      - m_Target: {fileID: 0}
         m_MethodName: SetSelectedGameObject
         m_Mode: 2
         m_Arguments:
@@ -1224,7 +1224,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Press Start to Join
+  m_Text: Press Start or Return to Play
 --- !u!222 &134185188
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1488,7 +1488,6 @@ GameObject:
   - component: {fileID: 229927310}
   - component: {fileID: 229927312}
   - component: {fileID: 229927311}
-  - component: {fileID: 5391553911578503549}
   m_Layer: 5
   m_Name: P1
   m_TagString: Untagged
@@ -1535,6 +1534,7 @@ MonoBehaviour:
   charText: {fileID: 956706687}
   boardText: {fileID: 204692283}
   charPort: {fileID: 331280124}
+  playPort: {fileID: 0}
   speedGauge: {fileID: 778221419}
   turnGauge: {fileID: 1257435400}
   jumpGauge: {fileID: 818426500}
@@ -1542,7 +1542,7 @@ MonoBehaviour:
   lArrow: {fileID: 1445107037}
   thissun: {fileID: 0}
   playInput: {fileID: 0}
-  events: {fileID: 0}
+  mpEvents: {fileID: 0}
 --- !u!114 &229927311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2448,17 +2448,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1819236997}
-        m_MethodName: SetSelectedGameObject
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 959505552}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1819236999}
         m_MethodName: StartSongButton
         m_Mode: 3
@@ -2477,6 +2466,17 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1819236996}
+        m_MethodName: SetSelectedGameObject
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 959505552}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -3397,7 +3397,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 1107052357}
-  m_PlaneDistance: 50
+  m_PlaneDistance: 2
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -3572,7 +3572,7 @@ Transform:
   - {fileID: 1542485147}
   - {fileID: 1745317236}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &649541052
 GameObject:
@@ -5135,11 +5135,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1819236997}
+      - m_Target: {fileID: 1819236996}
         m_MethodName: SetSelectedGameObject
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 959505552}
+          m_ObjectArgument: {fileID: 1007531445}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -5458,17 +5458,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1819236997}
-        m_MethodName: SetSelectedGameObject
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1668350835}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1819236999}
         m_MethodName: StartSongButton
         m_Mode: 3
@@ -5487,6 +5476,17 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1819236996}
+        m_MethodName: SetSelectedGameObject
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1668350835}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -5690,6 +5690,7 @@ MonoBehaviour:
   charText: {fileID: 2140123282}
   boardText: {fileID: 818767331}
   charPort: {fileID: 1622414107}
+  playPort: {fileID: 0}
   speedGauge: {fileID: 1684707001}
   turnGauge: {fileID: 1559919649}
   jumpGauge: {fileID: 1421410454}
@@ -5697,7 +5698,7 @@ MonoBehaviour:
   lArrow: {fileID: 1182602412}
   thissun: {fileID: 0}
   playInput: {fileID: 0}
-  events: {fileID: 0}
+  mpEvents: {fileID: 0}
 --- !u!114 &1006923140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5858,7 +5859,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1819236997}
+      - m_Target: {fileID: 1819236996}
         m_MethodName: SetSelectedGameObject
         m_Mode: 2
         m_Arguments:
@@ -6479,9 +6480,9 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 5
   field of view: 60
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -6548,8 +6549,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 695, y: -812.75}
-  m_SizeDelta: {x: 1340, y: 384.5}
+  m_AnchoredPosition: {x: 935.4688, y: -812.75}
+  m_SizeDelta: {x: 1820.9376, y: 384.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1111276574
 MonoBehaviour:
@@ -6902,6 +6903,7 @@ MonoBehaviour:
   charText: {fileID: 1155889680}
   boardText: {fileID: 271004401}
   charPort: {fileID: 511973772}
+  playPort: {fileID: 0}
   speedGauge: {fileID: 82115368}
   turnGauge: {fileID: 917299505}
   jumpGauge: {fileID: 1439390990}
@@ -6909,7 +6911,7 @@ MonoBehaviour:
   lArrow: {fileID: 1857513394}
   thissun: {fileID: 0}
   playInput: {fileID: 0}
-  events: {fileID: 0}
+  mpEvents: {fileID: 0}
 --- !u!114 &1187677429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8897,7 +8899,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
 --- !u!114 &1437421611
@@ -9374,7 +9376,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1819236997}
+      - m_Target: {fileID: 0}
         m_MethodName: SetSelectedGameObject
         m_Mode: 2
         m_Arguments:
@@ -10355,7 +10357,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1819236997}
+      - m_Target: {fileID: 0}
         m_MethodName: SetSelectedGameObject
         m_Mode: 2
         m_Arguments:
@@ -11009,7 +11011,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1819236997}
+      - m_Target: {fileID: 0}
         m_MethodName: SetSelectedGameObject
         m_Mode: 2
         m_Arguments:
@@ -11433,9 +11435,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1819236998}
-  - component: {fileID: 1819236997}
   - component: {fileID: 1819236999}
   - component: {fileID: 1819237000}
+  - component: {fileID: 1819236996}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -11443,7 +11445,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1819236997
+--- !u!114 &1819236996
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -11452,12 +11454,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1819236995}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Script: {fileID: 11500000, guid: b16c6f78230fa4964a222622d8aae332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 1699110249}
+  m_FirstSelected: {fileID: 959505552}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
+  m_PlayerRoot: {fileID: 0}
 --- !u!4 &1819236998
 Transform:
   m_ObjectHideFlags: 0
@@ -11470,7 +11473,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1819236999
 MonoBehaviour:
@@ -11484,6 +11487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9954a7d2fa1be8f4c9423beb18a379fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pressStart: {fileID: 134185183}
   countSet: {fileID: 1222769960}
   characterSet: {fileID: 1847003416}
   mainSet: {fileID: 1239568948}
@@ -11494,6 +11498,11 @@ MonoBehaviour:
   readySet: {fileID: 1506027083}
   bypassButton: {fileID: 959505552}
   battleSub:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  battleSubScript:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -11512,6 +11521,11 @@ MonoBehaviour:
   - {fileID: -6292459627741719466, guid: 562b0f12a84600f4e9354958ab4218d6, type: 3}
   - {fileID: -5633498348829720769, guid: 562b0f12a84600f4e9354958ab4218d6, type: 3}
   - {fileID: 2170970421244147848, guid: 562b0f12a84600f4e9354958ab4218d6, type: 3}
+  playPortSrc:
+  - {fileID: 21300000, guid: 603e5d696b1ac944d804f4adb8caa401, type: 3}
+  - {fileID: 21300002, guid: 603e5d696b1ac944d804f4adb8caa401, type: 3}
+  - {fileID: 21300004, guid: 603e5d696b1ac944d804f4adb8caa401, type: 3}
+  - {fileID: 21300006, guid: 603e5d696b1ac944d804f4adb8caa401, type: 3}
   maxLayerVolume: 0.7
   volumePercentSpeed: 0.025
   lapCountText: {fileID: 1102697451}
@@ -11521,12 +11535,7 @@ MonoBehaviour:
   coins: {fileID: 240465771}
   progressBar: {fileID: 970473935}
   laps: {fileID: 1355441790}
-  joyNames: []
   playersReady: 0
-  battleSubScript: []
-  pIM: {fileID: 1819237000}
-  gridParent1: {fileID: 0}
-  gridParent2: {fileID: 0}
 --- !u!114 &1819237000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17268,6 +17277,7 @@ MonoBehaviour:
   charText: {fileID: 1911297801}
   boardText: {fileID: 32548584}
   charPort: {fileID: 333000256}
+  playPort: {fileID: 0}
   speedGauge: {fileID: 400433480}
   turnGauge: {fileID: 2130950266}
   jumpGauge: {fileID: 1981034929}
@@ -17275,7 +17285,7 @@ MonoBehaviour:
   lArrow: {fileID: 983766410}
   thissun: {fileID: 0}
   playInput: {fileID: 0}
-  events: {fileID: 0}
+  mpEvents: {fileID: 0}
 --- !u!114 &1936940352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18922,34 +18932,3 @@ MonoBehaviour:
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!114 &5391553911578503549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 229927308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: b04716a6024edc949876431eb6117025,
-    type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 229927311}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
