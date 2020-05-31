@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 using UnityEngine.InputSystem.UI;
 using System.IO;
 
@@ -38,6 +39,8 @@ public class BattleMenu : MonoBehaviour {
         GameVar.controlp = new int[4];
         GameVar.charForP = new int[4];
         GameVar.boardForP = new int[4];
+        GameVar.inpUse = new InputUser[4];
+        GameVar.inpDev = new InputDevice[4];
 
 		// Main Menu
         loadSet.SetActive(false);
@@ -126,19 +129,22 @@ public class BattleMenu : MonoBehaviour {
     }
 
     public void OnPlayerJoined(PlayerInput player) {
-        Debug.Log("Player " + (player.user.index+1) + " joined.");
+        Debug.Log("Player " + (player.user.index) + " joined.");
         GameVar.playerCount = player.user.index+1;
         if (GameVar.playerCount > 2) {
             player3And4.SetActive(true);
         }
+        GameVar.inpUse[player.user.index] = player.user;
+        GameVar.inpDev[player.user.index] = player.user.pairedDevices[0];
+        Debug.Log(player.user.id + "\n" + player.user.pairedDevices[0]);
     }
 
-    public void OnPlayerLeft(PlayerInput player) {
-        Debug.Log("Player " + player.user.index + " disconnected.");
-        GameVar.playerCount --;
-        battleSub[player.user.index].SetActive(false);
-        if (GameVar.playerCount < 3) player3And4.SetActive(false);
-    }
+    // public void OnPlayerLeft(PlayerInput player) {
+    //     Debug.Log("Player " + player.user.index + " disconnected.");
+    //     GameVar.playerCount --;
+    //     battleSub[player.user.index].SetActive(false);
+    //     if (GameVar.playerCount < 3) player3And4.SetActive(false);
+    // }
 
 	public void SetLaps() {
         if (laps.value == 0) {

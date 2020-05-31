@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 
 public static class GameVar
 {
@@ -13,4 +15,6 @@ public static class GameVar
 	public static BoardData[] boardData;
 	public static SaveFileData currentSaveFile;
 	public static string currentSaveDirectory, nextSceneToLoad;
+	public static InputDevice[] inpDev;
+	public static InputUser[] inpUse;
 }

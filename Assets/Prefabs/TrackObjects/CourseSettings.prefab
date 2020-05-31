@@ -74,6 +74,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   mapRotated: 0
+  playerInputs: {fileID: -944628639613478452, guid: b04716a6024edc949876431eb6117025,
+    type: 3}
 --- !u!1 &3669739400724152965
 GameObject:
   m_ObjectHideFlags: 0

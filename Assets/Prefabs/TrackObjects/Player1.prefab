@@ -434,7 +434,6 @@ GameObject:
   - component: {fileID: 2004282455030052571}
   - component: {fileID: 2015200323473864437}
   - component: {fileID: 6800760675836590351}
-  - component: {fileID: 2965025863217279034}
   m_Layer: 8
   m_Name: Player1
   m_TagString: Player
@@ -584,19 +583,11 @@ MonoBehaviour:
   fire1Down: 0
   fire2Down: 0
   rightStickinUse: 0
+  jumpPressed: 0
   lockControls: 0
   raceOver: 0
   comboAble: 0
-  lStickH: 
-  lStickV: 
-  rStickH: 
-  rStickV: 
-  aBut: 
-  bBut: 
-  xBut: 
-  yBut: 
-  stBut: 
-  bkBut: 
+  stickPos: {x: 0, y: 0}
 --- !u!114 &1918638145114799637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -714,37 +705,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2965025863217279034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1959526420874107161}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: b04716a6024edc949876431eb6117025,
-    type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!1 &1959535937630961387
 GameObject:
   m_ObjectHideFlags: 0

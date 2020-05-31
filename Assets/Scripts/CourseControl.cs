@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 
 public class CourseControl : MonoBehaviour {
 
@@ -33,6 +35,9 @@ public class CourseControl : MonoBehaviour {
 	PlayerUI[] pUI;
 	AIControls[] aI;
 	RacerPhysics[] rPhys;
+	// InputUser[] inpUser;
+	// PlayerInputManager pIM;
+	public InputActionAsset playerInputs;
 
 	void Awake () {
 		// Initialize Minimap settings.
@@ -112,6 +117,8 @@ public class CourseControl : MonoBehaviour {
 		pUI = new PlayerUI[4];
 		aI = new AIControls[4];
 		rPhys = new RacerPhysics[4];
+		Debug.Log("Syncing scripts.");
+		// inpUser = new InputUser[4];
 
 		for (int i = 0; i < 4; i++) {
 			// player[i] = GameObject.Find("Player" + (i+1));
@@ -119,16 +126,8 @@ public class CourseControl : MonoBehaviour {
 			pUI[i] = player[i].GetComponent<PlayerUI>();
 			aI[i] = player[i].GetComponent<AIControls>();
 			rPhys[i] = player[i].GetComponent<RacerPhysics>();
+			Debug.Log("Player " + i + " scripts synced.");
 		}
-
-		// cameras = new GameObject[7];
-		// cameras[0] = GameObject.Find("CameraPositioner1/1");
-		// cameras[1] = GameObject.Find("CameraPositioner1/2");
-		// cameras[2] = GameObject.Find("CameraPositioner2/2");
-		// cameras[3] = GameObject.Find("CameraPositioner1/4");
-		// cameras[4] = GameObject.Find("CameraPositioner2/4");
-		// cameras[5] = GameObject.Find("CameraPositioner3/4");
-		// cameras[6] = GameObject.Find("CameraPositioner4/4");
 
 		// Remove other racers in Challenge Mode.
 		if (GameVar.gameMode == 2) {
@@ -139,39 +138,10 @@ public class CourseControl : MonoBehaviour {
 		}
 
 		// Assign cameras to players and deactivate unused ones.
-		if (GameVar.playerCount == 1) {
-			for (int i = 1; i < cameras.Length; i++) {
-				cameras[i].SetActive(false);
-			}
-			pUI[0].assignedCam = cameras[0];
-		}
-		else if (GameVar.playerCount == 2) {
-			cameras[0].SetActive(false);
-			pUI[0].assignedCam = cameras[1];
-			pUI[1].assignedCam = cameras[2];
-			cameras[3].SetActive(false);
-			cameras[4].SetActive(false);
-			cameras[5].SetActive(false);
-			cameras[6].SetActive(false);
-		}
-		else if (GameVar.playerCount == 3) {
-			cameras[0].SetActive(false);
-			cameras[1].SetActive(false);
-			cameras[2].SetActive(false);
-			pUI[0].assignedCam = cameras[3];
-			pUI[1].assignedCam = cameras[4];
-			pUI[2].assignedCam = cameras[5];
-			cameras[6].SetActive(false);
-		}
-		else {
-			// Assume 4 player if 1-3 is not correct
-			cameras[0].SetActive(false);
-			cameras[1].SetActive(false);
-			cameras[2].SetActive(false);
-			pUI[0].assignedCam = cameras[3];
-			pUI[1].assignedCam = cameras[4];
-			pUI[2].assignedCam = cameras[5];
-			pUI[3].assignedCam = cameras[6];
+		for (int i = 0; i < 4; i++)
+		{
+			pUI[i].assignedCam = cameras[i];
+			Debug.Log("Camera " + i + " assigned.");
 		}
 		
 		// Initialize Controller, UI, and AI scripts, and destroy unused scripts.
@@ -187,6 +157,15 @@ public class CourseControl : MonoBehaviour {
 		}
 		else {
 			for (int i = 0; i < GameVar.playerCount; i++) {
+				// Setup Controllers.
+				Debug.Log("Setting up controller " + i);
+				InputUser pUser = InputUser.PerformPairingWithDevice(GameVar.inpDev[i], GameVar.inpUse[i]);
+				Debug.Log("Paired user and device.");
+				PlayerInput pInp = player[i].AddComponent<PlayerInput>();
+				pInp.actions = playerInputs;
+				pInp.camera = cameras[i].GetComponent<Camera>();
+				Debug.Log("Created and updated Input.");
+
 				pUI[i].playerNum = i;
 				pCon[i].conNum = GameVar.controlp[i];
 				Destroy(aI[i]);
@@ -200,6 +179,7 @@ public class CourseControl : MonoBehaviour {
 		}
 
 		for (int i = 0; i < 4; i++) {
+
 			// Initialize character stats from data.
 			// Speed: Max 18, Min 15.
 			rPhys[i].speed = 14f + (2f/3f) + (GameVar.allCharData[GameVar.charForP[i]].speed + GameVar.boardData[GameVar.boardForP[i]].speed)/3f;
@@ -218,6 +198,7 @@ public class CourseControl : MonoBehaviour {
 			rPhys[i].playerNum = i;
 		}
 	}
+
 	void Start() {
 		StartCoroutine(Countdown());
 	}
