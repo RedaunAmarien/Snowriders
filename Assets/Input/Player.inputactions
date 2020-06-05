@@ -19,7 +19,7 @@
                     "id": "31c4eb1a-d881-4566-9978-8df01ad2cf4c",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press(behavior=2)"
                 },
                 {
                     "name": "Item",
@@ -27,7 +27,7 @@
                     "id": "e3ba6dbe-9f74-4f08-af74-3fc4af35cd46",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press(behavior=2)"
                 },
                 {
                     "name": "LookBack",
@@ -51,7 +51,7 @@
                     "id": "be678a36-ffb8-4050-9a24-b475941b3007",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": "Press"
+                    "interactions": "Press(pressPoint=0.1,behavior=2)"
                 },
                 {
                     "name": "Pause",
@@ -63,6 +63,17 @@
                 }
             ],
             "bindings": [
+                {
+                    "name": "",
+                    "id": "8cc42c19-3d78-4862-b504-385fbe75ad0c",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
                 {
                     "name": "",
                     "id": "143bb1cd-cc10-4eca-a2f0-a3664166fe91",
@@ -77,7 +88,7 @@
                 {
                     "name": "",
                     "id": "05f6913d-c316-48b2-a6bb-e225f14c7960",
-                    "path": "<Mouse>/leftButton",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -120,19 +131,8 @@
                 },
                 {
                     "name": "",
-                    "id": "8cc42c19-3d78-4862-b504-385fbe75ad0c",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Shoot",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "dac8e4b8-553a-4a6f-b68b-f512f79f86d9",
-                    "path": "<Gamepad>/buttonWest",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -142,8 +142,41 @@
                 },
                 {
                     "name": "",
+                    "id": "363f5819-3e69-48b5-9f86-982e41e24974",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Item",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "192ae752-e44b-4277-b054-c0d02933c627",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Item",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "15e3eb78-ab1b-4b42-9ed2-0f9ac288b5dd",
                     "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e109f7ad-0164-4b93-979e-9fef7c5003ef",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -164,11 +197,11 @@
                 },
                 {
                     "name": "",
-                    "id": "e109f7ad-0164-4b93-979e-9fef7c5003ef",
-                    "path": "<Gamepad>/rightShoulder",
+                    "id": "802baaad-7f9a-4327-b0f9-bc61dfcbca08",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Gamepad",
+                    "groups": "Keyboard&Mouse",
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -191,6 +224,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
+                    "action": "LookBack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d9bbe59b-afe4-4eab-a6d4-c42b849fa698",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
                     "action": "LookBack",
                     "isComposite": false,
                     "isPartOfComposite": false

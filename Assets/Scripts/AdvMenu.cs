@@ -121,9 +121,9 @@ public class AdvMenu : MonoBehaviour {
     public void OnPlayerJoined(PlayerInput player) {
         Debug.Log("Player " + (player.user.index) + " joined.");
         GameVar.playerCount = player.user.index+1;
-        if (GameVar.playerCount > 2) {
-            player3And4.SetActive(true);
-        }
+        // if (GameVar.playerCount > 2) {
+        //     player3And4.SetActive(true);
+        // }
         GameVar.inpUse[player.user.index] = player.user;
         GameVar.inpDev[player.user.index] = player.user.pairedDevices[0];
         Debug.Log(player.user.id + "\n" + player.user.pairedDevices[0]);

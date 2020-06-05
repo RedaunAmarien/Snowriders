@@ -101,8 +101,8 @@ public class RacerPhysics : MonoBehaviour {
 		if (shots <= 0) {
 			weapType = 6;
 		}
-        
     }
+
     void FixedUpdate() {
 		// Get relative velocity.
 		relVel = new Vector3(Vector3.Dot(transform.right, rigid.velocity), Vector3.Dot(-transform.up, rigid.velocity), Vector3.Dot(transform.forward, rigid.velocity));
@@ -140,12 +140,14 @@ public class RacerPhysics : MonoBehaviour {
 			}
         }
     }
+
     void LateUpdate() {
 		transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0);
 		if (Mathf.Abs(transform.localEulerAngles.x) > 60) {
 			transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, transform.localEulerAngles.z);
 		}
     }
+	
     void OnCollisionEnter (Collision other) {
 		if (other.gameObject.tag == "Track" || other.gameObject.tag == "OutofBounds") {
 			if (!grabbing && !tricking) {

@@ -70,11 +70,18 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  spriteHead: []
+  miniMap: {fileID: 0}
+  mapPanel: {fileID: 0}
+  resultsPanel: {fileID: 0}
+  spriteHeadImage: []
+  mapScale: 0
+  miniMapRef: 0
+  mapRef: {x: 0, y: 0, z: 0}
   mapRotated: 0
   playerInputs: {fileID: -944628639613478452, guid: b04716a6024edc949876431eb6117025,
+    type: 3}
+  playerPrefab: {fileID: 7682347921249527906, guid: 642b252d37aab214b96a8c66712c91eb,
     type: 3}
 --- !u!1 &3669739400724152965
 GameObject:

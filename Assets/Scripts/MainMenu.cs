@@ -136,9 +136,15 @@ public class MainMenu : MonoBehaviour {
 			if (File.Exists(thisPath)) {
 				saveData[i] = LoadFile(Path.Combine(dir, "Save_"+i+".sbsv"));
 				fileName[i].text = saveData[i].fileName;
-				fileCoins[i].text = saveData[i].coins.ToString() + "P";
+				fileCoins[i].text = saveData[i].coins.ToString() + " c";
 				for (int c = 0; c < 12; c++) {
 					SortMedal(i, c, saveData[i].courseGrade[c]);
+				}
+			}
+			else {
+				fileCoins[i].text = "No Data";
+				for (int c = 0; c < 12; c++) {
+					SortMedal(i, c, 0);
 				}
 			}
 		}

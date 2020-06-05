@@ -16,7 +16,7 @@ public class PlayerRaceControls : MonoBehaviour {
 	PlayerUI pUI;
 	RacerPhysics rPhys;
 	// public string lStickH, lStickV, rStickH, rStickV, aBut, bBut, xBut, yBut, stBut, bkBut;
-	public Vector2 stickPos;
+	public Vector2 lStickPos, rStickPos;
 
 	void Start () {
 		//Find objects.
@@ -42,25 +42,66 @@ public class PlayerRaceControls : MonoBehaviour {
 		// bkBut = (conNum+ " Button 6");
 	}
 
-	// void Update () {
+	void Update () {
 
-	// 	// Make sure items will be shot one at a time.
-	// 	// if (Input.GetButtonUp(bBut)) fire1Down = false;
-	// 	// if (Input.GetButtonUp(xBut)) fire2Down = false;
+		// Make sure items will be shot one at a time.
+		// if (Input.GetButtonUp(bBut)) fire1Down = false;
+		// if (Input.GetButtonUp(xBut)) fire2Down = false;
 
-	// 	// Control player if not finished.
-	// 	if (!rPhys.finished && !lockControls) {
-	// 		// Use items and attacks, making sure one press only fires one item.
-	// 		// if (Input.GetButtonDown(xBut) && !fire2Down) {
-	// 		// 	rPhys.Shoot();
-	// 		// 	fire2Down = true;
-	// 		// }
-	// 		// if (Input.GetButtonDown(bBut) && !fire1Down) {
-	// 		// 	rPhys.Item();
-	// 		// 	fire1Down = true;
-	// 		// }
-	// 	}
-	// }
+		// Control player if not finished.
+		if (!rPhys.finished && !lockControls) {
+		// Steer
+			if (rPhys.grounded) {
+				if (!jumpPressed) {
+					if (lStickPos.y >= 0) {
+						float t = lStickPos.x * rPhys.turnSpeed * Time.deltaTime;
+						transform.Rotate(0,t,0);
+					}
+					if (lStickPos.y < 0) {
+						float t = lStickPos.x * rPhys.turnSpeed * Time.deltaTime;
+						transform.Rotate(0, t + (t*Mathf.Abs(lStickPos.y)) ,0);
+					}
+				}
+			}
+			else {
+				// Turn slower when not grounded, but not at all when tricking
+				if (!rPhys.tricking) {
+					var t = lStickPos.x * rPhys.turnSpeed * Time.deltaTime;
+					transform.Rotate(0,t/2,0);
+				}
+			}
+		
+		// Do board grabs.
+		if (!rPhys.grabbing && !rPhys.grounded && !rightStickinUse) {
+			if (rStickPos.x < 0) {
+				StartCoroutine(rPhys.BoardGrab(7, rPhys.lgdr));
+				rightStickinUse = true;
+			}
+			else if (rStickPos.x > 0) {
+				StartCoroutine(rPhys.BoardGrab(3, rPhys.lgdr));
+				rightStickinUse = true;
+			}
+			if (rStickPos.y < 0) {
+				StartCoroutine(rPhys.BoardGrab(5, rPhys.lgdr));
+				rightStickinUse = true;
+			}
+			else if (rStickPos.y > 0) {
+				StartCoroutine(rPhys.BoardGrab(1, rPhys.lgdr));
+				rightStickinUse = true;
+			}
+		}
+		if (rStickPos.x == 0 && rStickPos.y == 0) rightStickinUse = false;
+			// Use items and attacks, making sure one press only fires one item.
+			// if (Input.GetButtonDown(xBut) && !fire2Down) {
+			// 	rPhys.Shoot();
+			// 	fire2Down = true;
+			// }
+			// if (Input.GetButtonDown(bBut) && !fire1Down) {
+			// 	rPhys.Item();
+			// 	fire1Down = true;
+			// }
+		}
+	}
 
 	public void OnLookBack(InputValue val) {
 		float p = val.Get<float>();
@@ -87,38 +128,38 @@ public class PlayerRaceControls : MonoBehaviour {
 				else {
 					// Jump and perform tricks if touching the ground.
 					rPhys.Jump();
-					if (stickPos.x > 0) {
-						if (stickPos.y > 0) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
-						else if (stickPos.y == 0) StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
-						else if (stickPos.y < 0) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
+					if (lStickPos.x > 0) {
+						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
+						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
+						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
 					}
-					else if (stickPos.x == 0) {
-						if (stickPos.y > 0) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
-						else if (stickPos.y < 0) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
+					else if (lStickPos.x == 0) {
+						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
+						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
 					}
-					else if (stickPos.x < 0) {
-						if (stickPos.y > 0) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
-						else if (stickPos.y == 0) StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
-						else if (stickPos.y < 0) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
+					else if (lStickPos.x < 0) {
+						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
+						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
+						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
 					}
 				}
 			}
 			else {
 				// Combo tricks in air
 				if (!jumpPressed && comboAble) {
-					if (stickPos.x > 0) {
-						if (stickPos.y > 0) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
-						else if (stickPos.y == 0) StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
-						else if (stickPos.y < 0) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
+					if (lStickPos.x > 0) {
+						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
+						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
+						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
 					}
-					else if (stickPos.x == 0) {
-						if (stickPos.y > 0) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
-						else if (stickPos.y < 0) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
+					else if (lStickPos.x == 0) {
+						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
+						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
 					}
-					else if (stickPos.x < 0) {
-						if (stickPos.y > 0) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
-						else if (stickPos.y == 0) StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
-						else if (stickPos.y < 0) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
+					else if (lStickPos.x < 0) {
+						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
+						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
+						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
 					}
 					comboAble = false;
 				}
@@ -126,71 +167,30 @@ public class PlayerRaceControls : MonoBehaviour {
 		}
 	}
 
-	public void OnShoot() {
-		if (!rPhys.finished && !lockControls) {
+	public void OnShoot(InputValue val) {
+		var v = val.Get<float>();
+		if (v > 0) fire1Down = true;
+		else fire1Down = false;
+		if (!rPhys.finished && !lockControls && !fire1Down) {
 			rPhys.Shoot();
 		}
-		Debug.Log("Pressing Shoot.");
-
 	}
 
-	public void OnItem() {
-		if (!rPhys.finished && !lockControls) {
+	public void OnItem(InputValue val) {
+		var v = val.Get<float>();
+		if (v > 0) fire2Down = true;
+		else fire2Down = false;
+		if (!rPhys.finished && !lockControls && !fire2Down) {
 			rPhys.Item();
 		}
-		Debug.Log("Pressing Item.");
-
 	}
 
 	public void OnTurn(InputValue val) {
-		stickPos = val.Get<Vector2>();
-		// Steer
-		if (!rPhys.finished && !lockControls) {
-			if (rPhys.grounded) {
-				if (!jumpPressed) {
-					if (stickPos.y >= 0) {
-						float t = stickPos.x * rPhys.turnSpeed * Time.deltaTime;
-						transform.Rotate(0,t,0);
-					}
-					if (stickPos.y < 0) {
-						float t = stickPos.x * rPhys.turnSpeed * Time.deltaTime;
-						transform.Rotate(0, t + (t*Mathf.Abs(stickPos.y)) ,0);
-					}
-				}
-			}
-			else {
-				// Turn slower when not grounded, but not at all when tricking
-				if (!rPhys.tricking) {
-					var t = stickPos.x * rPhys.turnSpeed * Time.deltaTime;
-					transform.Rotate(0,t/2,0);
-				}
-			}
-		}
+		lStickPos = val.Get<Vector2>();
 	}
 
 	public void OnGrab(InputValue val) {
-		Vector2 d = val.Get<Vector2>();
-		
-		// Do board grabs.
-		if (!rPhys.grabbing && !rPhys.finished && !rPhys.grounded && !lockControls && !rightStickinUse) {
-			if (d.x < 0) {
-				StartCoroutine(rPhys.BoardGrab(7, rPhys.lgdr));
-				rightStickinUse = true;
-			}
-			else if (d.x > 0) {
-				StartCoroutine(rPhys.BoardGrab(3, rPhys.lgdr));
-				rightStickinUse = true;
-			}
-			if (d.y < 0) {
-				StartCoroutine(rPhys.BoardGrab(5, rPhys.lgdr));
-				rightStickinUse = true;
-			}
-			else if (d.y > 0) {
-				StartCoroutine(rPhys.BoardGrab(1, rPhys.lgdr));
-				rightStickinUse = true;
-			}
-		}
-		if (d.x == 0 && d.y == 0) rightStickinUse = false;
+		rStickPos = val.Get<Vector2>();
 	}
 
 	public void OnStart() {

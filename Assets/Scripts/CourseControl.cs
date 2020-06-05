@@ -11,7 +11,6 @@ public class CourseControl : MonoBehaviour {
 	public string courseName;
 	public int courseIndex, defaultLapCount;
 	public int[] defaultCpu, defaultCpuBoard, prize;
-	public GameObject firstCheckpoint;
 	int t1, t2, t3, t4, t5;
 	public int totalTimer;
 	public string printTimer;
@@ -21,13 +20,14 @@ public class CourseControl : MonoBehaviour {
 	public GameObject[] player, cameras;
 	GameObject[] items, weapons, coins;
 	CharacterData[] charData;
-	GameObject[] spriteHead;
-	Image miniMap;
-	RectTransform mapPan;
-	GameObject resultsPanel;
+	public GameObject[] spriteHead;
+	public Image miniMap;
+	public RectTransform mapPanel;
+	public GameObject resultsPanel;
 	Dictionary <string, Text> rankBar = new Dictionary <string, Text>();
-	Image[] spriteHeadImage;
-	float mapScale, mapRef, miniMapRef;
+	public Image[] spriteHeadImage;
+	public float mapScale, miniMapRef;
+	public Vector3 mapRef;
 	public bool mapRotated;
 	GameObject track;
 	Dictionary <string, ScriptableObject> pScripts = new Dictionary <string, ScriptableObject>();
@@ -38,11 +38,12 @@ public class CourseControl : MonoBehaviour {
 	// InputUser[] inpUser;
 	// PlayerInputManager pIM;
 	public InputActionAsset playerInputs;
+	public GameObject playerPrefab;
 
 	void Awake () {
 		// Initialize Minimap settings.
 		track = GameObject.FindGameObjectWithTag("Track");
-		mapRef = track.GetComponent<Collider>().bounds.size.z;
+		mapRef = track.GetComponent<Collider>().bounds.size;
 
 		spriteHead = new GameObject[4];
 		spriteHead[0] = GameObject.Find("SpriteHead 0");
@@ -57,18 +58,18 @@ public class CourseControl : MonoBehaviour {
 		spriteHeadImage[3] = spriteHead[3].GetComponent<Image>();
 
 		miniMap = GameObject.Find("MiniMap").GetComponent<Image>();
-		mapPan = GameObject.Find("MapPanel").GetComponent<RectTransform>();
+		mapPanel = GameObject.Find("MapPanel").GetComponent<RectTransform>();
 		if (GameVar.playerCount == 1) {
-			mapPan.anchorMax = miniMapAnchorMax1p;
-			mapPan.anchorMin = miniMapAnchorMin1p;
+			mapPanel.anchorMax = miniMapAnchorMax1p;
+			mapPanel.anchorMin = miniMapAnchorMin1p;
 		}
 		else if (GameVar.playerCount == 3) {
-			mapPan.anchorMax = miniMapAnchorMax3p;
-			mapPan.anchorMin = miniMapAnchorMin3p;
+			mapPanel.anchorMax = miniMapAnchorMax3p;
+			mapPanel.anchorMin = miniMapAnchorMin3p;
 		}
 		else {
-			mapPan.anchorMax = miniMapAnchorMaxDefault;
-			mapPan.anchorMin = miniMapAnchorMinDefault;
+			mapPanel.anchorMax = miniMapAnchorMaxDefault;
+			mapPanel.anchorMin = miniMapAnchorMinDefault;
 		}
 		Debug.Log("Map size: " + mapRef);
 		Debug.Log("Minimap size: "+ miniMap.rectTransform.rect.height + ", " + miniMap.rectTransform.rect.width);
@@ -122,6 +123,7 @@ public class CourseControl : MonoBehaviour {
 
 		for (int i = 0; i < 4; i++) {
 			// player[i] = GameObject.Find("Player" + (i+1));
+			cameras[i] = GameObject.Find("Main Camera " + i);
 			pCon[i] = player[i].GetComponent<PlayerRaceControls>();
 			pUI[i] = player[i].GetComponent<PlayerUI>();
 			aI[i] = player[i].GetComponent<AIControls>();
@@ -138,10 +140,14 @@ public class CourseControl : MonoBehaviour {
 		}
 
 		// Assign cameras to players and deactivate unused ones.
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < GameVar.playerCount; i++)
 		{
 			pUI[i].assignedCam = cameras[i];
 			Debug.Log("Camera " + i + " assigned.");
+		}
+		for (int i = GameVar.playerCount; i < 4; i++)
+		{
+			cameras[i].SetActive(false);
 		}
 		
 		// Initialize Controller, UI, and AI scripts, and destroy unused scripts.
@@ -157,14 +163,13 @@ public class CourseControl : MonoBehaviour {
 		}
 		else {
 			for (int i = 0; i < GameVar.playerCount; i++) {
-				// Setup Controllers.
-				Debug.Log("Setting up controller " + i);
-				InputUser pUser = InputUser.PerformPairingWithDevice(GameVar.inpDev[i], GameVar.inpUse[i]);
-				Debug.Log("Paired user and device.");
-				PlayerInput pInp = player[i].AddComponent<PlayerInput>();
-				pInp.actions = playerInputs;
+				Debug.Log("Adding input for player " + i);
+				var pInp = PlayerInput.Instantiate(playerPrefab, -1, null, -1, GameVar.inpDev[i]);
+				player[i].transform.SetParent(pInp.transform);
+				// pInp.actions = playerInputs;
+				pInp.ActivateInput();
 				pInp.camera = cameras[i].GetComponent<Camera>();
-				Debug.Log("Created and updated Input.");
+				Debug.Log("Player " + i + "'s inputs complete.\n" + pInp.user.index + ", " + GameVar.inpDev[i]);
 
 				pUI[i].playerNum = i;
 				pCon[i].conNum = GameVar.controlp[i];
@@ -254,7 +259,7 @@ public class CourseControl : MonoBehaviour {
 		// Update Minimap
 		if (mapRotated) miniMapRef = miniMap.rectTransform.rect.width;
 		else miniMapRef = miniMap.rectTransform.rect.height;
-		mapScale = miniMapRef/mapRef;
+		mapScale = miniMapRef/mapRef.z;
 		if (GameVar.gameMode == 2) {
 			Vector2 sHL = new Vector2(player[0].transform.position.x, player[0].transform.position.z);
 			spriteHeadImage[0].rectTransform.anchoredPosition = sHL*mapScale;

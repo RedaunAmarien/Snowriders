@@ -158,9 +158,11 @@ public class AdvSubMenu : MonoBehaviour {
             // Keep text fields updated.
             if (GameVar.currentSaveFile.boardOwned[GameVar.boardForP[myNumber]]) {
                 boardText.text = GameVar.boardData[GameVar.boardForP[myNumber]].name;
+                boardText.color = Color.white;
             }
             else {
                 boardText.text = GameVar.boardData[GameVar.boardForP[myNumber]].name + " (Locked)";
+                boardText.color = Color.red;
             }
             speedGauge.fillAmount = (GameVar.allCharData[GameVar.charForP[myNumber]].speed + GameVar.boardData[GameVar.boardForP[myNumber]].speed)/10f;
             turnGauge.fillAmount = (GameVar.allCharData[GameVar.charForP[myNumber]].turn + GameVar.boardData[GameVar.boardForP[myNumber]].turn)/10f;

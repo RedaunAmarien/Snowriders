@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 using System.IO;
 
 public class Shop : MonoBehaviour {
@@ -19,7 +20,7 @@ public class Shop : MonoBehaviour {
     }
 
     void Update() {
-        totalPoints.text = ("Points Available: " + GameVar.currentSaveFile.coins + "P");
+        totalPoints.text = ("Coins Available: " + GameVar.currentSaveFile.coins);
         flavorText.text = GameVar.boardData[currentChoice].description;
 
         if (GameVar.currentSaveFile.boardOwned[currentChoice]) {
@@ -27,36 +28,45 @@ public class Shop : MonoBehaviour {
             boardInfo.color = Color.green;
         }
         else {
-            boardInfo.text = GameVar.boardData[currentChoice].name + "\nSpeed: " + GameVar.boardData[currentChoice].speed + "\nTurn: " + GameVar.boardData[currentChoice].turn + "\nJump: " + GameVar.boardData[currentChoice].jump + "\nPrice: " + GameVar.boardData[currentChoice].price + "P";
+            boardInfo.text = GameVar.boardData[currentChoice].name + "\nSpeed: " + GameVar.boardData[currentChoice].speed + "\nTurn: " + GameVar.boardData[currentChoice].turn + "\nJump: " + GameVar.boardData[currentChoice].jump + "\nPrice: " + GameVar.boardData[currentChoice].price + " coins";
             boardInfo.color = Color.white;
         }
-        if (Input.GetButtonDown("0 Button 1")) StartCoroutine(LoadScene("HubTown"));
-        
-        if (Input.GetButtonDown("0 Button 0")) {
-            if (GameVar.boardData[currentChoice].price > GameVar.currentSaveFile.coins) {
-                // Not Enough.
-            }
-            else if (GameVar.currentSaveFile.boardOwned[currentChoice]) {
-                // Already Owned.
-            }
-            else {
-                GameVar.currentSaveFile.boardOwned[currentChoice] = true;
-                GameVar.currentSaveFile.coins -= GameVar.boardData[currentChoice].price;
-                SaveFile(GameVar.currentSaveFile, GameVar.currentSaveDirectory);
-                // reloadData = LoadFile(GameVar.currentSaveDirectory);
-            }
+    }
+
+    public void OnSubmit() {
+        if (GameVar.boardData[currentChoice].price > GameVar.currentSaveFile.coins) {
+            // Not Enough.
         }
-        else if (Input.GetAxisRaw("0 Axis 1") > .5f && !stickMove) {
+        else if (GameVar.currentSaveFile.boardOwned[currentChoice]) {
+            // Already Owned.
+        }
+        else {
+            GameVar.currentSaveFile.boardOwned[currentChoice] = true;
+            GameVar.currentSaveFile.coins -= GameVar.boardData[currentChoice].price;
+            SaveFile(GameVar.currentSaveFile, GameVar.currentSaveDirectory);
+            // reloadData = LoadFile(GameVar.currentSaveDirectory);
+        }
+    }
+
+    public void OnCancel() {
+        StartCoroutine(LoadScene("HubTown"));
+    }
+
+    public void OnNavigate(InputValue val) {
+        var v = val.Get<Vector2>();
+
+        if (v.x > .5f && !stickMove) {
             currentChoice ++;
             if (currentChoice > GameVar.boardData.Length-1) currentChoice = 0;
             stickMove = true;
         }
-        else if (Input.GetAxisRaw("0 Axis 1") < -.5f && !stickMove) {
+        else if (v.x < -.5f && !stickMove) {
             currentChoice --;
             if (currentChoice < 0) currentChoice =GameVar.boardData.Length-1;
             stickMove = true;
         }
-        else if (Input.GetAxisRaw("0 Axis 1") > -.5f && Input.GetAxisRaw("0 Axis 1") < .5f) stickMove = false;
+        else if (v.x > -.5f && v.x < .5f) stickMove = false;
+
     }
 
 	static SaveFileData LoadFile (string path) {

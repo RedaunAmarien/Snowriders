@@ -41,11 +41,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4743492530586852}
     m_Modifications:
-    - target: {fileID: 1959526420874107161, guid: 2eb854d7bf78f6241863ddf2dba5bf79,
-        type: 3}
-      propertyPath: m_Name
-      value: Player2
-      objectReference: {fileID: 0}
     - target: {fileID: 1956460334773335853, guid: 2eb854d7bf78f6241863ddf2dba5bf79,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -101,6 +96,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1959526420874107161, guid: 2eb854d7bf78f6241863ddf2dba5bf79,
+        type: 3}
+      propertyPath: m_Name
+      value: Player2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3366723634223564881, guid: 2eb854d7bf78f6241863ddf2dba5bf79,
+        type: 3}
+      propertyPath: playerNum
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2eb854d7bf78f6241863ddf2dba5bf79, type: 3}
 --- !u!4 &1393527613397552589 stripped
@@ -116,11 +121,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4743492530586852}
     m_Modifications:
-    - target: {fileID: 1959526420874107161, guid: 2eb854d7bf78f6241863ddf2dba5bf79,
-        type: 3}
-      propertyPath: m_Name
-      value: Player1
-      objectReference: {fileID: 0}
     - target: {fileID: 1956460334773335853, guid: 2eb854d7bf78f6241863ddf2dba5bf79,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -176,6 +176,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1959526420874107161, guid: 2eb854d7bf78f6241863ddf2dba5bf79,
+        type: 3}
+      propertyPath: m_Name
+      value: Player1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2eb854d7bf78f6241863ddf2dba5bf79, type: 3}
 --- !u!4 &4949740801834846 stripped
@@ -191,11 +196,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4743492530586852}
     m_Modifications:
-    - target: {fileID: 1959526420874107161, guid: 2eb854d7bf78f6241863ddf2dba5bf79,
-        type: 3}
-      propertyPath: m_Name
-      value: Player3
-      objectReference: {fileID: 0}
     - target: {fileID: 1956460334773335853, guid: 2eb854d7bf78f6241863ddf2dba5bf79,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -251,6 +251,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1959526420874107161, guid: 2eb854d7bf78f6241863ddf2dba5bf79,
+        type: 3}
+      propertyPath: m_Name
+      value: Player3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3366723634223564881, guid: 2eb854d7bf78f6241863ddf2dba5bf79,
+        type: 3}
+      propertyPath: playerNum
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2eb854d7bf78f6241863ddf2dba5bf79, type: 3}
 --- !u!4 &7582946060949771571 stripped
@@ -266,11 +276,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4743492530586852}
     m_Modifications:
-    - target: {fileID: 1959526420874107161, guid: 2eb854d7bf78f6241863ddf2dba5bf79,
-        type: 3}
-      propertyPath: m_Name
-      value: Player4
-      objectReference: {fileID: 0}
     - target: {fileID: 1956460334773335853, guid: 2eb854d7bf78f6241863ddf2dba5bf79,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -325,6 +330,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959526420874107161, guid: 2eb854d7bf78f6241863ddf2dba5bf79,
+        type: 3}
+      propertyPath: m_Name
+      value: Player4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3366723634223564881, guid: 2eb854d7bf78f6241863ddf2dba5bf79,
+        type: 3}
+      propertyPath: playerNum
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2eb854d7bf78f6241863ddf2dba5bf79, type: 3}
