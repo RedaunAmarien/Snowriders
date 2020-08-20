@@ -7276,13 +7276,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0b78bbcaae6674ea28be53d6ada8c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  time0: 0
   time1: 0
   time2: 0
   time3: 0
   timetick: 0
   rotator: 0
-  offsetX: -90
-  offsetY: -30
+  offset: {x: -90, y: -30}
 --- !u!1001 &1411847685
 PrefabInstance:
   m_ObjectHideFlags: 0

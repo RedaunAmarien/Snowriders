@@ -7,12 +7,13 @@ public class RacerPhysics : MonoBehaviour {
 
     public int playerNum;
 
-    // Character Stats
-	public string charName, boardName;
+    [Header("Character Settings")]
+	public string charName;
+	public string boardName;
     public float speed, traction, turnSpeed;
     public Vector3 jumpForce;
 
-    // Race Stats and Placement
+    [Header("Race Stats")]
     public bool finished;
 	public int place, currentLap;
     public int nextCheckVal;
@@ -21,17 +22,20 @@ public class RacerPhysics : MonoBehaviour {
     public int coins;
 	public GameObject firstCheckpoint, lastCheckpoint, nextCheckpoint;
 
-    // Items and Weapons
-    public int weapType, shots, blankWeap, itemType, blankItem, statusTime, rollTime, standTime;
+    [Header("Items and Weapons")]
+    public int weapType;
+	public int shots, blankWeap, itemType, blankItem, statusTime, rollTime, standTime;
 	[Tooltip("X = Lifetime, Y = Acceleration, Z = Additional Max Speed")]
     public Vector3 rocket1, rocket2;
 	public Vector3 highJumpForce;
     public GameObject rock, rockSpawn, projectile, shootSpawn, dropCoin, characterModel, iceCube, snowman, balloon, highJumpParticles, lockParticles, slowed, rocketParticles1, rocketParticles2;
+	public AnimationCurve blueWeights1, blueWeights2, blueWeights3, blueWeights4, redWeights1, redWeights2, redWeights3, redWeights4;
 	public SpriteRenderer headSprite;
 	public Sprite[] headSpriteSrc;
 
-    // Physics
-    public bool grounded, boostOn;
+    [Header("Physics")]
+    public bool grounded;
+	public bool boostOn;
     public float boostForce, boostAddSpeed;
     public bool invisible, spotLock, grabbing, tricking, jumping, highJumpReady, respawning;
     public int ltdr, lgdr, grabsChained, grabsCombo, tricksChained, slows;
@@ -244,7 +248,23 @@ public class RacerPhysics : MonoBehaviour {
 				coins = coins - 100;
 				StartCoroutine(other.GetComponent<CoinSpin>().Respawn());
 				aUD.Play("item");
-				itemType = /*Needs to be rubber-banded.*/ Random.Range(0,pUI.itemSprite.Length-1);
+				switch (place) {
+					case 1:
+						itemType = Mathf.RoundToInt(blueWeights1.Evaluate(Random.value) * pUI.itemSprite.Length-1);
+					break;
+					case 2:
+						itemType = Mathf.RoundToInt(blueWeights2.Evaluate(Random.value) * pUI.itemSprite.Length-1);
+					break;
+					case 3:
+						itemType = Mathf.RoundToInt(blueWeights3.Evaluate(Random.value) * pUI.itemSprite.Length-1);
+					break;
+					case 4:
+						itemType = Mathf.RoundToInt(blueWeights4.Evaluate(Random.value) * pUI.itemSprite.Length-1);
+					break;
+					default:
+						Debug.LogError("Placement out of range for choosing item.");
+					break;
+				}
 			}
 		}
 		// Ammo Box
@@ -256,7 +276,23 @@ public class RacerPhysics : MonoBehaviour {
 				coins = coins - 100;
 				StartCoroutine(other.GetComponent<CoinSpin>().Respawn());
 				aUD.Play("item");
-				weapType = Random.Range(0,pUI.weaponSprite.Length-1);
+				switch (place) {
+					case 1:
+						weapType = Mathf.RoundToInt(redWeights1.Evaluate(Random.value) * pUI.weaponSprite.Length-1);
+					break;
+					case 2:
+						weapType = Mathf.RoundToInt(redWeights2.Evaluate(Random.value) * pUI.weaponSprite.Length-1);
+					break;
+					case 3:
+						weapType = Mathf.RoundToInt(redWeights3.Evaluate(Random.value) * pUI.weaponSprite.Length-1);
+					break;
+					case 4:
+						weapType = Mathf.RoundToInt(redWeights4.Evaluate(Random.value) * pUI.weaponSprite.Length-1);
+					break;
+					default:
+						Debug.LogError("Placement out of range for choosing weapon.");
+					break;
+				}
 				shots = 3;
 			}
 		}
