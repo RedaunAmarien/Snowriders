@@ -1,5 +1,4 @@
 Internal:
-- Item rubber-banding not finished.
 - Keyboard controls may need reworking.
 - CPUs use items and weapons immediately, not strategically.
 - CPUs can jump while turning without accidentally doing tricks, giving unfair advantage.
@@ -19,7 +18,7 @@ Worlds and Maps:
 UI:
 - Maybe make a way to import custom face sprites? Or generate based on customization.
 - Characters need more models.
-- Loading tips only display one tip right now.
+- Loading tips only displays one tip right now.
 - Minimap gets lost in snow.
 - Minimap is not properly scaling for most courses.
 

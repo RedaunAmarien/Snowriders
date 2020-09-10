@@ -15,8 +15,8 @@ public class MainMenu : MonoBehaviour {
 	public Sprite[] medalSource;
 	bool firstTime;
 	string[] names, charFileCust, charFilePerm, boardFile;
-	public SaveFileData[] saveData;
-	public SaveFileData newSaveData;
+	public SaveData[] saveData;
+	public SaveData newSaveData;
 	public string saveFileVersion;
 	string dir;
 	int newFileNum;
@@ -30,7 +30,6 @@ public class MainMenu : MonoBehaviour {
             Directory.CreateDirectory(dir);
 			firstTime = true;
         }
-		saveData = new SaveFileData[3];
 		UpdateFileList();
 
 		// Initialize Permanent Characters
@@ -88,16 +87,14 @@ public class MainMenu : MonoBehaviour {
 	}
 
 	public void Load (int fileIndex) {
-		string dataPath = Path.Combine(dir, "Save_"+fileIndex+".sbsv");
-		if (File.Exists (dataPath)) {
-			saveData[fileIndex] = LoadFile(dataPath);
+		if (saveData[fileIndex] != null) {
 			GameVar.currentSaveFile = saveData[fileIndex];
-			GameVar.currentSaveDirectory = dataPath;
+			GameVar.currentSaveDirectory = Path.Combine(dir, saveData[fileIndex].fileName + ".sbsv");
 			GameVar.saveSlot = fileIndex;
 			print ("Slot " + fileIndex + " loaded.");
 			StartCoroutine(LoadScene("HubTown"));
 		}
-		if (!File.Exists (dataPath)) {
+		else {
 			newFileSet.SetActive(true);
 			chooseSet.SetActive(false);
 			newFileNum = fileIndex;
@@ -105,7 +102,6 @@ public class MainMenu : MonoBehaviour {
 	}
 
 	public void NameNewSave() {
-		string dataPath = Path.Combine(dir, "Save_"+newFileNum+".sbsv");
 		if (nameBox.text == "") {
 			// Do nothing.
 		}
@@ -121,8 +117,8 @@ public class MainMenu : MonoBehaviour {
 			for (int i = 0; i < 12; i++) {
 				newSaveData.courseGrade[i] = 0;
 			}
-			SaveFile (newSaveData, dataPath);
-			print ("Created save file \"" + nameBox.text + "\" in slot " + newFileNum);
+			FileManager.SaveFile(newSaveData.fileName, newSaveData);
+			Debug.Log("Created save file \"" + nameBox.text + "\" in slot " + newFileNum);
 			UpdateFileList();
 			newFileSet.SetActive(false);
 			chooseSet.SetActive(true);
@@ -131,10 +127,18 @@ public class MainMenu : MonoBehaviour {
 	}
 	
 	void UpdateFileList() {
+		saveData = new SaveData[3];
+		string[] saveFiles = Directory.GetFiles(dir, "*.sbsv");
+		Debug.Log("Found " + saveFiles.Length + " save files.");
+		for (int i = 0; i < saveFiles.Length; i++)
+		{
+			saveData[i] = (SaveData)FileManager.LoadFile(saveFiles[i]);
+			if (saveData[i] == null) {
+				Debug.LogError("File not read.");
+			}
+		}
 		for (int i = 0; i < 3; i++) {
-			string thisPath = Path.Combine(dir, "Save_"+i+".sbsv");
-			if (File.Exists(thisPath)) {
-				saveData[i] = LoadFile(Path.Combine(dir, "Save_"+i+".sbsv"));
+			if (saveData[i] != null) {
 				fileName[i].text = saveData[i].fileName;
 				fileCoins[i].text = saveData[i].coins.ToString() + " c";
 				for (int c = 0; c < 12; c++) {
@@ -145,7 +149,7 @@ public class MainMenu : MonoBehaviour {
 				fileCoins[i].text = "No Data";
 				for (int c = 0; c < 12; c++) {
 					SortMedal(i, c, 0);
-				}
+				}	
 			}
 		}
 	}
@@ -207,20 +211,6 @@ public class MainMenu : MonoBehaviour {
 		using (StreamReader streamReader = File.OpenText (path)) {
 			string jsonString = streamReader.ReadToEnd();
 			return JsonUtility.FromJson<BoardData> (jsonString);
-		}
-	}
-
-	static SaveFileData LoadFile (string path) {
-		using (StreamReader streamReader = File.OpenText (path)) {
-			string jsonString = streamReader.ReadToEnd();
-			return JsonUtility.FromJson<SaveFileData> (jsonString);
-		}
-	}
-
-	static void SaveFile (SaveFileData data, string path) {
-		string jsonString = JsonUtility.ToJson (data);
-		using (StreamWriter streamWriter = File.CreateText(path)) {
-			streamWriter.Write (jsonString);
 		}
 	}
 }

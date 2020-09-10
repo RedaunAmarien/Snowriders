@@ -13,7 +13,7 @@ public static class GameVar
 	public static int[] controlp, charForP, boardForP;
 	public static CharacterData[] charDataCustom, charDataPermanent, allCharData;
 	public static BoardData[] boardData;
-	public static SaveFileData currentSaveFile;
+	public static SaveData currentSaveFile;
 	public static string currentSaveDirectory, nextSceneToLoad;
 	public static InputDevice[] inpDev;
 	public static InputUser[] inpUse;

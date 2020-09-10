@@ -145,14 +145,6 @@ public class CharacterEditor : MonoBehaviour {
 		}
 	}
 
-    static void SaveFile (SaveFileData saveData, string path) {
-		string jsonString = JsonUtility.ToJson (saveData);
-		using (StreamWriter streamWriter = File.CreateText(path)) {
-			streamWriter.Write (jsonString);
-		}
-
-    }
-
 	IEnumerator LoadScene(string sceneToLoad) {
 		GameVar.nextSceneToLoad = sceneToLoad;
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("LoadingScreen");

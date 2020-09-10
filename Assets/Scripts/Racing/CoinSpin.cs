@@ -8,8 +8,8 @@ public class CoinSpin : MonoBehaviour {
 	public Vector2 spinRange;
 	bool nega, noSpawn;
 	void Start() {
-		int choice = Random.Range(0,1);
-		if (choice == 0) nega = false;
+		float choice = Random.value;
+		if (choice > .5f) nega = false;
 		else nega = true;
 		spinSpeed = Random.Range(spinRange.x,spinRange.y);
 	}

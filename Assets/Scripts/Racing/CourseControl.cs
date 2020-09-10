@@ -27,7 +27,7 @@ public class CourseControl : MonoBehaviour {
 	Dictionary <string, Text> rankBar = new Dictionary <string, Text>();
 	public Image[] spriteHeadImage;
 	public float mapScale, miniMapRef;
-	public Vector3 mapRef;
+	public Vector3 courseMax, courseMin;
 	public bool mapRotated;
 	GameObject track;
 	Dictionary <string, ScriptableObject> pScripts = new Dictionary <string, ScriptableObject>();
@@ -43,7 +43,11 @@ public class CourseControl : MonoBehaviour {
 	void Awake () {
 		// Initialize Minimap settings.
 		track = GameObject.FindGameObjectWithTag("Track");
-		mapRef = track.GetComponent<Collider>().bounds.size;
+		// courseSize = track.GetComponent<Collider>().bounds.size;
+		// courseCenter = track.GetComponent<Collider>().bounds.center;
+		courseMin = track.GetComponent<Collider>().bounds.min;
+		courseMax = track.GetComponent<Collider>().bounds.max;
+		// Vector3 courseExtents = courseSize/2;
 
 		spriteHead = new GameObject[4];
 		spriteHead[0] = GameObject.Find("SpriteHead 0");
@@ -71,7 +75,7 @@ public class CourseControl : MonoBehaviour {
 			mapPanel.anchorMax = miniMapAnchorMaxDefault;
 			mapPanel.anchorMin = miniMapAnchorMinDefault;
 		}
-		Debug.Log("Map size: " + mapRef);
+		Debug.Log("Map size: " + (courseMax - courseMin).ToString());
 		Debug.Log("Minimap size: "+ miniMap.rectTransform.rect.height + ", " + miniMap.rectTransform.rect.width);
 
 		// Ready the Results Screen
@@ -208,7 +212,7 @@ public class CourseControl : MonoBehaviour {
 		StartCoroutine(Countdown());
 	}
 	
-	void Update () {
+	void FixedUpdate () {
 		// Run timer.
 		if (timerOn) {
 			totalTimer += 2;
@@ -231,7 +235,10 @@ public class CourseControl : MonoBehaviour {
 			}
 		}
 		printTimer = t5 + ":" + t4+t3 + "." + t2+t1;
+	}
 
+	void Update() {
+		
 		// Check who is in first place.
 		if (GameVar.gameMode < 2) {
 			for (int i = 0; i < player.Length; i++) {
@@ -257,17 +264,23 @@ public class CourseControl : MonoBehaviour {
 		}
 		
 		// Update Minimap
-		if (mapRotated) miniMapRef = miniMap.rectTransform.rect.width;
-		else miniMapRef = miniMap.rectTransform.rect.height;
-		mapScale = miniMapRef/mapRef.z;
+		// if (mapRotated) miniMapRef = miniMap.rectTransform.rect.width;
+		// else miniMapRef = miniMap.rectTransform.rect.height;
+		// mapScale = miniMapRef/courseSize.z;
 		if (GameVar.gameMode == 2) {
-			Vector2 sHL = new Vector2(player[0].transform.position.x, player[0].transform.position.z);
-			spriteHeadImage[0].rectTransform.anchoredPosition = sHL*mapScale;
+			Vector2 sHL = new Vector2(
+				Mathf.InverseLerp(courseMin.x, courseMax.x, player[0].transform.position.x),
+				Mathf.InverseLerp(courseMin.z, courseMax.z, player[0].transform.position.z)
+			);
+			spriteHeadImage[0].rectTransform.anchoredPosition = new Vector2(sHL.x * miniMap.rectTransform.rect.height, sHL.y * miniMap.rectTransform.rect.width) + miniMap.rectTransform.rect.min;
 		}
 		else {
 			for (int i = 0; i < player.Length; i++) {
-				Vector2 sHL = new Vector2(player[i].transform.position.x, player[i].transform.position.z);
-				spriteHeadImage[i].rectTransform.anchoredPosition = sHL*mapScale;
+				Vector2 sHL = new Vector2(
+					Mathf.InverseLerp(courseMin.x, courseMax.x, player[i].transform.position.x),
+					Mathf.InverseLerp(courseMin.z, courseMax.z, player[i].transform.position.z)
+				);
+				spriteHeadImage[i].rectTransform.anchoredPosition = new Vector2(sHL.x * miniMap.rectTransform.rect.height, sHL.y * miniMap.rectTransform.rect.width) + miniMap.rectTransform.rect.min;
 			}
 		}
 	}
@@ -477,21 +490,7 @@ public class CourseControl : MonoBehaviour {
 
 		//Save File
 		Debug.LogWarning("Autosaving to file " + GameVar.saveSlot + " " + GameVar.currentSaveFile.fileName);
-		SaveFile(GameVar.currentSaveFile, GameVar.currentSaveDirectory);
-		GameVar.currentSaveFile = LoadFile(GameVar.currentSaveDirectory);
-	}
-    
-	static SaveFileData LoadFile (string path) {
-		using (StreamReader streamReader = File.OpenText (path)) {
-			string jsonString = streamReader.ReadToEnd();
-			return JsonUtility.FromJson<SaveFileData> (jsonString);
-		}
-	}
-
-	static void SaveFile (SaveFileData saveData, string path) {
-		string jsonString = JsonUtility.ToJson (saveData);
-		using (StreamWriter streamWriter = File.CreateText(path)) {
-			streamWriter.Write (jsonString);
-		}
+		FileManager.SaveFile(GameVar.currentSaveFile.fileName, GameVar.currentSaveFile);
+		GameVar.currentSaveFile = (SaveData)FileManager.LoadFile(GameVar.currentSaveDirectory);
 	}
 }

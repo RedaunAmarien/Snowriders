@@ -13,7 +13,7 @@ public class Shop : MonoBehaviour {
     public GameObject loadSet, warnSet;
     public Slider progressBar;
     bool stickMove;
-    SaveFileData reloadData;
+    SaveData reloadData;
 
     void Start() {
         
@@ -43,7 +43,7 @@ public class Shop : MonoBehaviour {
         else {
             GameVar.currentSaveFile.boardOwned[currentChoice] = true;
             GameVar.currentSaveFile.coins -= GameVar.boardData[currentChoice].price;
-            SaveFile(GameVar.currentSaveFile, GameVar.currentSaveDirectory);
+            FileManager.SaveFile(GameVar.currentSaveFile.fileName, GameVar.currentSaveFile);
             // reloadData = LoadFile(GameVar.currentSaveDirectory);
         }
     }
@@ -68,20 +68,6 @@ public class Shop : MonoBehaviour {
         else if (v.x > -.5f && v.x < .5f) stickMove = false;
 
     }
-
-	static SaveFileData LoadFile (string path) {
-		using (StreamReader streamReader = File.OpenText (path)) {
-			string jsonString = streamReader.ReadToEnd();
-			return JsonUtility.FromJson<SaveFileData> (jsonString);
-		}
-	}
-
-	static void SaveFile (SaveFileData data, string path) {
-		string jsonString = JsonUtility.ToJson (data);
-		using (StreamWriter streamWriter = File.CreateText(path)) {
-			streamWriter.Write (jsonString);
-		}
-	}
 
 	IEnumerator LoadScene(string sceneToLoad) {
 		GameVar.nextSceneToLoad = sceneToLoad;

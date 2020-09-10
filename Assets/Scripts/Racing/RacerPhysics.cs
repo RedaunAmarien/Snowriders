@@ -29,7 +29,6 @@ public class RacerPhysics : MonoBehaviour {
     public Vector3 rocket1, rocket2;
 	public Vector3 highJumpForce;
     public GameObject rock, rockSpawn, projectile, shootSpawn, dropCoin, characterModel, iceCube, snowman, balloon, highJumpParticles, lockParticles, slowed, rocketParticles1, rocketParticles2;
-	public AnimationCurve blueWeights1, blueWeights2, blueWeights3, blueWeights4, redWeights1, redWeights2, redWeights3, redWeights4;
 	public SpriteRenderer headSprite;
 	public Sprite[] headSpriteSrc;
 
@@ -250,19 +249,56 @@ public class RacerPhysics : MonoBehaviour {
 				aUD.Play("item");
 				switch (place) {
 					case 1:
-						itemType = Mathf.RoundToInt(blueWeights1.Evaluate(Random.value) * pUI.itemSprite.Length-1);
+						itemType = WeightedRandom.Range(
+							new IntRange(0, 0, 5)/*Invis*/,
+							new IntRange(1, 1, 5)/*HighJump*/,
+							new IntRange(2, 2, 4)/*SlowOne*/,
+							new IntRange(3, 3, 2)/*SlowThree*/,
+							new IntRange(4, 4, 5)/*Rock*/,
+							new IntRange(5, 5, 1)/*Pan*/,
+							new IntRange(6, 6, 4)/*Steal*/,
+							new IntRange(7, 7, 1)/*StealThree*/,
+							new IntRange(8, 8, 1)/*Rocket*/,
+							new IntRange(9, 9, 0)/*SuperRocket*/);
 					break;
 					case 2:
-						itemType = Mathf.RoundToInt(blueWeights2.Evaluate(Random.value) * pUI.itemSprite.Length-1);
+						itemType = WeightedRandom.Range(
+							new IntRange(0, 0, 4)/*Invis*/,
+							new IntRange(1, 1, 4)/*HighJump*/,
+							new IntRange(2, 2, 5)/*SlowOne*/,
+							new IntRange(3, 3, 4)/*SlowThree*/,
+							new IntRange(4, 4, 4)/*Rock*/,
+							new IntRange(5, 5, 3)/*Pan*/,
+							new IntRange(6, 6, 4)/*Steal*/,
+							new IntRange(7, 7, 1)/*StealThree*/,
+							new IntRange(8, 8, 1)/*Rocket*/,
+							new IntRange(9, 9, .5f)/*SuperRocket*/);
 					break;
 					case 3:
-						itemType = Mathf.RoundToInt(blueWeights3.Evaluate(Random.value) * pUI.itemSprite.Length-1);
+						itemType = WeightedRandom.Range(
+							new IntRange(0, 0, 1)/*Invis*/,
+							new IntRange(1, 1, 1)/*HighJump*/,
+							new IntRange(2, 2, 1)/*SlowOne*/,
+							new IntRange(3, 3, 1)/*SlowThree*/,
+							new IntRange(4, 4, 1)/*Rock*/,
+							new IntRange(5, 5, 1)/*Pan*/,
+							new IntRange(6, 6, 3)/*Steal*/,
+							new IntRange(7, 7, 5)/*StealThree*/,
+							new IntRange(8, 8, 5)/*Rocket*/,
+							new IntRange(9, 9, 3)/*SuperRocket*/);
 					break;
 					case 4:
-						itemType = Mathf.RoundToInt(blueWeights4.Evaluate(Random.value) * pUI.itemSprite.Length-1);
-					break;
-					default:
-						Debug.LogError("Placement out of range for choosing item.");
+						itemType = WeightedRandom.Range(
+							new IntRange(0, 0, 1)/*Invis*/,
+							new IntRange(1, 1, 1)/*HighJump*/,
+							new IntRange(2, 2, 2)/*SlowOne*/,
+							new IntRange(3, 3, 3)/*SlowThree*/,
+							new IntRange(4, 4, 1)/*Rock*/,
+							new IntRange(5, 5, 5)/*Pan*/,
+							new IntRange(6, 6, 2)/*Steal*/,
+							new IntRange(7, 7, 4)/*StealThree*/,
+							new IntRange(8, 8, 4)/*Rocket*/,
+							new IntRange(9, 9, 5)/*SuperRocket*/);
 					break;
 				}
 			}
@@ -278,19 +314,40 @@ public class RacerPhysics : MonoBehaviour {
 				aUD.Play("item");
 				switch (place) {
 					case 1:
-						weapType = Mathf.RoundToInt(redWeights1.Evaluate(Random.value) * pUI.weaponSprite.Length-1);
+						weapType = WeightedRandom.Range(
+							new IntRange(0, 0, 3)/*Ice*/,
+							new IntRange(1, 1, 1)/*Balloon*/,
+							new IntRange(2, 2, 5)/*Bomb*/, 
+							new IntRange(3, 3, 5)/*Snow*/,
+							new IntRange(4, 4, 1)/*Tornado*/,
+							new IntRange(5, 5, 3)/*Slap*/);
 					break;
 					case 2:
-						weapType = Mathf.RoundToInt(redWeights2.Evaluate(Random.value) * pUI.weaponSprite.Length-1);
+						weapType = WeightedRandom.Range(
+							new IntRange(0, 0, 2)/*Ice*/,
+							new IntRange(1, 1, 1)/*Balloon*/,
+							new IntRange(2, 2, 3)/*Bomb*/, 
+							new IntRange(3, 3, 3)/*Snow*/,
+							new IntRange(4, 4, 1)/*Tornado*/,
+							new IntRange(5, 5, 2)/*Slap*/);
 					break;
 					case 3:
-						weapType = Mathf.RoundToInt(redWeights3.Evaluate(Random.value) * pUI.weaponSprite.Length-1);
+						weapType = WeightedRandom.Range(
+							new IntRange(0, 0, 2)/*Ice*/,
+							new IntRange(1, 1, 3)/*Balloon*/,
+							new IntRange(2, 2, 1)/*Bomb*/, 
+							new IntRange(3, 3, 1)/*Snow*/,
+							new IntRange(4, 4, 3)/*Tornado*/,
+							new IntRange(5, 5, 2)/*Slap*/);
 					break;
 					case 4:
-						weapType = Mathf.RoundToInt(redWeights4.Evaluate(Random.value) * pUI.weaponSprite.Length-1);
-					break;
-					default:
-						Debug.LogError("Placement out of range for choosing weapon.");
+						weapType = WeightedRandom.Range(
+							new IntRange(0, 0, 3)/*Ice*/,
+							new IntRange(1, 1, 5)/*Balloon*/,
+							new IntRange(2, 2, 1)/*Bomb*/, 
+							new IntRange(3, 3, 1)/*Snow*/,
+							new IntRange(4, 4, 5)/*Tornado*/,
+							new IntRange(5, 5, 3)/*Slap*/);
 					break;
 				}
 				shots = 3;
