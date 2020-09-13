@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class AIWaypoint : MonoBehaviour {
 
-    public float spread;
     public GameObject nextInChain;
     public bool splitting;
-    public GameObject nextInChain2;
-    public bool jump, grab;
+    public GameObject nextInAltChain;
+    public int totalInAltChain;
+    public bool joining;
+    public bool tryJump, tryGrab;
     public int tricksPossible;
 
 }

@@ -1,21 +1,21 @@
 fileFormatVersion: 2
-guid: a05be495829c0b44a8091593e7c50a7f
+guid: 05adc2954d37a7e49930cc5416d2e13d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8987081429794414364
-    second: Medals_None
+      213: 1699839288339780594
+    second: Medal_Gold
   - first:
-      213: -6086320422288628912
-    second: Medals_Bronze
+      213: -8474832591409494553
+    second: Medal_Silver
   - first:
-      213: -5226006561887031274
-    second: Medals_Silver
+      213: -4620241418024215519
+    second: Medal_Bronze
   - first:
-      213: 2853330337899625475
-    second: Medals_Gold
+      213: 7426614198137331535
+    second: Medal_None
   externalObjects: {}
-  serializedVersion: 10
+  serializedVersion: 11
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -35,6 +35,7 @@ TextureImporter:
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
+  vTOnly: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -69,8 +70,10 @@ TextureImporter:
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
   platformSettings:
-  - serializedVersion: 2
+  - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -81,7 +84,8 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - serializedVersion: 2
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -92,7 +96,8 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - serializedVersion: 2
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -103,89 +108,90 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Medals_None
+      name: Medal_Gold
       rect:
         serializedVersion: 2
         x: 0
-        y: 256
-        width: 256
-        height: 256
+        y: 512
+        width: 512
+        height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 16ea9cc940dc9dd43bd22bb922d2433e
-      internalID: 8987081429794414364
+      spriteID: 2f3debc93da079710800000000000000
+      internalID: 1699839288339780594
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Medals_Bronze
+      name: Medal_Silver
       rect:
         serializedVersion: 2
-        x: 256
-        y: 256
-        width: 256
-        height: 256
+        x: 512
+        y: 512
+        width: 512
+        height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e388e8a4a61384241b101852a48d7a76
-      internalID: -6086320422288628912
+      spriteID: 7e54222e8a8536a80800000000000000
+      internalID: -8474832591409494553
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Medals_Silver
+      name: Medal_Bronze
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 256
-        height: 256
+        width: 512
+        height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: df3d94923199f9d46a9dc2b76da7419b
-      internalID: -5226006561887031274
+      spriteID: 12c9e1ec8ea91efb0800000000000000
+      internalID: -4620241418024215519
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Medals_Gold
+      name: Medal_None
       rect:
         serializedVersion: 2
-        x: 256
+        x: 512
         y: 0
-        width: 256
-        height: 256
+        width: 512
+        height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 69b8bd644a5c2914e95af69e3fe1e01f
-      internalID: 2853330337899625475
+      spriteID: f4f19dbe342a01760800000000000000
+      internalID: 7426614198137331535
       vertices: []
       indices: 
       edges: []
@@ -193,7 +199,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 80a36708eea549644850d47756f6d6b3
+    spriteID: c228a69315dce764dbcb445db732dc75
     internalID: 0
     vertices: []
     indices: 

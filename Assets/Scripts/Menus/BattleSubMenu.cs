@@ -63,7 +63,7 @@ public class BattleSubMenu : MonoBehaviour {
             StartCoroutine(ResetPress(.25f));
         }
         if (assignmentStep == 2 && !pressingSubmit) {
-            if (GameVar.currentSaveFile.boardOwned[GameVar.boardForP[myNumber]]) {
+            if (GameRam.currentSaveFile.boardOwned[GameRam.boardForP[myNumber]]) {
                 boardText.color = Color.green;
                 assignmentStep = 3;
                 battleMenu.playersReady ++;
@@ -96,13 +96,13 @@ public class BattleSubMenu : MonoBehaviour {
 
             //Select Character.
             if (v.x > .5f && !charStickMove) {
-                GameVar.charForP[myNumber] ++;
-                if (GameVar.charForP[myNumber] > GameVar.allCharData.Length-1) GameVar.charForP[myNumber] = 0;
+                GameRam.charForP[myNumber] ++;
+                if (GameRam.charForP[myNumber] > GameRam.allCharData.Count-1) GameRam.charForP[myNumber] = 0;
                 charStickMove = true;
             }
             else if (v.x < -.5f && !charStickMove) {
-                GameVar.charForP[myNumber] --;
-                if (GameVar.charForP[myNumber] < 0) GameVar.charForP[myNumber] = GameVar.allCharData.Length-1;
+                GameRam.charForP[myNumber] --;
+                if (GameRam.charForP[myNumber] < 0) GameRam.charForP[myNumber] = GameRam.allCharData.Count-1;
                 charStickMove = true;
             }
             else if (v.x > -.5f && v.x < .5f) charStickMove = false;
@@ -111,13 +111,13 @@ public class BattleSubMenu : MonoBehaviour {
 
             // Select Board.
             if (v.x > .5f && !charStickMove) {
-                GameVar.boardForP[myNumber] ++;
-                if (GameVar.boardForP[myNumber] > GameVar.boardData.Length-1) GameVar.boardForP[myNumber] = 0;
+                GameRam.boardForP[myNumber] ++;
+                if (GameRam.boardForP[myNumber] > GameRam.boardData.Length-1) GameRam.boardForP[myNumber] = 0;
                 charStickMove = true;
             }
             else if (v.x < -.5f && !charStickMove) {
-                GameVar.boardForP[myNumber] --;
-                if (GameVar.boardForP[myNumber] < 0) GameVar.boardForP[myNumber] = GameVar.boardData.Length-1;
+                GameRam.boardForP[myNumber] --;
+                if (GameRam.boardForP[myNumber] < 0) GameRam.boardForP[myNumber] = GameRam.boardData.Length-1;
                 charStickMove = true;
             }
             else if (v.x > -.5f && v.x < .5f) charStickMove = false;
@@ -140,12 +140,12 @@ public class BattleSubMenu : MonoBehaviour {
             lArrow.anchorMax = new Vector2 (0, .95f);
 
             // Keep text and image fields updated.
-            charText.text = GameVar.allCharData[GameVar.charForP[myNumber]].name;
-            speedGauge.fillAmount = GameVar.allCharData[GameVar.charForP[myNumber]].speed/10f;
-            turnGauge.fillAmount = GameVar.allCharData[GameVar.charForP[myNumber]].turn/10f;
-            jumpGauge.fillAmount = GameVar.allCharData[GameVar.charForP[myNumber]].jump/10f;
-            // if (GameVar.charForP[myNumber] >= GameVar.charDataCustom.Length) {
-            //     charPort.sprite = battleMenu.charPortSrc[GameVar.charForP[myNumber]-GameVar.charDataCustom.Length];
+            charText.text = GameRam.allCharData[GameRam.charForP[myNumber]].name;
+            speedGauge.fillAmount = GameRam.allCharData[GameRam.charForP[myNumber]].speed/10f;
+            turnGauge.fillAmount = GameRam.allCharData[GameRam.charForP[myNumber]].turn/10f;
+            jumpGauge.fillAmount = GameRam.allCharData[GameRam.charForP[myNumber]].jump/10f;
+            // if (GameRam.charForP[myNumber] >= GameRam.charDataCustom.Length) {
+            //     charPort.sprite = battleMenu.charPortSrc[GameRam.charForP[myNumber]-GameRam.charDataCustom.Length];
             // }
             // else charPort.sprite = battleMenu.charPortSrc[battleMenu.charPortSrc.Length-1];
 
@@ -166,15 +166,15 @@ public class BattleSubMenu : MonoBehaviour {
             lArrow.anchorMax = new Vector2 (0, .15f);
 
             // Keep text fields updated.
-            if (GameVar.currentSaveFile.boardOwned[GameVar.boardForP[myNumber]]) {
-                boardText.text = GameVar.boardData[GameVar.boardForP[myNumber]].name;
+            if (GameRam.currentSaveFile.boardOwned[GameRam.boardForP[myNumber]]) {
+                boardText.text = GameRam.boardData[GameRam.boardForP[myNumber]].name;
             }
             else {
-                boardText.text = GameVar.boardData[GameVar.boardForP[myNumber]].name + " (Locked)";
+                boardText.text = GameRam.boardData[GameRam.boardForP[myNumber]].name + " (Locked)";
             }
-            speedGauge.fillAmount = (GameVar.allCharData[GameVar.charForP[myNumber]].speed + GameVar.boardData[GameVar.boardForP[myNumber]].speed)/10f;
-            turnGauge.fillAmount = (GameVar.allCharData[GameVar.charForP[myNumber]].turn + GameVar.boardData[GameVar.boardForP[myNumber]].turn)/10f;
-            jumpGauge.fillAmount = (GameVar.allCharData[GameVar.charForP[myNumber]].jump + GameVar.boardData[GameVar.boardForP[myNumber]].jump)/10f;
+            speedGauge.fillAmount = (GameRam.allCharData[GameRam.charForP[myNumber]].speed + GameRam.boardData[GameRam.boardForP[myNumber]].speed)/10f;
+            turnGauge.fillAmount = (GameRam.allCharData[GameRam.charForP[myNumber]].turn + GameRam.boardData[GameRam.boardForP[myNumber]].turn)/10f;
+            jumpGauge.fillAmount = (GameRam.allCharData[GameRam.charForP[myNumber]].jump + GameRam.boardData[GameRam.boardForP[myNumber]].jump)/10f;
         }
 	}
 

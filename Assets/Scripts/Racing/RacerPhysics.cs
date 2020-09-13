@@ -16,7 +16,7 @@ public class RacerPhysics : MonoBehaviour {
     [Header("Race Stats")]
     public bool finished;
 	public int place, currentLap;
-    public int nextCheckVal;
+    public float nextCheckVal;
 	public float checkDist;
     public int finalPlace, totalLaps;
     public int coins;
@@ -41,30 +41,36 @@ public class RacerPhysics : MonoBehaviour {
 
     // Objects
     PlayerRaceControls pCon;
-    CourseControl corCon;
+    // CourseControl corCon;
+	public TrackManager tManage;
+	public CourseSettings cSettings;
     PlayerUI pUI;
     AudioMaker aUD;
 	AudioSource audioSrc;
     AIControls aI;
-    Transform playerStartPoint;
+    public Transform playerStartPoint;
     public Rigidbody rigid;
     GameObject course;
     public Vector3 relVel;
+	bool initialized;
 
     void Start() {
+
         // Initialize Objects and Stats
+		tManage = GameObject.Find("TrackManager").GetComponent<TrackManager>();
+		cSettings = GameObject.Find("CourseSettings").GetComponent<CourseSettings>();
         rigid = gameObject.GetComponent<Rigidbody>();
+
         pCon = gameObject.GetComponent<PlayerRaceControls>();
-        playerStartPoint = GameObject.Find("Players").transform;
 		pUI = GetComponent<PlayerUI>();
 		aI = GetComponent<AIControls>();
 		aUD = GetComponentInChildren<AudioMaker>();
 		audioSrc = GetComponentInChildren<AudioSource>();
-		if (playerNum < GameVar.playerCount) audioSrc.spatialBlend = 0;
-		course = GameObject.FindGameObjectWithTag("CourseController");
-        corCon = course.GetComponent<CourseControl>();
+		if (playerNum < GameRam.playerCount) audioSrc.spatialBlend = 0;
+		// course = GameObject.FindGameObjectWithTag("CourseController");
+        // corCon = course.GetComponent<CourseControl>();
         jumpForce.z = speed*10;
-        firstCheckpoint = GameObject.Find("Start");
+        // firstCheckpoint = GameObject.Find("Start");
 		lastCheckpoint = firstCheckpoint;
         nextCheckpoint = firstCheckpoint.GetComponent<Checkpoint>().nextCheck;
 		nextCheckVal = nextCheckpoint.GetComponent<Checkpoint>().value;
@@ -76,11 +82,16 @@ public class RacerPhysics : MonoBehaviour {
 		rigid.maxAngularVelocity = 0.05f;
 
 		// Become character.
-		if (GameVar.charForP[playerNum] >= GameVar.charDataCustom.Length) {
-			headSprite.sprite = headSpriteSrc[GameVar.charForP[playerNum]-GameVar.charDataCustom.Length];
+		if (tManage.demoMode) {
+			headSprite.gameObject.SetActive(false);
 		}
-		else headSprite.sprite = headSpriteSrc[headSpriteSrc.Length-1];
-		if (playerNum < GameVar.playerCount) headSprite.gameObject.SetActive(false);
+		else if (GameRam.charForP[playerNum] < GameRam.charDataPermanent.Length) {
+			headSprite.sprite = headSpriteSrc[GameRam.charForP[playerNum]];
+		}
+		else {
+			headSprite.sprite = headSpriteSrc[headSpriteSrc.Length-1];
+		}
+		if (playerNum < GameRam.playerCount) headSprite.gameObject.SetActive(false);
         
         // Initialize items.
 		blankWeap = pUI.weaponSprite.Length-1;
@@ -89,65 +100,73 @@ public class RacerPhysics : MonoBehaviour {
 		itemType = blankItem;
         shots = 0;
         coins = 0;
+
+		initialized = true;
     }
 
     void Update() {
-		// Update Checkpoints
-		checkDist = (transform.position - lastCheckpoint.transform.position).magnitude - (transform.position - nextCheckpoint.transform.position).magnitude;
-		if (finished) checkDist += 1000000;
-		Debug.DrawLine(transform.position, lastCheckpoint.transform.position, Color.green, .25f);
-		Debug.DrawLine(transform.position, nextCheckpoint.transform.position, Color.blue, .25f);
-		Debug.DrawLine(lastCheckpoint.transform.position, nextCheckpoint.transform.position, Color.red, .1f);
+		if (initialized) {
+			// Update Checkpoints
+			checkDist = (transform.position - lastCheckpoint.transform.position).sqrMagnitude - (transform.position - nextCheckpoint.transform.position).sqrMagnitude;
+			// if (finished) checkDist += 1000000;
+			Debug.DrawLine(transform.position, lastCheckpoint.transform.position, Color.green, .25f);
+			Debug.DrawLine(transform.position, nextCheckpoint.transform.position, Color.blue, .25f);
+			Debug.DrawLine(lastCheckpoint.transform.position, nextCheckpoint.transform.position, Color.red, .1f);
 
-		// Update variable limits.
-		if (coins < 0) coins = 0;
-		if (shots <= 0) {
-			weapType = 6;
+			// Update variable limits.
+			if (coins < 0) coins = 0;
+			if (shots <= 0) {
+				weapType = 6;
+			}
 		}
     }
 
     void FixedUpdate() {
-		// Get relative velocity.
-		relVel = new Vector3(Vector3.Dot(transform.right, rigid.velocity), Vector3.Dot(-transform.up, rigid.velocity), Vector3.Dot(transform.forward, rigid.velocity));
+		if (initialized) {
+			// Get relative velocity.
+			relVel = new Vector3(Vector3.Dot(transform.right, rigid.velocity), Vector3.Dot(-transform.up, rigid.velocity), Vector3.Dot(transform.forward, rigid.velocity));
 
-        // Slow down player when finished.
-		if (finished) {
-			rigid.AddRelativeForce(-relVel*2, ForceMode.Acceleration);
+			// Slow down player when finished.
+			if (finished) {
+				rigid.AddRelativeForce(-relVel*2, ForceMode.Acceleration);
+			}
+
+			// Control player when not finished.
+			else {
+				// Slowdown from other players.
+				if (!boostOn && relVel.z > speed/(slows+1)) rigid.AddRelativeForce(0,0,-relVel.z, ForceMode.Acceleration);
+				if (boostOn && relVel.z > (speed + boostAddSpeed)/(slows+1)) rigid.AddRelativeForce(0,0,-relVel.z, ForceMode.Acceleration);
+				if (slows > 0) slowed.SetActive(true);
+				else slowed.SetActive(false);
+
+				// Use rockets and fans.
+				if (boostOn) {
+					rigid.AddRelativeForce(0,0,boostForce, ForceMode.Acceleration);
+					if (relVel.z > speed + boostAddSpeed) rigid.AddRelativeForce(0,0,-relVel.z, ForceMode.Acceleration);
+				}
+				
+				// Keep player below max speeds.
+				if (relVel.x > Mathf.Abs(speed)) rigid.AddRelativeForce(-relVel.x,0,0, ForceMode.Acceleration);
+				if (relVel.z > speed && !boostOn) rigid.AddRelativeForce(0,0,-relVel.z, ForceMode.Acceleration);
+				if (spotLock) rigid.AddRelativeForce(-relVel.x,0,-relVel.z, ForceMode.VelocityChange);
+
+				if (grounded) {
+					// Slow horizontal movement.
+					rigid.AddRelativeForce(traction * -relVel.x,0,0, ForceMode.VelocityChange);
+
+					// Turn board around when going backwards.
+					if (relVel.z < -1) transform.Rotate(0,180,0);
+				}
+			}
 		}
-
-        // Control player when not finished.
-        else {
-            // Slowdown from other players.
-            if (!boostOn && relVel.z > speed/(slows+1)) rigid.AddRelativeForce(0,0,-relVel.z, ForceMode.Acceleration);
-            if (boostOn && relVel.z > (speed + boostAddSpeed)/(slows+1)) rigid.AddRelativeForce(0,0,-relVel.z, ForceMode.Acceleration);
-			if (slows > 0) slowed.SetActive(true);
-			else slowed.SetActive(false);
-
-			// Use rockets and fans.
-			if (boostOn) {
-				rigid.AddRelativeForce(0,0,boostForce, ForceMode.Acceleration);
-				if (relVel.z > speed + boostAddSpeed) rigid.AddRelativeForce(0,0,-relVel.z, ForceMode.Acceleration);
-			}
-            
-			// Keep player below max speeds.
-			if (relVel.x > Mathf.Abs(speed)) rigid.AddRelativeForce(-relVel.x,0,0, ForceMode.Acceleration);
-			if (relVel.z > speed && !boostOn) rigid.AddRelativeForce(0,0,-relVel.z, ForceMode.Acceleration);
-			if (spotLock) rigid.AddRelativeForce(-relVel.x,0,-relVel.z, ForceMode.VelocityChange);
-
-            if (grounded) {
-				// Slow horizontal movement.
-				rigid.AddRelativeForce(traction * -relVel.x,0,0, ForceMode.VelocityChange);
-
-				// Turn board around when going backwards.
-				if (relVel.z < -1) transform.Rotate(0,180,0);
-			}
-        }
     }
 
     void LateUpdate() {
-		transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0);
-		if (Mathf.Abs(transform.localEulerAngles.x) > 60) {
-			transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, transform.localEulerAngles.z);
+		if (initialized) {
+			transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0);
+			if (Mathf.Abs(transform.localEulerAngles.x) > 60) {
+				transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, transform.localEulerAngles.z);
+			}
 		}
     }
 	
@@ -207,7 +226,7 @@ public class RacerPhysics : MonoBehaviour {
 				if (chPnt.isLift) {
 					lastCheckpoint = firstCheckpoint;
 					nextCheckpoint = firstCheckpoint.GetComponent<Checkpoint>().nextCheck;
-					if (pUI != null && GameVar.gameMode == 2) pUI.LapTime(currentLap);
+					if (pUI != null && GameRam.gameMode == 2) pUI.LapTime(currentLap);
 					currentLap ++;
 					boostOn = false;
 					rigid.velocity = Vector3.zero;
@@ -217,9 +236,10 @@ public class RacerPhysics : MonoBehaviour {
 				}
 				if (chPnt.isFinish && currentLap >= totalLaps) {
 					finalPlace = place;
-					corCon.Finish(playerNum);
+					// corCon.Finish(playerNum);
+					tManage.Finish(playerNum);
 					if (pUI != null) {
-						if (GameVar.gameMode == 2) pUI.LapTime(currentLap);
+						if (GameRam.gameMode == 2) pUI.LapTime(currentLap);
 						pUI.finished = true;
 					}
 					aI.finished = true;
@@ -554,12 +574,14 @@ public class RacerPhysics : MonoBehaviour {
 				break;
 			case 2:
 			// Slow
-				corCon.UseSlow(playerNum);
+				// corCon.UseSlow(playerNum);
+				tManage.UseSlow(playerNum);
 				itemType = blankItem; 
 				break;
 			case 3:
 			// Triple Slow
-				corCon.UseTripleSlow(playerNum);
+				// corCon.UseTripleSlow(playerNum);
+				tManage.UseTripleSlow(playerNum);
 				itemType = blankItem;
 				break;
 			case 4:
@@ -569,17 +591,20 @@ public class RacerPhysics : MonoBehaviour {
 				break;
 			case 5:
 			// Triple Rock
-				corCon.UseTripleStop(playerNum);
+				// corCon.UseTripleStop(playerNum);
+				tManage.UseTripleStop(playerNum);
 				itemType = blankItem;
 				break;
 			case 6:
 			// Steal
-				corCon.UseSteal(playerNum);
+				// corCon.UseSteal(playerNum);
+				tManage.UseSteal(playerNum);
 				itemType = blankItem;
 				break;
 			case 7:
 			// Triple Steal
-				corCon.UseTripleSteal(playerNum);
+				// corCon.UseTripleSteal(playerNum);
+				tManage.UseTripleSteal(playerNum);
 				itemType = blankItem;
 				break;
 			case 8:

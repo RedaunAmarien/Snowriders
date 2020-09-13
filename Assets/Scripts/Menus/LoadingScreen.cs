@@ -5,19 +5,30 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LoadingScreen : MonoBehaviour {
-    public Image progressBar;
-    public Text progressText;
+    public Image progressBar, progressMask;
+    public Gradient progressBarColor;
+    public Text progressText, tipText;
+    public string[] tips;
 
     void Start() {
-        if (GameVar.nextSceneToLoad == null) StartCoroutine(LoadScene("MainMenu"));
-        else StartCoroutine(LoadScene(GameVar.nextSceneToLoad));
+        tipText.text = tips[Random.Range(0, tips.Length)];
+        if (GameRam.nextSceneToLoad == null) {
+            GameRam.nextSceneType = GameRam.SceneType.Menu;
+            GameRam.nextSceneToLoad = "MainMenu";
+            StartCoroutine(LoadScene("OpeningCinematic"));
+        }
+        else {
+            StartCoroutine(LoadScene(GameRam.nextSceneToLoad));
+        }
     }
 
     IEnumerator LoadScene(string sceneName) {
+        // Debug.Log("Loading scene " + sceneName);
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
         while (!asyncLoad.isDone) {
-			progressBar.fillAmount = asyncLoad.progress;
-            progressText.text = "Loading...\n" + (asyncLoad.progress*100) + "%";
+			progressMask.fillAmount = asyncLoad.progress;
+            progressText.text = "Loading...\n" + asyncLoad.progress.ToString("P2");
+            progressBar.color = progressBarColor.Evaluate(asyncLoad.progress);
             yield return null;
         }
     }

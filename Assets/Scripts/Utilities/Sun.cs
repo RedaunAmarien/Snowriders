@@ -1,19 +1,40 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Sun : MonoBehaviour {
-    public float time0, time1, time2, time3, timetick, rotator;
-    public Vector2 offset = new Vector2 (-90, -30);
+    public float timeOfDayPercent, rotator;
+    public Vector3 offsetRoot, offsetLight;
+    GameObject child;
+    public GameObject[] sceneNightLights;
+    [Range(0,1)]
+    public float sceneSunrise, sceneSunset;
+    public bool timeStatic;
+    [Range(0,23)]
+    public int staticHour;
+    [Range(0,59)]
+    public int staticMinute;
+
+    DateTime staticTime; 
+    void Start() {
+        child = transform.Find("Directional Light").gameObject;
+        if (child == null) Debug.LogErrorFormat("Sun child object was not found. Make sure scene sun has been replaced with LightRoot prefab.");
+        Reset();
+    }
+
+    void Reset() {
+        staticTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, staticHour, staticMinute, 0);
+        for (int i = 0; i < sceneNightLights.Length; i++) {
+            if (timeOfDayPercent > sceneSunrise && timeOfDayPercent < sceneSunset) sceneNightLights[i].SetActive(false);
+            else sceneNightLights[i].SetActive(true);
+        }
+    }
+
     void LateUpdate() {
-        time0 = System.DateTime.Now.DayOfYear;
-        time1 = System.DateTime.Now.Hour;
-        time2 = System.DateTime.Now.Minute;
-        time3 = System.DateTime.Now.Second;
-        timetick = ((time1*60f*60f) + (time2*60f) + (time3));
-        rotator = (timetick/86400f*360f) + offset.x;
-        transform.SetPositionAndRotation(transform.position, Quaternion.Euler(rotator,offset.y,0));
-        // if (time1 > 6 && time1 < 18) nightLight.SetActive(false);
-        // else nightLight.SetActive(true);
+        if (timeStatic) timeOfDayPercent = (float)staticTime.TimeOfDay.TotalMinutes/1440f;
+        else timeOfDayPercent = (float)DateTime.Now.TimeOfDay.TotalMinutes/1440f;
+        rotator = (timeOfDayPercent*360f) + offsetLight.x;
+        child.transform.SetPositionAndRotation(transform.position, Quaternion.Euler(rotator, offsetLight.y, offsetLight.z));
     }
 }

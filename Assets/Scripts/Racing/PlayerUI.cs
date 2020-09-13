@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class PlayerUI : MonoBehaviour {
 
@@ -13,12 +14,15 @@ public class PlayerUI : MonoBehaviour {
 	public Vector3 camAngle, camOffset;
 	public float camSmoothTime;
 	public Canvas canvas;
-	public Text lapText, coinText, shotsText, trickText, timeText, lapTimeDisplay;
+	public TextMeshProUGUI lapText, coinText, shotsText, trickText, timeText, lapTimeDisplay, placementText;
+	public GameObject reverseView;
+	public RenderTexture[] reverseViews;
+	public Color[] placementColor;
 	public string[] lapTimeValue;
 	public int[] lapTime;
 	public int runningLapTime;
 	public bool timerOn, paused;
-	public Image blueItem, redItem, placement;
+	public Image blueItem, redItem;
 	public GameObject pauseMenu, pauseResume, finishGraphic;
 	public EventSystem events;
 	public StandaloneInputModule inputMod;
@@ -26,14 +30,16 @@ public class PlayerUI : MonoBehaviour {
 	public Sprite[] itemSprite, weaponSprite, placeSprite;
 	public bool finished, camIsReversed;
 	RacerPhysics rPhys;
-	CourseControl corCon;
-	public Camera subCam;
+	// CourseControl corCon;
+	public Camera reverseCam;
 
 	void Start () {
 		// Find objects.
-		corCon = GameObject.Find("CourseSettings").GetComponent<CourseControl>();
+		// corCon = GameObject.Find("CourseSettings").GetComponent<CourseControl>();
 		rPhys = GetComponent<RacerPhysics>();
-		subCam = assignedCam.GetComponentInChildren<Camera>();
+		reverseCam = GameObject.Find("Reverse Camera " + playerNum).GetComponent<Camera>();
+		reverseView.GetComponent<RawImage>().texture = reverseViews[playerNum];
+		reverseView.SetActive(false);
 		events = GameObject.Find("EventSystem").GetComponent<EventSystem>();
 		inputMod = GameObject.Find("EventSystem").GetComponent<StandaloneInputModule>();
 		lapTime = new int[rPhys.totalLaps];
@@ -41,45 +47,70 @@ public class PlayerUI : MonoBehaviour {
 
 		// Initialize camera
 		assignedCam.transform.SetPositionAndRotation(transform.position, transform.rotation);
+		reverseCam.transform.SetPositionAndRotation(transform.position, transform.rotation);
 		// subCam.transform.position = transform.position + camOffset;
-		subCam.transform.LookAt(transform.position + camAngle);
-		finishGraphic.SetActive(false);
-		pauseMenu.SetActive(false);
-		if (GameVar.gameMode == 2) placement.gameObject.SetActive(false);
-		if (!GameVar.itemsOn) itemDisplay.SetActive(false);
-		if (GameVar.playerCount == 1) canvas.worldCamera = GameObject.Find("Main Camera 0").GetComponent<Camera>();
-		if (GameVar.playerCount == 2) canvas.worldCamera = GameObject.Find("Main Camera "+(playerNum+1)).GetComponent<Camera>();
-		if (GameVar.playerCount >= 3) canvas.worldCamera = GameObject.Find("Main Camera "+(playerNum+3)).GetComponent<Camera>();
+		assignedCam.transform.LookAt(transform.position + camAngle);
+		reverseCam.transform.LookAt(transform.position + camAngle);
+		if (GameRam.gameMode == 2) placementText.gameObject.SetActive(false);
+		if (!GameRam.itemsOn) itemDisplay.SetActive(false);
+		//Are these canvas assignments correct??
+		canvas.worldCamera = assignedCam.GetComponent<Camera>();
+		// if (GameRam.playerCount == 1) canvas.worldCamera = GameObject.Find("Main Camera 0").GetComponent<Camera>();
+		// if (GameRam.playerCount >= 2) canvas.worldCamera = GameObject.Find("Main Camera "+playerNum).GetComponent<Camera>();
 		canvas.planeDistance = .5f;
 
+		switch (playerNum) {
+			case 0:
+				if (GameRam.playerCount == 1) assignedCam.GetComponent<Camera>().rect = new Rect(Vector2.zero, Vector2.one);
+				else if (GameRam.playerCount == 2) assignedCam.GetComponent<Camera>().rect = new Rect(Vector2.zero, new Vector2(.5f, 1));
+				else assignedCam.GetComponent<Camera>().rect = new Rect(new Vector2(0, .5f), new Vector2(.5f, .5f));
+			break;
+			case 1:
+				if (GameRam.playerCount == 2) assignedCam.GetComponent<Camera>().rect = new Rect(new Vector2(.5f, 1), new Vector2(.5f, 1));
+				else assignedCam.GetComponent<Camera>().rect = new Rect(new Vector2(.5f, .5f), new Vector2(.5f, .5f));
+			break;
+			case 2:
+				assignedCam.GetComponent<Camera>().rect = new Rect(Vector2.zero, new Vector2(.5f, .5f));
+			break;
+			case 3:
+				assignedCam.GetComponent<Camera>().rect = new Rect(new Vector2(.5f, 0), new Vector2(.5f, .5f));
+			break;
+		}
+
 		// Fix Audio Listeners at some point.
-		subCam.GetComponent<AudioListener>().enabled = true;
+		assignedCam.GetComponent<AudioListener>().enabled = true;
+		finishGraphic.SetActive(false);
+		pauseMenu.SetActive(false);
 	}
 
 	void Update () {
 		if (!finished) {
 			// Update UI texts.
 			lapText.text = "Lap " + rPhys.currentLap + "/" + rPhys.totalLaps;
-			coinText.text = rPhys.coins.ToString();
+			coinText.text = rPhys.coins.ToString("N0");
 			if (rPhys.place == 1) {
-				placement.sprite = placeSprite[0];
-				placement.rectTransform.localScale = new Vector3 (.4f, .4f, 1);
+				placementText.text = "1<sup>st</sup>";
+				placementText.fontSize = 200;
+				placementText.color = placementColor[0];
 			}
 			if (rPhys.place == 2) {
-				placement.sprite = placeSprite[1];
-				placement.rectTransform.localScale = new Vector3 (.35f, .35f, 1);
+				placementText.text = "2<sup>nd</sup>";
+				placementText.fontSize = 175;
+				placementText.color = placementColor[1];
 			}
 			if (rPhys.place == 3) {
-				placement.sprite = placeSprite[2];
-				placement.rectTransform.localScale = new Vector3 (.3f, .3f, 1);
+				placementText.text = "3<sup>rd</sup>";
+				placementText.fontSize = 150;
+				placementText.color = placementColor[2];
 			}
 			if (rPhys.place == 4) {
-				placement.sprite = placeSprite[3];
-				placement.rectTransform.localScale = new Vector3 (.25f, .25f, 1);
+				placementText.text = "4<sup>th</sup>";
+				placementText.fontSize = 130;
+				placementText.color = placementColor[3];
 			}
 			if (rPhys.shots <= 0) shotsText.text = "";
 			else shotsText.text = rPhys.shots.ToString();
-			timeText.text = corCon.printTimer;
+			timeText.text = rPhys.tManage.printTimer;
 		}
 		
 		else finishGraphic.SetActive(true);
@@ -93,21 +124,29 @@ public class PlayerUI : MonoBehaviour {
 		// Camera Follow
 		Vector3 vel = Vector3.zero;
 		assignedCam.transform.position = Vector3.SmoothDamp(assignedCam.transform.position, transform.TransformPoint(camOffset), ref vel, camSmoothTime);
-		if (camIsReversed) {
-			subCam.transform.LookAt(transform.position + camAngle, Vector3.up);
+		if (finished) {
+			assignedCam.transform.RotateAround(transform.position, Vector3.up, camRotSpeed);
 		}
 		else {
-			subCam.transform.LookAt(transform.position + camAngle, Vector3.up);
+			assignedCam.transform.LookAt(transform.position + camAngle, Vector3.up);
 		}
-		if (finished) {
-			subCam.transform.RotateAround(transform.position, Vector3.up, camRotSpeed);
+
+		reverseCam.transform.position = Vector3.SmoothDamp(assignedCam.transform.localPosition, transform.TransformPoint(camOffset), ref vel, camSmoothTime);
+		// reverseCam.transform.RotateAround(transform.position, Vector3.up, 180);
+
+		if (camIsReversed) {
+			reverseView.SetActive(true);
+		}
+		else {
+			reverseView.SetActive(false);
 		}
 	}
 
 	public void Pause (int option) {
 		if (option == 0) {
 			Time.timeScale = 0;
-			corCon.timerOn = false;
+			// corCon.timerOn = false;
+			rPhys.tManage.timerOn = false;
 			paused = true;
 			inputMod.horizontalAxis = (playerNum-1) + " Axis 1";
 			inputMod.verticalAxis = (playerNum-1) + " Axis 2";
@@ -117,7 +156,8 @@ public class PlayerUI : MonoBehaviour {
 			pauseMenu.SetActive(true);
 		}
 		else if (option == 1) {
-			corCon.timerOn = true;
+			// corCon.timerOn = true;
+			rPhys.tManage.timerOn = true;
 			Time.timeScale = 1;
 			paused = false;
 			pauseMenu.SetActive(false);
@@ -133,19 +173,19 @@ public class PlayerUI : MonoBehaviour {
 	}
 
 	public IEnumerator TrickComplete (int total) {
-		Text textBox = Instantiate(trickText, new Vector2(0,0), Quaternion.Euler(0,0,0), canvas.gameObject.transform);
+		TextMeshProUGUI textBox = Instantiate(trickText, new Vector2(0,0), Quaternion.Euler(0,0,0), canvas.gameObject.transform);
 		textBox.rectTransform.localPosition = new Vector3(0,0,0);
 		textBox.rectTransform.localEulerAngles = new Vector3(0,0,0);
-		textBox.text = "TRICK!  " + total + "P";
+		textBox.text = "TRICK!  " + total;
 		yield return new WaitForSeconds(1.5f);
 		Destroy(textBox.gameObject);
 	}
 
 	public void LapTime (int lap) {
-		Text textBox = Instantiate(lapTimeDisplay, new Vector3(0,0,0), Quaternion.Euler(0,0,0), timeText.gameObject.transform);
+		TextMeshProUGUI textBox = Instantiate(lapTimeDisplay, new Vector3(0,0,0), Quaternion.Euler(0,0,0), timeText.gameObject.transform);
 		textBox.rectTransform.anchoredPosition3D = new Vector3(0, -50*lap, 0);
 		textBox.rectTransform.localEulerAngles = new Vector3(0,0,0);
-		int newLapTime = corCon.totalTimer;
+		int newLapTime = rPhys.tManage.totalTimer;
 		if (lap == 1) {
 			lapTime[lap-1] = newLapTime;
 		}
@@ -172,6 +212,6 @@ public class PlayerUI : MonoBehaviour {
 		}
 		lapTimeValue[lap-1] = t5 + ":" + t4 + t3 + "." + t2 + t1;
 		textBox.text = lapTimeValue[lap-1] + " Lap " + lap;
-		runningLapTime = corCon.totalTimer;
+		runningLapTime = rPhys.tManage.totalTimer;
 	}
 }

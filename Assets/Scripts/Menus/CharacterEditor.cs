@@ -29,8 +29,6 @@ public class CharacterEditor : MonoBehaviour {
         }
         charDir = Path.Combine(Application.persistentDataPath, "Characters");
         saveDir = Path.Combine(Application.persistentDataPath, "Saves");
-        saveDataPath = Path.Combine(saveDir, "Save_" + GameVar.saveSlot + ".sbsv");
-        print (saveDataPath);
         UpdateLoadList();
         speedSl.value = 3;
         turnSl.value = 3;
@@ -46,23 +44,23 @@ public class CharacterEditor : MonoBehaviour {
 
     void UpdateLoadList() {
         // Update Custom list for customization.
-        charFile = Directory.GetFiles(charDir);
-        GameVar.charDataCustom = new CharacterData[charFile.Length];
+        charFile = Directory.GetFiles(charDir, "*.sbcc");
+        GameRam.charDataCustom = new CharacterData[charFile.Length];
         string[] names = new string[charFile.Length];
         List<string> savedChars = new List<string> {};
         for (int i = 0; i < charFile.Length; i++) {
-            GameVar.charDataCustom[i] = LoadChar(charFile[i]);
+            GameRam.charDataCustom[i] = LoadChar(charFile[i]);
             names[i] = LoadChar(charFile[i]).name;
             savedChars.Add(names[i]);
         }
 
         // Update Total list for gameplay.
-		GameVar.allCharData = new CharacterData[GameVar.charDataPermanent.Length + GameVar.charDataCustom.Length];
-		for (int i = 0; i < GameVar.charDataCustom.Length; i++) {
-			GameVar.allCharData[i] = GameVar.charDataCustom[i];
+        GameRam.allCharData.Clear();
+		for (int i = 0; i < GameRam.charDataPermanent.Length; i++) {
+			GameRam.allCharData.Add(GameRam.charDataPermanent[i]);
 		}
-		for (int i = 0; i < GameVar.charDataPermanent.Length; i++) {
-			GameVar.allCharData[i+GameVar.charDataCustom.Length] = GameVar.charDataPermanent[i];
+		for (int i = 0; i < GameRam.charDataCustom.Length; i++) {
+			GameRam.allCharData.Add(GameRam.charDataCustom[i]);
 		}
         loadChars.ClearOptions();
         loadChars.AddOptions(savedChars);
@@ -100,7 +98,7 @@ public class CharacterEditor : MonoBehaviour {
                     }
                 }
                 else {
-                    currentCharData.creator = GameVar.currentSaveFile.fileName;
+                    currentCharData.creator = GameRam.currentSaveFile.fileName;
                     currentCharData.updateTimeStamp = System.DateTime.Now.ToString();
                     SaveChar(currentCharData, charDataPath);
                     print ("Successfully saved " + currentCharData.name);
@@ -146,7 +144,7 @@ public class CharacterEditor : MonoBehaviour {
 	}
 
 	IEnumerator LoadScene(string sceneToLoad) {
-		GameVar.nextSceneToLoad = sceneToLoad;
+		GameRam.nextSceneToLoad = sceneToLoad;
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("LoadingScreen");
         while (!asyncLoad.isDone)
         {

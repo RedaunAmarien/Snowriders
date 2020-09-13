@@ -28,25 +28,9 @@ public class PlayerRaceControls : MonoBehaviour {
 		rPhys.spotLock = true;
 		lockControls = true;
 		rigid.maxAngularVelocity = 0.05f;
-
-		//Initialize controls.
-		// lStickH = (conNum+" Axis 1");
-		// lStickV = (conNum+" Axis 2");
-		// rStickH = (conNum+" Axis 4");
-		// rStickV = (conNum+" Axis 5");
-		// aBut = (conNum+ " Button 0");
-		// bBut = (conNum+ " Button 1");
-		// xBut = (conNum+ " Button 2"); //Button 2 or Axis 9
-		// yBut = (conNum+ " Button 3"); //Button 3 or Axis 10
-		// stBut = (conNum+ " Button 7");
-		// bkBut = (conNum+ " Button 6");
 	}
 
 	void Update () {
-
-		// Make sure items will be shot one at a time.
-		// if (Input.GetButtonUp(bBut)) fire1Down = false;
-		// if (Input.GetButtonUp(xBut)) fire2Down = false;
 
 		// Control player if not finished.
 		if (!rPhys.finished && !lockControls) {
@@ -167,6 +151,56 @@ public class PlayerRaceControls : MonoBehaviour {
 		}
 	}
 
+	public void OnJumpAI(bool down) {
+
+		// During Race
+		if (!rPhys.finished && !lockControls) {
+			if (rPhys.grounded) {
+				if (down) {
+					// Crouch to ready tricks.
+				}
+				else {
+					// Jump and perform tricks if touching the ground.
+					rPhys.Jump();
+					if (lStickPos.x > 0) {
+						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
+						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
+						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
+					}
+					else if (lStickPos.x == 0) {
+						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
+						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
+					}
+					else if (lStickPos.x < 0) {
+						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
+						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
+						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
+					}
+				}
+			}
+			else {
+				// Combo tricks in air
+				if (!down && comboAble) {
+					if (lStickPos.x > 0) {
+						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
+						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
+						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
+					}
+					else if (lStickPos.x == 0) {
+						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
+						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
+					}
+					else if (lStickPos.x < 0) {
+						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
+						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
+						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
+					}
+					comboAble = false;
+				}
+			}
+		}
+	}
+
 	public void OnShoot(InputValue val) {
 		var v = val.Get<float>();
 		if (v > 0) fire1Down = true;
@@ -176,11 +210,23 @@ public class PlayerRaceControls : MonoBehaviour {
 		}
 	}
 
+	public void OnShootAI() {
+		if (!rPhys.finished && !lockControls) {
+			rPhys.Shoot();
+		}
+	}
+
 	public void OnItem(InputValue val) {
 		var v = val.Get<float>();
 		if (v > 0) fire2Down = true;
 		else fire2Down = false;
 		if (!rPhys.finished && !lockControls && !fire2Down) {
+			rPhys.Item();
+		}
+	}
+
+	public void OnItemAI() {
+		if (!rPhys.finished && !lockControls) {
 			rPhys.Item();
 		}
 	}
@@ -200,7 +246,7 @@ public class PlayerRaceControls : MonoBehaviour {
 	}
 
 	IEnumerator LoadScene(string sceneToLoad) {
-		GameVar.nextSceneToLoad = sceneToLoad;
+		GameRam.nextSceneToLoad = sceneToLoad;
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("LoadingScreen");
         while (!asyncLoad.isDone)
         {

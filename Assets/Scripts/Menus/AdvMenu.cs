@@ -34,11 +34,11 @@ public class AdvMenu : MonoBehaviour {
     }
 
 	void Start () {
-        GameVar.controlp = new int[4];
-        GameVar.charForP = new int[4];
-        GameVar.boardForP = new int[4];
-        GameVar.inpUse = new InputUser[4];
-        GameVar.inpDev = new InputDevice[4];
+        GameRam.controlp = new int[4];
+        GameRam.charForP = new int[4];
+        GameRam.boardForP = new int[4];
+        GameRam.inpUse = new InputUser[4];
+        GameRam.inpDev = new InputDevice[4];
 
 		// Main Menu
         loadSet.SetActive(false);
@@ -47,19 +47,19 @@ public class AdvMenu : MonoBehaviour {
 		courseSet.SetActive(false);
 		
 		// Set defaults
-        GameVar.lapCount = 0;
+        GameRam.lapCount = 0;
         playersReady = 0;
 
         //Game Mode 0 = Battle (Multiplayer), 1 = Adventure, 2 = Challenge, 3 = Online(Unused).
-        if (GameVar.gameMode == 0) {
+        if (GameRam.gameMode == 0) {
             Debug.LogError("Trying to play multiplayer gamemode through singleplayer menu. Code will not work.");
             titleText.text = "Battle Mode";
             countSet.SetActive(false);
             characterSet.SetActive(true);
             StartCoroutine(StartSong(1));
             optionButton.interactable = true;
-            GameVar.itemsOn = true;
-            GameVar.coinsOn = true;
+            GameRam.itemsOn = true;
+            GameRam.coinsOn = true;
             items.isOn = true;
             coins.isOn = true;
         }
@@ -67,19 +67,19 @@ public class AdvMenu : MonoBehaviour {
             countSet.SetActive(false);
             characterSet.SetActive(true);
             StartCoroutine(StartSong(1));
-            if (GameVar.gameMode == 1) {
+            if (GameRam.gameMode == 1) {
                 titleText.text = "Adventure Mode";
                 optionButton.interactable = false;
-                GameVar.itemsOn = true;
-                GameVar.coinsOn = true;
+                GameRam.itemsOn = true;
+                GameRam.coinsOn = true;
                 items.isOn = true;
                 coins.isOn = true;
             }
-            else if (GameVar.gameMode == 2) {
+            else if (GameRam.gameMode == 2) {
                 titleText.text = "Challenge Mode";
                 optionButton.interactable = true;
-                GameVar.itemsOn = false;
-                GameVar.coinsOn = false;
+                GameRam.itemsOn = false;
+                GameRam.coinsOn = false;
                 items.isOn = false;
                 coins.isOn = false;
             }
@@ -87,7 +87,7 @@ public class AdvMenu : MonoBehaviour {
 	}
 
     void Update() {
-        if (playersReady == GameVar.playerCount && GameVar.playerCount != 0) {
+        if (playersReady == GameRam.playerCount && GameRam.playerCount != 0) {
             readyToGo = true;
             readySet.SetActive(true);
         }
@@ -104,11 +104,11 @@ public class AdvMenu : MonoBehaviour {
             advSub.transform.localPosition = new Vector3 (transform.position.x, transform.position.y, 350);
             mainSet.SetActive(true);
             playersReady = 0;
-            for (int i = GameVar.playerCount; i < 4; i++) {
-                // Fix later to be specific levels.
-                GameVar.charForP[i] = Random.Range(0, GameVar.allCharData.Length);
-                GameVar.boardForP[i] = Random.Range(0, GameVar.boardData.Length);
-            }
+            // for (int i = GameRam.playerCount; i < 4; i++) {
+            //     // Fix later to be specific levels.
+            //     GameRam.charForP[i] = Random.Range(0, GameRam.allCharData.Count);
+            //     GameRam.boardForP[i] = Random.Range(0, GameRam.boardData.Length);
+            // }
             StartCoroutine(StartSong(2));
             StartCoroutine(StopSong(1));
         }
@@ -120,18 +120,18 @@ public class AdvMenu : MonoBehaviour {
 
     public void OnPlayerJoined(PlayerInput player) {
         Debug.Log("Player " + (player.user.index) + " joined.");
-        GameVar.playerCount = player.user.index+1;
-        // if (GameVar.playerCount > 2) {
+        GameRam.playerCount = player.user.index+1;
+        // if (GameRam.playerCount > 2) {
         //     player3And4.SetActive(true);
         // }
-        GameVar.inpUse[player.user.index] = player.user;
-        GameVar.inpDev[player.user.index] = player.user.pairedDevices[0];
+        GameRam.inpUse[player.user.index] = player.user;
+        GameRam.inpDev[player.user.index] = player.user.pairedDevices[0];
         Debug.Log(player.user.id + "\n" + player.user.pairedDevices[0]);
     }
 
     // public void OnPlayerLeft(PlayerInput player) {
     //     Debug.Log("Player " + player.user.index + " disconnected.");
-    //     GameVar.playerCount --;
+    //     GameRam.playerCount --;
     //     // advSub.SetActive(false);
     // }
 
@@ -142,23 +142,31 @@ public class AdvMenu : MonoBehaviour {
         else {
             lapCountText.text = "Lap Count: " + laps.value;
         }
-        GameVar.lapCount = Mathf.RoundToInt(laps.value);
+        GameRam.lapCount = Mathf.RoundToInt(laps.value);
 	}
 
 	public void ItemToggle() {
-		GameVar.itemsOn = items.isOn;
+		GameRam.itemsOn = items.isOn;
 	}
 
 	public void CoinToggle() {
-		GameVar.coinsOn = coins.isOn;
+		GameRam.coinsOn = coins.isOn;
 	}
 
 	public void ChooseCourse(string sceneName) {
-		StartCoroutine(LoadScene(sceneName));
+        //Can go to cutscene or menu, but not directly to course. Point name to cutscene.
+        StartCoroutine(LoadScene(sceneName));
 	}
 
+    public void ChooseCourseSkip(string sceneName) {
+        //Goes to course without cutscene. Point name to course directly.
+        GameRam.courseToLoad = sceneName;
+        StartCoroutine(LoadScene("TrackContainer"));
+    }
+
 	IEnumerator LoadScene(string sceneToLoad) {
-		GameVar.nextSceneToLoad = sceneToLoad;
+        //Reroute through loading screen to load scene.
+		GameRam.nextSceneToLoad = sceneToLoad;
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("LoadingScreen");
         while (!asyncLoad.isDone)
         {

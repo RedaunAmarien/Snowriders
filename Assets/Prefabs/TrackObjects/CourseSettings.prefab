@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1865039778898810
+--- !u!1 &5197659618128788229
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,121 +8,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4057453977711368}
-  - component: {fileID: 114495920719211068}
-  m_Layer: 8
-  m_Name: CourseSettings
-  m_TagString: CourseController
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4057453977711368
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1865039778898810}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 8276613506959037656}
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114495920719211068
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1865039778898810}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f20b96fa8b376bc4ba7caae718bbf270, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  courseName: 
-  courseIndex: 0
-  defaultLapCount: 3
-  defaultCpu: 000000000000000000000000
-  defaultCpuBoard: 000000000000000000000000
-  prize: 1027000070170000b80b000000000000
-  firstCheckpoint: {fileID: 0}
-  totalTimer: 0
-  printTimer: 
-  timerOn: 0
-  miniMapAnchorMinDefault: {x: 0.4, y: 0.4}
-  miniMapAnchorMaxDefault: {x: 0.6, y: 0.6}
-  miniMapAnchorMin1p: {x: 0.85, y: 0.2}
-  miniMapAnchorMax1p: {x: 0.95, y: 0.8}
-  miniMapAnchorMin3p: {x: 0.5, y: 0}
-  miniMapAnchorMax3p: {x: 1, y: 0.5}
-  player:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  cameras:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  spriteHead: []
-  miniMap: {fileID: 0}
-  mapPanel: {fileID: 0}
-  resultsPanel: {fileID: 0}
-  spriteHeadImage: []
-  mapScale: 0
-  miniMapRef: 0
-  mapRef: {x: 0, y: 0, z: 0}
-  mapRotated: 0
-  playerInputs: {fileID: -944628639613478452, guid: b04716a6024edc949876431eb6117025,
-    type: 3}
-  playerPrefab: {fileID: 7682347921249527906, guid: 642b252d37aab214b96a8c66712c91eb,
-    type: 3}
---- !u!1 &3669739400724152965
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8276613506959037656}
-  - component: {fileID: 5118664942292593643}
-  - component: {fileID: 9218614552806793174}
-  - component: {fileID: 2064437563066706870}
+  - component: {fileID: 581020748322188632}
+  - component: {fileID: 4451075742130115179}
+  - component: {fileID: 370239096868955734}
+  - component: {fileID: 7379737801200112182}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8276613506959037656
+  m_IsActive: 0
+--- !u!4 &581020748322188632
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3669739400724152965}
+  m_GameObject: {fileID: 5197659618128788229}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4057453977711368}
+  m_Father: {fileID: 8845678055785941640}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5118664942292593643
+--- !u!114 &4451075742130115179
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3669739400724152965}
+  m_GameObject: {fileID: 5197659618128788229}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
@@ -131,13 +48,13 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
---- !u!114 &9218614552806793174
+--- !u!114 &370239096868955734
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3669739400724152965}
+  m_GameObject: {fileID: 5197659618128788229}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
@@ -162,13 +79,13 @@ MonoBehaviour:
   m_TrackedDeviceOrientationAction: {fileID: 0}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
---- !u!114 &2064437563066706870
+--- !u!114 &7379737801200112182
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3669739400724152965}
+  m_GameObject: {fileID: 5197659618128788229}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 621567455fd1c4ceb811cc8a00b6a1a5, type: 3}
@@ -205,3 +122,71 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!1 &8848134379619031802
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8845678055785941640}
+  - component: {fileID: 8848521485449329030}
+  m_Layer: 8
+  m_Name: CourseSettings
+  m_TagString: CourseController
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8845678055785941640
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8848134379619031802}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 581020748322188632}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8848521485449329030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8848134379619031802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb53211fa1040424aaa159452005a23d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tManager: {fileID: 0}
+  courseName: x
+  courseIndex: 0
+  defaultLapCount: 3
+  defaultCpu: 00000000000000000000000000000000
+  defaultCpuBoard: 00000000000000000000000000000000
+  prize: 88130000b80b0000e803000000000000
+  ticketLevel: 000000000000000000000000
+  miniMapAnchorMinDefault: {x: 0.4, y: 0.2}
+  miniMapAnchorMaxDefault: {x: 0.6, y: 0.8}
+  miniMapAnchorMin1p: {x: 0.85, y: 0.2}
+  miniMapAnchorMax1p: {x: 0.95, y: 0.8}
+  miniMapAnchorMin3p: {x: 0.5, y: 0}
+  miniMapAnchorMax3p: {x: 1, y: 0.5}
+  playerSpawn:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  startPoint: {fileID: 0}
+  miniMapSprite: {fileID: 0}
+  track: {fileID: 0}
+  startCheckpoint: {fileID: 0}
+  startWaypoint: {fileID: 0}

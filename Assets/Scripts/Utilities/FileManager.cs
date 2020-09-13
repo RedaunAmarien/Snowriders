@@ -4,16 +4,16 @@ using System.IO;
 
 public class FileManager
 {
-    public static bool SaveFile(string saveName, object saveData)
+    public static bool SaveFile(string saveName, object saveData, string saveDirectory)
     {
         BinaryFormatter formatter = GetBinaryFormatter();
 
-        if (!Directory.Exists(Application.persistentDataPath + "/Saves"))
+        if (!Directory.Exists(Application.persistentDataPath + saveDirectory))
         {
-            Directory.CreateDirectory(Application.persistentDataPath + "/Saves");
+            Directory.CreateDirectory(Application.persistentDataPath + saveDirectory);
         }
 
-        string path = Application.persistentDataPath + "/Saves/" + saveName + ".sbsv";
+        string path = Application.persistentDataPath + saveDirectory + "/" + saveName + ".srd";
         FileStream file = File.Create(path);
 
         formatter.Serialize(file, saveData);

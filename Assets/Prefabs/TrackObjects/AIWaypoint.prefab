@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 3888800668861242228}
   - component: {fileID: 3424198392624902228}
   - component: {fileID: 5007146614512241414}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: AIWaypoint
-  m_TagString: Untagged
+  m_TagString: AIWaypoint
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

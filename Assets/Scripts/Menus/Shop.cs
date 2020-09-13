@@ -8,43 +8,78 @@ using System.IO;
 
 public class Shop : MonoBehaviour {
 
-    public Text boardInfo, flavorText, totalPoints;
+    [Tooltip("0 = Name, 1 = Speed, 2 = Turn, 3 = Jump, 4 = Flavor")]
+    public Text[] boardInfoText;
+    [Tooltip("0 = Coin, 1 = Bronze, 2 = Silver, 3 = Gold")]
+    public Text[] costs, funds;
     public int currentChoice;
-    public GameObject loadSet, warnSet;
+    public GameObject loadSet, warnSet, soldOutSign, lazySusan;
+    public GameObject[] boards;
     public Slider progressBar;
     bool stickMove;
     SaveData reloadData;
+    public InputAction cheatAction;
+
+    void Awake() {
+        cheatAction.Enable();
+        // cheatAction.performed += OnCheat;
+    }
 
     void Start() {
-        
+        currentChoice = 4;
+    }
+
+    void OnCheatAction () {
+        GameRam.currentSaveFile.coins += 10000;
+        GameRam.currentSaveFile.ticketBronze += 5;
+        GameRam.currentSaveFile.ticketSilver += 5;
+        GameRam.currentSaveFile.ticketGold += 5;
     }
 
     void Update() {
-        totalPoints.text = ("Coins Available: " + GameVar.currentSaveFile.coins);
-        flavorText.text = GameVar.boardData[currentChoice].description;
+        funds[0].text = GameRam.currentSaveFile.coins.ToString("N0");
+        funds[1].text = GameRam.currentSaveFile.ticketBronze.ToString();
+        funds[2].text = GameRam.currentSaveFile.ticketSilver.ToString();
+        funds[3].text = GameRam.currentSaveFile.ticketGold.ToString();
 
-        if (GameVar.currentSaveFile.boardOwned[currentChoice]) {
-            boardInfo.text = GameVar.boardData[currentChoice].name + "\nSpeed: " + GameVar.boardData[currentChoice].speed + "\nTurn: " + GameVar.boardData[currentChoice].turn + "\nJump: " + GameVar.boardData[currentChoice].jump + "\nSOLD OUT";
-            boardInfo.color = Color.green;
+        lazySusan.transform.SetPositionAndRotation(lazySusan.transform.position, Quaternion.Euler(0, currentChoice*36f, 0));
+
+        boardInfoText[0].text = GameRam.boardData[currentChoice].name;
+        boardInfoText[1].text = "Speed: " + GameRam.boardData[currentChoice].speed;
+        boardInfoText[2].text = "Turn: " + GameRam.boardData[currentChoice].turn;
+        boardInfoText[3].text = "Jump: " + GameRam.boardData[currentChoice].jump;
+        boardInfoText[4].text = GameRam.boardData[currentChoice].description;
+
+        if (GameRam.currentSaveFile.boardOwned[currentChoice]) {
+            for (int i = 0; i < 4; i++) {
+                boardInfoText[i].color = Color.gray;
+            }
+            soldOutSign.SetActive(true);
         }
         else {
-            boardInfo.text = GameVar.boardData[currentChoice].name + "\nSpeed: " + GameVar.boardData[currentChoice].speed + "\nTurn: " + GameVar.boardData[currentChoice].turn + "\nJump: " + GameVar.boardData[currentChoice].jump + "\nPrice: " + GameVar.boardData[currentChoice].price + " coins";
-            boardInfo.color = Color.white;
+            costs[0].text = GameRam.boardData[currentChoice].boardCost.coins.ToString("N0");
+            costs[1].text = GameRam.boardData[currentChoice].boardCost.bronzeTickets.ToString();
+            costs[2].text = GameRam.boardData[currentChoice].boardCost.silverTickets.ToString();
+            costs[3].text = GameRam.boardData[currentChoice].boardCost.goldTickets.ToString();
+            for (int i = 0; i < 4; i++) {
+                boardInfoText[i].color = Color.white;
+            }
+            soldOutSign.SetActive(false);
         }
     }
 
     public void OnSubmit() {
-        if (GameVar.boardData[currentChoice].price > GameVar.currentSaveFile.coins) {
+        if (GameRam.boardData[currentChoice].boardCost.coins > GameRam.currentSaveFile.coins) {
             // Not Enough.
         }
-        else if (GameVar.currentSaveFile.boardOwned[currentChoice]) {
+        else if (GameRam.currentSaveFile.boardOwned[currentChoice]) {
             // Already Owned.
         }
         else {
-            GameVar.currentSaveFile.boardOwned[currentChoice] = true;
-            GameVar.currentSaveFile.coins -= GameVar.boardData[currentChoice].price;
-            FileManager.SaveFile(GameVar.currentSaveFile.fileName, GameVar.currentSaveFile);
-            // reloadData = LoadFile(GameVar.currentSaveDirectory);
+            GameRam.currentSaveFile.boardOwned[currentChoice] = true;
+            GameRam.currentSaveFile.coins -= GameRam.boardData[currentChoice].boardCost.coins;
+            FileManager.SaveFile(GameRam.currentSaveFile.saveSlot + "_" + GameRam.currentSaveFile.fileName, GameRam.currentSaveFile, "/Saves");
+            // reloadData = LoadFile(GameRam.currentSaveDirectory);
         }
     }
 
@@ -57,20 +92,19 @@ public class Shop : MonoBehaviour {
 
         if (v.x > .5f && !stickMove) {
             currentChoice ++;
-            if (currentChoice > GameVar.boardData.Length-1) currentChoice = 0;
+            if (currentChoice > GameRam.boardData.Length-1) currentChoice = 4;
             stickMove = true;
         }
         else if (v.x < -.5f && !stickMove) {
             currentChoice --;
-            if (currentChoice < 0) currentChoice =GameVar.boardData.Length-1;
+            if (currentChoice < 4) currentChoice = GameRam.boardData.Length-1;
             stickMove = true;
         }
         else if (v.x > -.5f && v.x < .5f) stickMove = false;
-
     }
 
 	IEnumerator LoadScene(string sceneToLoad) {
-		GameVar.nextSceneToLoad = sceneToLoad;
+		GameRam.nextSceneToLoad = sceneToLoad;
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("LoadingScreen");
         while (!asyncLoad.isDone)
         {
