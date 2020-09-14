@@ -11,7 +11,7 @@ public class PlayerUI : MonoBehaviour {
 	// UI Section
 	public int playerNum;
 	public float camRotSpeed;
-	public Vector3 camAngle, camOffset;
+	public Vector3 camAngle, camOffset, revCamOffset;
 	public float camSmoothTime;
 	public Canvas canvas;
 	public TextMeshProUGUI lapText, coinText, shotsText, trickText, timeText, lapTimeDisplay, placementText;
@@ -66,7 +66,7 @@ public class PlayerUI : MonoBehaviour {
 				else assignedCam.GetComponent<Camera>().rect = new Rect(new Vector2(0, .5f), new Vector2(.5f, .5f));
 			break;
 			case 1:
-				if (GameRam.playerCount == 2) assignedCam.GetComponent<Camera>().rect = new Rect(new Vector2(.5f, 1), new Vector2(.5f, 1));
+				if (GameRam.playerCount == 2) assignedCam.GetComponent<Camera>().rect = new Rect(new Vector2(.5f, 0), new Vector2(.5f, 1));
 				else assignedCam.GetComponent<Camera>().rect = new Rect(new Vector2(.5f, .5f), new Vector2(.5f, .5f));
 			break;
 			case 2:
@@ -124,15 +124,18 @@ public class PlayerUI : MonoBehaviour {
 		// Camera Follow
 		Vector3 vel = Vector3.zero;
 		assignedCam.transform.position = Vector3.SmoothDamp(assignedCam.transform.position, transform.TransformPoint(camOffset), ref vel, camSmoothTime);
+
+		vel = Vector3.zero;
+		reverseCam.transform.position = Vector3.SmoothDamp(reverseCam.transform.localPosition, transform.TransformPoint(revCamOffset), ref vel, camSmoothTime);
+
 		if (finished) {
 			assignedCam.transform.RotateAround(transform.position, Vector3.up, camRotSpeed);
+			reverseCam.transform.RotateAround(transform.position, Vector3.up, camRotSpeed);
 		}
 		else {
 			assignedCam.transform.LookAt(transform.position + camAngle, Vector3.up);
+			reverseCam.transform.LookAt(transform.position + camAngle, Vector3.up);
 		}
-
-		reverseCam.transform.position = Vector3.SmoothDamp(assignedCam.transform.localPosition, transform.TransformPoint(camOffset), ref vel, camSmoothTime);
-		// reverseCam.transform.RotateAround(transform.position, Vector3.up, 180);
 
 		if (camIsReversed) {
 			reverseView.SetActive(true);
@@ -148,11 +151,11 @@ public class PlayerUI : MonoBehaviour {
 			// corCon.timerOn = false;
 			rPhys.tManage.timerOn = false;
 			paused = true;
-			inputMod.horizontalAxis = (playerNum-1) + " Axis 1";
-			inputMod.verticalAxis = (playerNum-1) + " Axis 2";
-			inputMod.submitButton = (playerNum-1) + " Button 0";
-			inputMod.cancelButton = (playerNum-1) + " Button 1";
-			events.SetSelectedGameObject(pauseResume);
+			// inputMod.horizontalAxis = (playerNum-1) + " Axis 1";
+			// inputMod.verticalAxis = (playerNum-1) + " Axis 2";
+			// inputMod.submitButton = (playerNum-1) + " Button 0";
+			// inputMod.cancelButton = (playerNum-1) + " Button 1";
+			// events.SetSelectedGameObject(pauseResume);
 			pauseMenu.SetActive(true);
 		}
 		else if (option == 1) {

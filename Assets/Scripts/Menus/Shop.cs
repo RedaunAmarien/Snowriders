@@ -19,6 +19,9 @@ public class Shop : MonoBehaviour {
     bool stickMove;
     SaveData reloadData;
     public InputAction cheatAction;
+    public Image fadePanel;
+    bool fadingIn, fadingOut;
+    public float fadeDelay, startTime;
 
     void Awake() {
         cheatAction.Enable();
@@ -27,6 +30,8 @@ public class Shop : MonoBehaviour {
 
     void Start() {
         currentChoice = 4;
+		fadePanel.gameObject.SetActive(true);
+		StartCoroutine(Fade(true));
     }
 
     void OnCheatAction () {
@@ -50,7 +55,7 @@ public class Shop : MonoBehaviour {
         boardInfoText[3].text = "Jump: " + GameRam.boardData[currentChoice].jump;
         boardInfoText[4].text = GameRam.boardData[currentChoice].description;
 
-        if (GameRam.currentSaveFile.boardOwned[currentChoice]) {
+        if (GameRam.currentSaveFile.boardsOwned.Contains(GameRam.boardData[currentChoice].name)) {
             for (int i = 0; i < 4; i++) {
                 boardInfoText[i].color = Color.gray;
             }
@@ -69,22 +74,39 @@ public class Shop : MonoBehaviour {
     }
 
     public void OnSubmit() {
-        if (GameRam.boardData[currentChoice].boardCost.coins > GameRam.currentSaveFile.coins) {
+        ItemCost board = GameRam.boardData[currentChoice].boardCost;
+        SaveData save = GameRam.currentSaveFile;
+        if (board.coins > save.coins
+            || board.bronzeTickets > save.ticketBronze
+            || board.silverTickets > save.ticketSilver
+            || board.goldTickets > save.ticketGold) {
             // Not Enough.
         }
-        else if (GameRam.currentSaveFile.boardOwned[currentChoice]) {
+        else if (GameRam.currentSaveFile.boardsOwned.Contains(GameRam.boardData[currentChoice].name)) {
             // Already Owned.
         }
         else {
-            GameRam.currentSaveFile.boardOwned[currentChoice] = true;
-            GameRam.currentSaveFile.coins -= GameRam.boardData[currentChoice].boardCost.coins;
-            FileManager.SaveFile(GameRam.currentSaveFile.saveSlot + "_" + GameRam.currentSaveFile.fileName, GameRam.currentSaveFile, "/Saves");
+            GameRam.currentSaveFile.boardsOwned.Add(GameRam.boardData[currentChoice].name);
+            GameRam.currentSaveFile.coins -= board.coins;
+            GameRam.currentSaveFile.ticketBronze -= board.bronzeTickets;
+            GameRam.currentSaveFile.ticketSilver -= board.silverTickets;
+            GameRam.currentSaveFile.ticketGold -= board.goldTickets;
+            GameRam.currentSaveFile.lastSaved = System.DateTime.Now;
+            FileManager.SaveFile(GameRam.currentSaveFile.fileName, GameRam.currentSaveFile, Path.Combine(Application.persistentDataPath, "Saves"));
+            GameRam.ownedBoardData.Clear();
+			foreach (string name in GameRam.currentSaveFile.boardsOwned) {
+				foreach (BoardData boardData in GameRam.boardData) {
+					if (boardData.name == name) {
+						GameRam.ownedBoardData.Add(boardData);
+					}
+				}
+			}
             // reloadData = LoadFile(GameRam.currentSaveDirectory);
         }
     }
 
     public void OnCancel() {
-        StartCoroutine(LoadScene("HubTown"));
+        StartCoroutine(Fade(false));
     }
 
     public void OnNavigate(InputValue val) {
@@ -92,12 +114,12 @@ public class Shop : MonoBehaviour {
 
         if (v.x > .5f && !stickMove) {
             currentChoice ++;
-            if (currentChoice > GameRam.boardData.Length-1) currentChoice = 4;
+            if (currentChoice > GameRam.boardData.Count-1) currentChoice = 4;
             stickMove = true;
         }
         else if (v.x < -.5f && !stickMove) {
             currentChoice --;
-            if (currentChoice < 4) currentChoice = GameRam.boardData.Length-1;
+            if (currentChoice < 4) currentChoice = GameRam.boardData.Count-1;
             stickMove = true;
         }
         else if (v.x > -.5f && v.x < .5f) stickMove = false;
@@ -110,5 +132,29 @@ public class Shop : MonoBehaviour {
         {
             yield return null;
         }
+    }
+    
+    public IEnumerator Fade(bool i) {
+		if (i) fadingIn = true;
+		else fadingOut = true;
+		startTime = Time.time;
+		yield return new WaitForSeconds(fadeDelay);
+		if (i) fadingIn = false;
+		else {
+			fadingOut = false;
+			StartCoroutine(LoadScene("HubTown"));
+		}
+	}
+
+	void LateUpdate() {
+        if (fadingIn) {
+            float t = (Time.time - startTime) / fadeDelay;
+            fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(1f, 0f, t));
+        }
+        else if (fadingOut) {
+            float t = (Time.time - startTime) / fadeDelay;
+            fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(0f, 1f, t));
+        }
+        
     }
 }

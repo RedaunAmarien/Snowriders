@@ -101,7 +101,7 @@ public class PlayerRaceControls : MonoBehaviour {
 		else jumpPressed = true;
 
 		// Return to Menu
-		if (raceOver && jumpPressed) StartCoroutine(LoadScene("HubTown"));
+		if (raceOver && jumpPressed) StartCoroutine(rPhys.tManage.Fade(false));
 
 		// During Race
 		if (!rPhys.finished && !lockControls) {
@@ -239,18 +239,11 @@ public class PlayerRaceControls : MonoBehaviour {
 		rStickPos = val.Get<Vector2>();
 	}
 
-	public void OnStart() {
-		// Pause or unpause.
-		if (!pUI.paused) pUI.Pause(0);
-		else pUI.Pause(1);
+	public void OnPause(InputValue val) {
+		if (val.Get<float>() < .5f) {
+			// Pause or unpause.
+			if (!pUI.paused) pUI.Pause(0);
+			else pUI.Pause(1);
+		}
 	}
-
-	IEnumerator LoadScene(string sceneToLoad) {
-		GameRam.nextSceneToLoad = sceneToLoad;
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("LoadingScreen");
-        while (!asyncLoad.isDone)
-        {
-            yield return null;
-        }
-    }
 }

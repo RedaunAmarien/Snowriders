@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 20352593018300486}
   - component: {fileID: 124057846839181568}
   - component: {fileID: 81330778354665554}
+  - component: {fileID: 2102810593399390117}
   m_Layer: 0
   m_Name: Main Camera 3
   m_TagString: MainCamera
@@ -52,10 +53,10 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: 0.5
     y: 0
-    width: 1
-    height: 1
+    width: 0.5
+    height: 0.5
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -92,6 +93,26 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1016463241112398}
   m_Enabled: 0
+--- !u!114 &2102810593399390117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1016463241112398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ec1aaa3266bc124b8b03e3d72080377, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  currentViewpoint: {fileID: 0}
+  viewOffset: {x: 0, y: 0.5, z: 0}
+  followOffset: {x: 3, y: 1.5, z: -5}
+  camSmoothTime: 0.065
+  currentMode: 0
+  switchTimeMin: 15
+  switchTimeMax: 30
 --- !u!1 &1025607414835148
 GameObject:
   m_ObjectHideFlags: 0
@@ -102,7 +123,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4459146469560438}
   - component: {fileID: 20282753294810916}
-  - component: {fileID: 81720054531233388}
   m_Layer: 0
   m_Name: BlackCam
   m_TagString: Untagged
@@ -167,14 +187,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &81720054531233388
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1025607414835148}
-  m_Enabled: 0
 --- !u!1 &1283692662133140
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,8 +372,8 @@ Camera:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1
-    height: 1
+    width: 0.5
+    height: 0.5
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -452,7 +464,7 @@ Camera:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1
+    width: 0.5
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -500,7 +512,6 @@ GameObject:
   m_Component:
   - component: {fileID: 723136553729525805}
   - component: {fileID: 4932974500049125093}
-  - component: {fileID: 4319478604748017364}
   m_Layer: 0
   m_Name: Reverse Camera 3
   m_TagString: Untagged
@@ -565,14 +576,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &4319478604748017364
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1257230551924056288}
-  m_Enabled: 1
 --- !u!1 &2600705893469969795
 GameObject:
   m_ObjectHideFlags: 0
@@ -583,7 +586,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2024110638500378409}
   - component: {fileID: 5902442739432691997}
-  - component: {fileID: 172403431569940827}
   m_Layer: 0
   m_Name: Reverse Camera 0
   m_TagString: Untagged
@@ -648,14 +650,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &172403431569940827
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2600705893469969795}
-  m_Enabled: 1
 --- !u!1 &3610285555420579523
 GameObject:
   m_ObjectHideFlags: 0
@@ -666,7 +660,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5567334837393728230}
   - component: {fileID: 4648901759422289417}
-  - component: {fileID: 4194761294011095326}
   m_Layer: 0
   m_Name: Reverse Camera 1
   m_TagString: Untagged
@@ -731,14 +724,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &4194761294011095326
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3610285555420579523}
-  m_Enabled: 1
 --- !u!1 &5606095851254840255
 GameObject:
   m_ObjectHideFlags: 0
@@ -749,7 +734,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2312537753160975032}
   - component: {fileID: 2441828998337659145}
-  - component: {fileID: 9143781387136213791}
   m_Layer: 0
   m_Name: Reverse Camera 2
   m_TagString: Untagged
@@ -814,11 +798,3 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &9143781387136213791
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5606095851254840255}
-  m_Enabled: 1

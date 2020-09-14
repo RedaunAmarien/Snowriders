@@ -22,12 +22,17 @@ public class BattleMenuTemp : MonoBehaviour {
     public float maxLayerVolume, volumePercentSpeed;
     public Slider progressBar;
     public int playersReady;
+    public Image fadePanel;
+    bool fadingIn, fadingOut;
+    public float fadeDelay, startTime;
 
 	void Start () {
+		fadePanel.gameObject.SetActive(true);
+		StartCoroutine(Fade(true, null));
 
         TMP_Dropdown.OptionDataList nameData = new TMP_Dropdown.OptionDataList();
         for (int i = 0; i < GameRam.allCharData.Count; i++) {
-            nameData.options.Add(new TMP_Dropdown.OptionData(GameRam.allCharData[i].name));
+            nameData.options.Add(new TMP_Dropdown.OptionData(string.Format("{0}: {1}/{2}/{3}", GameRam.allCharData[i].name, GameRam.allCharData[i].speed, GameRam.allCharData[i].turn, GameRam.allCharData[i].jump)));
         }
         for (int i = 0; i < 4; i++) {
             charSelectors[i].ClearOptions();
@@ -35,12 +40,12 @@ public class BattleMenuTemp : MonoBehaviour {
         }
 
         TMP_Dropdown.OptionDataList bNameData = new TMP_Dropdown.OptionDataList();
-        for (int i = 0; i < GameRam.boardData.Length; i++) {
-            bNameData.options.Add(new TMP_Dropdown.OptionData(GameRam.boardData[i].name));
+        for (int i = 0; i < GameRam.currentSaveFile.boardsOwned.Count; i++) {
+            bNameData.options.Add(new TMP_Dropdown.OptionData(string.Format("{0}: +{1}/{2}/{3}", GameRam.ownedBoardData[i].name, GameRam.ownedBoardData[i].speed, GameRam.ownedBoardData[i].turn, GameRam.ownedBoardData[i].jump)));
         }
         for (int i = 0; i < 4; i++) {
-            charSelectors[i].ClearOptions();
-            charSelectors[i].options = bNameData.options;
+            boardSelectors[i].ClearOptions();
+            boardSelectors[i].options = bNameData.options;
         }
 
         GameRam.controlp = new int[4];
@@ -51,9 +56,11 @@ public class BattleMenuTemp : MonoBehaviour {
 		
 		// Set defaults
         GameRam.lapCount = 0;
+        GameRam.itemsOn = true;
+        GameRam.coinsOn = true;
         playersReady = 0;
         
-        StartCoroutine(StartSong(1));
+        // StartCoroutine(StartSong(1));
 	}
 
     public void OnPlayerJoined(PlayerInput player) {
@@ -91,11 +98,11 @@ public class BattleMenuTemp : MonoBehaviour {
 
     public void Finish() {
         if (GameRam.courseToLoad == "Track0" || GameRam.courseToLoad == null) GameRam.courseToLoad = "Track1";
-        StartCoroutine(LoadScene("TrackContainer"));
+        StartCoroutine(Fade(false, "TrackContainer"));
     }
 
     public void Exit() {
-        StartCoroutine(LoadScene("HubTown"));
+        StartCoroutine(Fade(false, "HubTown"));
     }
 
 	IEnumerator LoadScene(string sceneToLoad) {
@@ -113,5 +120,29 @@ public class BattleMenuTemp : MonoBehaviour {
             yield return null;
         }
         if (songLayer[layer].volume > maxLayerVolume) songLayer[layer].volume = maxLayerVolume;
+    }
+    
+    public IEnumerator Fade(bool i, string destination) {
+		if (i) fadingIn = true;
+		else fadingOut = true;
+		startTime = Time.time;
+		yield return new WaitForSeconds(fadeDelay);
+		if (i) fadingIn = false;
+		else {
+			fadingOut = false;
+			StartCoroutine(LoadScene(destination));
+		}
+	}
+
+	void LateUpdate() {
+        if (fadingIn) {
+            float t = (Time.time - startTime) / fadeDelay;
+            fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(1f, 0f, t));
+        }
+        else if (fadingOut) {
+            float t = (Time.time - startTime) / fadeDelay;
+            fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(0f, 1f, t));
+        }
+        
     }
 }

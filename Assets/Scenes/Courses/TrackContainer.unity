@@ -257,7 +257,6 @@ MonoBehaviour:
   miniMap: {fileID: 1411847692}
   mapPanel: {fileID: 1411847691}
   resultsPanel: {fileID: 1411847690}
-  fadeInPanel: {fileID: 1411847693}
   spriteHead:
   - {fileID: 1411847689}
   - {fileID: 1411847688}
@@ -267,9 +266,12 @@ MonoBehaviour:
   courseMin: {x: 0, y: 0, z: 0}
   playerControlPrefab: {fileID: 7682347921249527906, guid: 642b252d37aab214b96a8c66712c91eb,
     type: 3}
+  readySetSet: {fileID: 2082302441}
+  fadePanel: {fileID: 1411847694}
+  fadeDelay: 1
   demoMode: 0
-  demoCourse: Track3
-  demoPlayerCount: 3
+  demoCourse: Track1
+  demoPlayerCount: 2
   demoChars:
   - name: Red
     creator: 
@@ -1047,7 +1049,7 @@ PrefabInstance:
     - target: {fileID: 6418570313063777235, guid: f97132ac9157a854e95936b2cf116c70,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6618493529582305172, guid: f97132ac9157a854e95936b2cf116c70,
         type: 3}
@@ -1513,12 +1515,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1411847693 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6418570313063777235, guid: f97132ac9157a854e95936b2cf116c70,
+--- !u!114 &1411847694 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4812605298620772153, guid: f97132ac9157a854e95936b2cf116c70,
     type: 3}
   m_PrefabInstance: {fileID: 1411847685}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1431601232
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1583,15 +1591,15 @@ PrefabInstance:
       propertyPath: orthographic
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 81720054531233388, guid: 4107f0f5c388acf4087bf7fbe35cc4e6,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 81817613170028212, guid: 4107f0f5c388acf4087bf7fbe35cc4e6,
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102810593399390117, guid: 4107f0f5c388acf4087bf7fbe35cc4e6,
+        type: 3}
+      propertyPath: currentMode
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4107f0f5c388acf4087bf7fbe35cc4e6, type: 3}
@@ -1618,6 +1626,12 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1403129466031438, guid: 4107f0f5c388acf4087bf7fbe35cc4e6,
     type: 3}
   m_PrefabInstance: {fileID: 1431601232}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2082302441 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8437512316474964641, guid: f97132ac9157a854e95936b2cf116c70,
+    type: 3}
+  m_PrefabInstance: {fileID: 1411847685}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &2064437564711521869
 MonoBehaviour:

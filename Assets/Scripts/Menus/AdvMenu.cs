@@ -25,6 +25,9 @@ public class AdvMenu : MonoBehaviour {
     public Slider progressBar, laps;
     public int playersReady;
     bool readyToGo;
+    public Image fadePanel;
+    bool fadingIn, fadingOut;
+    public float fadeDelay, startTime;
 
     void Awake() {
         songLayer[0].volume = 0;
@@ -34,6 +37,9 @@ public class AdvMenu : MonoBehaviour {
     }
 
 	void Start () {
+		fadePanel.gameObject.SetActive(true);
+		StartCoroutine(Fade(true, null));
+
         GameRam.controlp = new int[4];
         GameRam.charForP = new int[4];
         GameRam.boardForP = new int[4];
@@ -115,7 +121,7 @@ public class AdvMenu : MonoBehaviour {
     }
 
     public void Backup() {
-        StartCoroutine(LoadScene("HubTown"));
+        StartCoroutine(Fade(false, "HubTown"));
     }
 
     public void OnPlayerJoined(PlayerInput player) {
@@ -155,13 +161,13 @@ public class AdvMenu : MonoBehaviour {
 
 	public void ChooseCourse(string sceneName) {
         //Can go to cutscene or menu, but not directly to course. Point name to cutscene.
-        StartCoroutine(LoadScene(sceneName));
+        StartCoroutine(Fade(false, sceneName));
 	}
 
     public void ChooseCourseSkip(string sceneName) {
         //Goes to course without cutscene. Point name to course directly.
         GameRam.courseToLoad = sceneName;
-        StartCoroutine(LoadScene("TrackContainer"));
+        StartCoroutine(Fade(false, "TrackContainer"));
     }
 
 	IEnumerator LoadScene(string sceneToLoad) {
@@ -194,5 +200,29 @@ public class AdvMenu : MonoBehaviour {
             songLayer[layer].volume = i;
             yield return null;
         }
+    }
+    
+    public IEnumerator Fade(bool i, string destination) {
+		if (i) fadingIn = true;
+		else fadingOut = true;
+		startTime = Time.time;
+		yield return new WaitForSeconds(fadeDelay);
+		if (i) fadingIn = false;
+		else {
+			fadingOut = false;
+			StartCoroutine(LoadScene(destination));
+		}
+	}
+
+	void LateUpdate() {
+        if (fadingIn) {
+            float t = (Time.time - startTime) / fadeDelay;
+            fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(1f, 0f, t));
+        }
+        else if (fadingOut) {
+            float t = (Time.time - startTime) / fadeDelay;
+            fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(0f, 1f, t));
+        }
+        
     }
 }

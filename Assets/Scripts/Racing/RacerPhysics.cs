@@ -31,6 +31,7 @@ public class RacerPhysics : MonoBehaviour {
     public GameObject rock, rockSpawn, projectile, shootSpawn, dropCoin, characterModel, iceCube, snowman, balloon, highJumpParticles, lockParticles, slowed, rocketParticles1, rocketParticles2;
 	public SpriteRenderer headSprite;
 	public Sprite[] headSpriteSrc;
+	public float moneyBoardTime;
 
     [Header("Physics")]
     public bool grounded;
@@ -52,7 +53,7 @@ public class RacerPhysics : MonoBehaviour {
     public Rigidbody rigid;
     GameObject course;
     public Vector3 relVel;
-	bool initialized;
+	bool initialized, replayCamOn;
 
     void Start() {
 
@@ -85,7 +86,7 @@ public class RacerPhysics : MonoBehaviour {
 		if (tManage.demoMode) {
 			headSprite.gameObject.SetActive(false);
 		}
-		else if (GameRam.charForP[playerNum] < GameRam.charDataPermanent.Length) {
+		else if (GameRam.charForP[playerNum] < GameRam.charDataPermanent.Count) {
 			headSprite.sprite = headSpriteSrc[GameRam.charForP[playerNum]];
 		}
 		else {
@@ -102,6 +103,10 @@ public class RacerPhysics : MonoBehaviour {
         coins = 0;
 
 		initialized = true;
+		replayCamOn = true;
+
+		if (boardName == "Poverty Board") StartCoroutine(Poverty());
+		if (boardName == "Wealth Board") StartCoroutine(Wealth());
     }
 
     void Update() {
@@ -216,6 +221,11 @@ public class RacerPhysics : MonoBehaviour {
 	}
     
     void OnTriggerEnter (Collider other) {
+		if (other.gameObject.tag == "CamZone" && replayCamOn) {
+			ReplayCam rep = tManage.cameras[3].GetComponent<ReplayCam>();
+			if (rep != null) rep.EnterCamZone(playerNum, other.transform);
+			else replayCamOn = false;
+		}
 		// Checkpoint
 		if (other.gameObject.tag == "Checkpoint") {
 			Checkpoint chPnt = other.GetComponent<Checkpoint>();
@@ -722,12 +732,22 @@ public class RacerPhysics : MonoBehaviour {
 			boostOn = true;
 			boostForce = stat.y;
 			boostAddSpeed = stat.z;
-			if (stat.x == 7) rocketParticles1.SetActive(true);
-			if (stat.x == 5) rocketParticles2.SetActive(true);
+			if (stat.x == 7) {
+				rocketParticles1.SetActive(true);
+			}
+			if (stat.x == 5) {
+				rocketParticles2.SetActive(true);
+				rocketParticles1.SetActive(true);
+			}
 			yield return new WaitForSeconds(stat.x);
 			boostOn = false;
-			if (stat.x == 7) rocketParticles1.SetActive(false);
-			if (stat.x == 5) rocketParticles2.SetActive(false);
+			if (stat.x == 7) {
+				rocketParticles1.SetActive(false);
+			}
+			if (stat.x == 5) {
+				rocketParticles2.SetActive(false);
+				rocketParticles1.SetActive(false);
+			}
 		}
 	}
 
@@ -754,5 +774,17 @@ public class RacerPhysics : MonoBehaviour {
 			highJumpReady = true;
 			highJumpParticles.SetActive(true);
 		}
+	}
+
+	IEnumerator Poverty() {
+		yield return new WaitForSeconds(moneyBoardTime);
+		if (coins > 0) coins --;
+		StartCoroutine(Poverty());
+	}
+
+	IEnumerator Wealth() {
+		yield return new WaitForSeconds(moneyBoardTime);
+		coins ++;
+		StartCoroutine(Wealth());
 	}
 }

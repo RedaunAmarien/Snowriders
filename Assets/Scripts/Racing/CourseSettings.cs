@@ -12,7 +12,7 @@ public class CourseSettings : MonoBehaviour {
 	public int[] defaultCpu;
 	[Tooltip("Default enemy racer boards.")]
 	public int[] defaultCpuBoard;
-	[Tooltip("Reward added to total coins at the end of the race, per placement.")]
+	[Tooltip("Bonus coins added to file total for playing in multiplayer.")]
 	public int[] prize;
 	public int challengeTicketLevel;
 	public Vector2 miniMapAnchorMinDefault, miniMapAnchorMaxDefault, miniMapAnchorMin1p, miniMapAnchorMax1p, miniMapAnchorMin3p, miniMapAnchorMax3p;

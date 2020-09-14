@@ -391,12 +391,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Welcome to the Game.
+  m_text: 'Welcome to Snowriders.
 
-    This cutscene isn''t ready yet.
+    This is where the opening cinematic will go,
+    once it''s created, eventually.
 
-    Please
-    wait while we redirect you to the main meu.'
+    Please enjoy the game.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

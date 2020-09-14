@@ -28,6 +28,9 @@ public class HubTownControls : MonoBehaviour {
 	// string bBut, lStickV, rStickH, rStickV, xBut, yBut;
 	bool selected = false;
 	bool bump = false;
+    public Image fadePanel;
+    bool fadingIn, fadingOut;
+    public float fadeDelay, startTime;
 
 	void Awake() {
         select.performed += ctx => Select();
@@ -37,6 +40,8 @@ public class HubTownControls : MonoBehaviour {
 	}
 
 	void Start() {
+		fadePanel.gameObject.SetActive(true);
+		StartCoroutine(Fade(true, null));
 		//Fill in UI elements from save data.
 		int golds = 0;
 		int silvers = 0;
@@ -49,12 +54,7 @@ public class HubTownControls : MonoBehaviour {
 		goldCount.text = golds.ToString();
 		silverCount.text = silvers.ToString();
 		bronzeCount.text = bronzes.ToString();
-		int preSep = Mathf.FloorToInt(GameRam.currentSaveFile.coins/1000);
 		coinCount.text = GameRam.currentSaveFile.coins.ToString("N0");
-		// if (GameRam.currentSaveFile.coins >= 10000) {
-		// 	coinCount.text = preSep + "," + (GameRam.currentSaveFile.coins-preSep*1000);
-		// }
-		// else coinCount.text = GameRam.currentSaveFile.coins.ToString();
 		lowTicketCount.text = GameRam.currentSaveFile.ticketBronze.ToString();
 		midTicketCount.text = GameRam.currentSaveFile.ticketSilver.ToString();
 		highTicketCount.text = GameRam.currentSaveFile.ticketGold.ToString();
@@ -93,7 +93,16 @@ public class HubTownControls : MonoBehaviour {
 
 	void LateUpdate() {
 		cam.transform.LookAt(transform.position);
-	}
+        if (fadingIn) {
+            float t = (Time.time - startTime) / fadeDelay;
+            fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(1f, 0f, t));
+        }
+        else if (fadingOut) {
+            float t = (Time.time - startTime) / fadeDelay;
+            fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(0f, 1f, t));
+        }
+        
+    }
 
 	void OnTriggerEnter (Collider other) {
 		switch (other.name) {
@@ -110,7 +119,7 @@ public class HubTownControls : MonoBehaviour {
 					destDesc.text = "Earn <color=yellow>medals</color> and <color=yellow>coins</color> as you progress through the story.";
 				break;
 				case "Battle":
-					destDesc.text = "Earn <color=yellow>coins</color> with friends connected to the same computer.\n<color=red>(Unavailable)</color>";
+					destDesc.text = "Earn <color=yellow>coins</color> with friends connected to the same computer.";
 				break;
 				case "Online":
 					destDesc.text = "Earn <color=yellow>coins</color> with friends and other players online.\n<color=red>(Unavailable)</color>";
@@ -131,29 +140,28 @@ public class HubTownControls : MonoBehaviour {
 					Debug.LogWarning("Unavailable");
 				break;
 				case "Shop":
-					StartCoroutine(LoadScene("Shop"));
+					StartCoroutine(Fade(false, "Shop"));
 				break;
 				case "Custom":
-					StartCoroutine(LoadScene("CharacterEditor"));
+					StartCoroutine(Fade(false, "CharacterEditor"));
 				break;
 				case "Story":
 					GameRam.gameMode = 1;
-					StartCoroutine(LoadScene("AdvChallMenu"));
+					StartCoroutine(Fade(false, "AdvChallMenu"));
 				break;
 				case "Battle":
 					GameRam.gameMode = 0;
-					StartCoroutine(LoadScene("BattleMenuTemp"));
-					// Debug.LogWarning("Unavailable");
+					StartCoroutine(Fade(false, "BattleMenuTemp"));
 				break;
 				case "Online":
 					Debug.LogWarning("Unavailable");
 				break;
 				case "Challenge":
 					GameRam.gameMode = 2;
-					StartCoroutine(LoadScene("AdvChallMenu"));
+					StartCoroutine(Fade(false, "AdvChallMenu"));
 				break;
 				case "Exit":
-					StartCoroutine(LoadScene("MainMenu"));
+					StartCoroutine(Fade(false, "MainMenu"));
 				break;
 			}
 		}
@@ -168,4 +176,16 @@ public class HubTownControls : MonoBehaviour {
             yield return null;
         }
     }
+
+	public IEnumerator Fade(bool i, string destination) {
+		if (i) fadingIn = true;
+		else fadingOut = true;
+		startTime = Time.time;
+		yield return new WaitForSeconds(fadeDelay);
+		if (i) fadingIn = false;
+		else {
+			fadingOut = false;
+			StartCoroutine(LoadScene(destination));
+		}
+	}
 }

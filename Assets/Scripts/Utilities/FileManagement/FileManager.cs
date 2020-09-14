@@ -8,12 +8,12 @@ public class FileManager
     {
         BinaryFormatter formatter = GetBinaryFormatter();
 
-        if (!Directory.Exists(Application.persistentDataPath + saveDirectory))
+        if (!Directory.Exists(saveDirectory))
         {
-            Directory.CreateDirectory(Application.persistentDataPath + saveDirectory);
+            Directory.CreateDirectory(saveDirectory);
         }
 
-        string path = Application.persistentDataPath + saveDirectory + "/" + saveName + ".srd";
+        string path = saveDirectory + "/" + saveName + ".srd";
         FileStream file = File.Create(path);
 
         formatter.Serialize(file, saveData);
@@ -27,6 +27,7 @@ public class FileManager
 
         if (!File.Exists(path))
         {
+            Debug.LogErrorFormat("Tried loading nonexistant file at {0}", path);
             return null;
         }
 
@@ -45,6 +46,24 @@ public class FileManager
             Debug.LogErrorFormat("Failed to load file at {0}", path);
             file.Close();
             return null;
+        }
+    }
+
+    public static bool DeleteFile(string path) {
+        if (!File.Exists(path)) 
+        {
+            Debug.LogErrorFormat("Tried deleting nonexistant file at {0}", path);
+            return false;
+        }
+        else {
+            try {
+                File.Delete(path);
+                return true;
+            }
+            catch {
+                Debug.LogErrorFormat("Failed to delete file at {0}", path);
+                return false;
+            }
         }
     }
 

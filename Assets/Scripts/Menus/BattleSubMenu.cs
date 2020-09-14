@@ -63,7 +63,7 @@ public class BattleSubMenu : MonoBehaviour {
             StartCoroutine(ResetPress(.25f));
         }
         if (assignmentStep == 2 && !pressingSubmit) {
-            if (GameRam.currentSaveFile.boardOwned[GameRam.boardForP[myNumber]]) {
+            if (GameRam.currentSaveFile.boardsOwned.Contains(GameRam.boardData[GameRam.boardForP[myNumber]].name)) {
                 boardText.color = Color.green;
                 assignmentStep = 3;
                 battleMenu.playersReady ++;
@@ -112,12 +112,12 @@ public class BattleSubMenu : MonoBehaviour {
             // Select Board.
             if (v.x > .5f && !charStickMove) {
                 GameRam.boardForP[myNumber] ++;
-                if (GameRam.boardForP[myNumber] > GameRam.boardData.Length-1) GameRam.boardForP[myNumber] = 0;
+                if (GameRam.boardForP[myNumber] > GameRam.boardData.Count-1) GameRam.boardForP[myNumber] = 0;
                 charStickMove = true;
             }
             else if (v.x < -.5f && !charStickMove) {
                 GameRam.boardForP[myNumber] --;
-                if (GameRam.boardForP[myNumber] < 0) GameRam.boardForP[myNumber] = GameRam.boardData.Length-1;
+                if (GameRam.boardForP[myNumber] < 0) GameRam.boardForP[myNumber] = GameRam.boardData.Count-1;
                 charStickMove = true;
             }
             else if (v.x > -.5f && v.x < .5f) charStickMove = false;
@@ -166,11 +166,13 @@ public class BattleSubMenu : MonoBehaviour {
             lArrow.anchorMax = new Vector2 (0, .15f);
 
             // Keep text fields updated.
-            if (GameRam.currentSaveFile.boardOwned[GameRam.boardForP[myNumber]]) {
+            if (GameRam.currentSaveFile.boardsOwned.Contains(GameRam.boardData[GameRam.boardForP[myNumber]].name)) {
                 boardText.text = GameRam.boardData[GameRam.boardForP[myNumber]].name;
+                boardText.color = Color.white;
             }
             else {
                 boardText.text = GameRam.boardData[GameRam.boardForP[myNumber]].name + " (Locked)";
+                boardText.color = Color.gray;
             }
             speedGauge.fillAmount = (GameRam.allCharData[GameRam.charForP[myNumber]].speed + GameRam.boardData[GameRam.boardForP[myNumber]].speed)/10f;
             turnGauge.fillAmount = (GameRam.allCharData[GameRam.charForP[myNumber]].turn + GameRam.boardData[GameRam.boardForP[myNumber]].turn)/10f;

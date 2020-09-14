@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System.IO;
 using TMPro;
 using System.Linq;
 using UnityEngine.Animations;
@@ -17,10 +18,11 @@ public class TrackManager : MonoBehaviour {
 	int playersFinished, totalFinished;
     public GameObject playerPrefab;
 	public GameObject[] player, cameras;
+	public List<PlayerPosition> pp = new List<PlayerPosition>();
 	GameObject[] items, weapons, coins;
 	public Image miniMap;
 	public RectTransform mapPanel;
-	public GameObject resultsPanel, fadeInPanel;
+	public GameObject resultsPanel;
 	Dictionary <string, TextMeshProUGUI> rankBar = new Dictionary<string, TextMeshProUGUI>();
 	Dictionary <string, GameObject> rankBarRoots = new Dictionary<string, GameObject>();
 	public Image[] spriteHead;
@@ -35,6 +37,13 @@ public class TrackManager : MonoBehaviour {
 	List<Checkpoint> checkpoints;
 	System.TimeSpan totalTime = System.TimeSpan.Zero;
 	bool doneStarting;
+	
+	[Header("Fade Panel")]
+	public GameObject readySetSet;
+	public Image fadePanel;
+	bool fadingIn, fadingOut;
+	public float fadeDelay;
+	float startTime;
 
 	[Header("Demo Mode Overriders")]
 	public bool demoMode;
@@ -45,12 +54,12 @@ public class TrackManager : MonoBehaviour {
 	public string demoLayout;
 
 	void Awake () {
-		fadeInPanel.SetActive(true);
+		fadePanel.gameObject.SetActive(true);
 		if (GameRam.currentSaveFile == null) {
 			demoMode = true;
 			GameRam.courseToLoad = demoCourse;
 			GameRam.playerCount = demoPlayerCount;
-			GameRam.boardData = demoBoards;
+			GameRam.boardData.AddRange(demoBoards);
 			GameRam.charForP = new int[4];
 			GameRam.boardForP = new int[4];
 			GameRam.inpDev = new InputDevice[4];
@@ -67,7 +76,7 @@ public class TrackManager : MonoBehaviour {
 				GameRam.inpDev[i] = InputSystem.GetDevice(demoLayout);
 			}
 		}
-		SceneManager.LoadScene(GameRam.courseToLoad, LoadSceneMode.Additive);
+		if (GameRam.courseToLoad != null) SceneManager.LoadScene(GameRam.courseToLoad, LoadSceneMode.Additive);
         // Debug.Log("Loading scene " + GameRam.courseToLoad);
 	}
 
@@ -108,6 +117,7 @@ public class TrackManager : MonoBehaviour {
 		//Assign cameras to players.
 		for (int i = 0; i < GameRam.playerCount; i++) {
 			pUI[i].assignedCam = cameras[i];
+			if (i == 3) Destroy(cameras[i].GetComponent<ReplayCam>());
 			Debug.Log("Camera " + i + " assigned.");
 		}
 
@@ -115,6 +125,7 @@ public class TrackManager : MonoBehaviour {
 		for (int i = GameRam.playerCount; i < 4; i++) {
 			cameras[i].SetActive(false);
 		}
+		if (GameRam.playerCount == 3) cameras[3].SetActive(true);
 
 		//Setup Minimap
 		miniMap.sprite = cSettings.miniMapSprite;
@@ -123,6 +134,12 @@ public class TrackManager : MonoBehaviour {
 			miniMap.rectTransform.Rotate(new Vector3(0, 0, -90));
 			for (int i = 0; i < 4; i++) {
 				spriteHead[i].rectTransform.Rotate(new Vector3(0, 0, 90));
+			}
+		}
+		if (GameRam.playerCount == 3) {
+			miniMap.rectTransform.Rotate(new Vector3(0, 0, 90));
+			for (int i = 0; i < 4; i++) {
+				spriteHead[i].rectTransform.Rotate(new Vector3(0, 0, -90));
 			}
 		}
 		track = cSettings.track;
@@ -253,36 +270,23 @@ public class TrackManager : MonoBehaviour {
 	}
 
 	void Update() {
-		
-		// Check who is in first place.
-		// placementScore.Clear();
-		// for (int i = 0; i < 4; i++) {
-		// 	// placementScore.Add(rPhys[i].checkDist)
-		// }
 
 		if (GameRam.gameMode < 2 && doneStarting) {
+		
+			// Check who is in first place.
+			pp.Clear();
 			for (int i = 0; i < player.Length; i++) {
-				rPhys[i].place = 4;
-
-				//Compare stats to other players
-				for (int j = 0; j < player.Length; j++) {
-					//Skip self.
-					// if (i == j) break;
-
-					//Skip if finished.
-					if (rPhys[i].finished) rPhys[i].place = rPhys[i].finalPlace;
-
-					//Surpass if ahead in laps.
-					if (rPhys[i].currentLap > rPhys[j].currentLap) rPhys[i].place --;
-
-					//Surpass if ahead in checkpoints.
-					else if (rPhys[i].nextCheckVal > rPhys[j].nextCheckVal) rPhys[i].place --;
-
-					//Surpass if ahead in distance.
-					else if (rPhys[i].checkDist > rPhys[j].checkDist) rPhys[i].place --;
-
-						
-				}	
+				pp.Add(new PlayerPosition());
+				pp[i].index = rPhys[i].playerNum;
+				pp[i].lap = rPhys[i].currentLap;
+				pp[i].checkpoint = rPhys[i].nextCheckVal;
+				pp[i].distance = rPhys[i].checkDist;
+				pp[i].finished = rPhys[i].finished;
+			}
+			pp = pp.OrderByDescending(x => x.lap).ThenByDescending(x => x.checkpoint).ThenByDescending(x => x.distance).ToList();
+			for (int i = 0; i < player.Length; i++) {
+				pp[i].place = i+1;
+				rPhys[pp[i].index].place = i+1;
 			}
 		}
 		
@@ -295,27 +299,51 @@ public class TrackManager : MonoBehaviour {
 			spriteHead[i].rectTransform.anchoredPosition = new Vector2(sHL.x * miniMap.rectTransform.rect.width, sHL.y * miniMap.rectTransform.rect.height) + miniMap.rectTransform.rect.min;
 		}
 	}
+    
+    public IEnumerator Fade(bool i) {
+		if (i) fadingIn = true;
+		else fadingOut = true;
+		startTime = Time.time;
+		yield return new WaitForSeconds(fadeDelay);
+		if (i) fadingIn = false;
+		else {
+			fadingOut = false;
+			StartCoroutine(LoadScene("HubTown"));
+		}
+	}
+
+	IEnumerator LoadScene(string sceneToLoad) {
+		GameRam.nextSceneToLoad = sceneToLoad;
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("LoadingScreen");
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+    }
+
+	void LateUpdate() {
+        if (fadingIn) {
+            float t = (Time.time - startTime) / fadeDelay;
+            fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(1f, 0f, t));
+        }
+        else if (fadingOut) {
+            float t = (Time.time - startTime) / fadeDelay;
+            fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(0f, 1f, t));
+        }
+        
+    }
 
 	public IEnumerator Countdown (bool boostable = true) {
-		fadeInPanel.GetComponent<Animator>().SetBool("Fading", true);
-		yield return new WaitForSeconds(1);
-		fadeInPanel.SetActive(false);
-		print("Ready");
-		// if (Input.GetButton(bBut)) {
-		// 	boostable = false;
-		// }
-		yield return new WaitForSeconds(1);
-		print("Set");
-		// if (Input.GetButton(bBut)) {
-		// 	boostable = false;
-		// }
+		//Fade In
+		readySetSet.GetComponent<Animator>().SetBool("Going", false);
+		StartCoroutine(Fade(true));
+		yield return new WaitForSeconds(fadeDelay);
 
-		yield return new WaitForSeconds(1);
-		print("Go!");
-		// if (Input.GetButton(bBut) && boostable) {
-		// 	pUI.itemType = 9;
-		// 	pUI.Item();
-		// }
+		//Start Countdown
+		readySetSet.GetComponent<Animator>().SetBool("Going", true);
+		yield return new WaitForSeconds(2);
+
+		//Kickoff
 		mapPanel.gameObject.SetActive(true);
 		rPhys[0].SetGo();
 		if (GameRam.gameMode < 2) {
@@ -325,7 +353,7 @@ public class TrackManager : MonoBehaviour {
 		}
 		timerOn = true;
 		yield return new WaitForSeconds(1);
-		// Clear countdown graphics.
+		readySetSet.SetActive(false);
 	}
 
 	public void UseSteal(int userIndex) {
@@ -450,7 +478,7 @@ public class TrackManager : MonoBehaviour {
 				rankBar["Time"+i].text = "";
 				rankBar["Reward"+i].text = "";
 			}
-			// Debug.Log(rPhys[userIndex].charName + " finished at " + printTimer + " with " rPhys[userIndex].coins + " points.");
+			// Debug.LogFormat("{0} finshed at {1} with {2:N0}.", rPhys[userIndex].charName, printTimer, rPhys[userIndex].coins);
 		}
 
 		if (GameRam.gameMode == 1 && userIndex == 0) {
@@ -502,7 +530,8 @@ public class TrackManager : MonoBehaviour {
 
 		//Save File
 		Debug.LogWarning("Autosaving to file " + GameRam.currentSaveFile.fileName);
-		FileManager.SaveFile(GameRam.currentSaveFile.saveSlot + "_" + GameRam.currentSaveFile.fileName, GameRam.currentSaveFile, "/Saves");
+        GameRam.currentSaveFile.lastSaved = System.DateTime.Now;
+		FileManager.SaveFile(GameRam.currentSaveFile.fileName, GameRam.currentSaveFile, Path.Combine(Application.persistentDataPath, "Saves"));
 		GameRam.currentSaveFile = (SaveData)FileManager.LoadFile(GameRam.currentSaveDirectory);
 	}
 }

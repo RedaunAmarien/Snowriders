@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 [System.Serializable]
 public class SaveData {
     
@@ -25,6 +24,7 @@ public class SaveData {
     public bool[] challengeBronze, challengeSilver, challengeGold;
     public int ticketBronze, ticketSilver, ticketGold;
     public int[] courseGrade;
-    public bool[] boardOwned;
+    public List<string> boardsOwned = new List<string>();
     public bool storyStarted;
+    public System.DateTime lastSaved;
 }

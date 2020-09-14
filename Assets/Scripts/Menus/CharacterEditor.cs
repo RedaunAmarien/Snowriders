@@ -19,8 +19,13 @@ public class CharacterEditor : MonoBehaviour {
     public bool exiting;
     string charDir, charDataPath, saveDir, saveDataPath;
     string[] charFile;
+    public Image fadePanel;
+    bool fadingIn, fadingOut;
+    public float fadeDelay, startTime;
     
     void Start() {
+		fadePanel.gameObject.SetActive(true);
+		StartCoroutine(Fade(true));
         skinSL.maxValue = skins.Length-1;
         warningPanel.SetActive(false);
         loadSet.SetActive(false);
@@ -36,32 +41,33 @@ public class CharacterEditor : MonoBehaviour {
     }
 
     void Update() {
-        currentCharData.speed = Mathf.RoundToInt(speedSl.value);
-        currentCharData.turn = Mathf.RoundToInt(turnSl.value);
-        currentCharData.jump = Mathf.RoundToInt(jumpSl.value);
-        currentCharData.skinCol = Mathf.RoundToInt(skinSL.value);
+        currentCharData.speed = (int)speedSl.value;
+        currentCharData.turn = (int)turnSl.value;
+        currentCharData.jump = (int)jumpSl.value;
+        currentCharData.skinCol = (int)skinSL.value;
     }
 
     void UpdateLoadList() {
+        GameRam.charDataCustom.Clear();
         // Update Custom list for customization.
         charFile = Directory.GetFiles(charDir, "*.sbcc");
-        GameRam.charDataCustom = new CharacterData[charFile.Length];
-        string[] names = new string[charFile.Length];
+        // GameRam.charDataCustom = new CharacterData[charFile.Length];
         List<string> savedChars = new List<string> {};
         for (int i = 0; i < charFile.Length; i++) {
-            GameRam.charDataCustom[i] = LoadChar(charFile[i]);
-            names[i] = LoadChar(charFile[i]).name;
-            savedChars.Add(names[i]);
+            GameRam.charDataCustom.Add(LoadChar(charFile[i]));
+            savedChars.Add(GameRam.charDataCustom[i].name);
         }
 
         // Update Total list for gameplay.
         GameRam.allCharData.Clear();
-		for (int i = 0; i < GameRam.charDataPermanent.Length; i++) {
-			GameRam.allCharData.Add(GameRam.charDataPermanent[i]);
-		}
-		for (int i = 0; i < GameRam.charDataCustom.Length; i++) {
-			GameRam.allCharData.Add(GameRam.charDataCustom[i]);
-		}
+        GameRam.allCharData.AddRange(GameRam.charDataPermanent);
+        GameRam.allCharData.AddRange(GameRam.charDataCustom);
+		// for (int i = 0; i < GameRam.charDataPermanent.Count; i++) {
+		// 	GameRam.allCharData.Add(GameRam.charDataPermanent[i]);
+		// }
+		// for (int i = 0; i < GameRam.charDataCustom.Count; i++) {
+		// 	GameRam.allCharData.Add(GameRam.charDataCustom[i]);
+		// }
         loadChars.ClearOptions();
         loadChars.AddOptions(savedChars);
     }
@@ -74,7 +80,7 @@ public class CharacterEditor : MonoBehaviour {
     }
 
     public void SetSkin() {
-        int a = Mathf.RoundToInt(skinSL.value);
+        int a = (int)skinSL.value;
         characterMat.SetTexture("Albedo",skins[a]);
     }
 
@@ -108,7 +114,7 @@ public class CharacterEditor : MonoBehaviour {
         }
         else {
             UpdateLoadList();
-            StartCoroutine(LoadScene("HubTown"));
+            StartCoroutine(Fade(false));
         }
 	}
 
@@ -150,5 +156,29 @@ public class CharacterEditor : MonoBehaviour {
         {
             yield return null;
         }
+    }
+    
+    public IEnumerator Fade(bool i) {
+		if (i) fadingIn = true;
+		else fadingOut = true;
+		startTime = Time.time;
+		yield return new WaitForSeconds(fadeDelay);
+		if (i) fadingIn = false;
+		else {
+			fadingOut = false;
+			StartCoroutine(LoadScene("HubTown"));
+		}
+	}
+
+	void LateUpdate() {
+        if (fadingIn) {
+            float t = (Time.time - startTime) / fadeDelay;
+            fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(1f, 0f, t));
+        }
+        else if (fadingOut) {
+            float t = (Time.time - startTime) / fadeDelay;
+            fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(0f, 1f, t));
+        }
+        
     }
 }
