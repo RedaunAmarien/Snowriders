@@ -6,74 +6,66 @@ using UnityEngine.Audio;
 
 public class AIControls : MonoBehaviour {
 
-	public GameObject firstWaypoint;
-	public int current, altCurrent;
+	public GameObject startWaypoint, prevWaypoint, nextWaypoint;
+	[Tooltip("The point at which the AI will switch to the next waypoint.\n0 = Halfway between, 1 = At the next checkpoint."), Range(0,1)]
+	public float wayPointChangePoint;
 	public float turnAng, jumpDelay, chainTrickDelay;
 	public Canvas canvas;
-	public bool finished, locked, foundTarget, usingAlt;
-	AIWaypoint cwp;
+	public bool finished, foundTarget, usingAlt;
+	AIWaypoint pwpScript;
 	RacerPhysics rPhys;
 	PlayerRaceControls pCon;
-	public List<GameObject> waypoints = new List<GameObject>();
-	public List<GameObject> altWaypoints = new List<GameObject>();
+	// public List<GameObject> waypoints = new List<GameObject>();
+	// public List<GameObject> altWaypoints = new List<GameObject>();
 
 	void Start() {
-		locked = true;
 		finished = false;
 		rPhys = GetComponent<RacerPhysics>();
 		pCon = GetComponent<PlayerRaceControls>();
+		prevWaypoint = startWaypoint;
+		pwpScript = prevWaypoint.GetComponent<AIWaypoint>();
+		nextWaypoint = pwpScript.nextInChain;
 
-		waypoints.Add(firstWaypoint);
-		int stopper1 = 255;
-		int stopper2 = 0;
-		int altBegindex = 0;
-		Debug.Log("Starting waypoint loop.");
-		for (int i = 0; i < stopper1; i++) {
-			waypoints.Add(waypoints[i].GetComponent<AIWaypoint>().nextInChain);
-			if (waypoints[i+1].GetComponent<AIWaypoint>().splitting) {
-				Debug.Log("Splitter found.");
-				altBegindex = i+1;
-				stopper2 = waypoints[i+1].GetComponent<AIWaypoint>().totalInAltChain-1;
-			}
-			else if (waypoints[i+1] == waypoints[0]) {
-				Debug.Log("End found.");
-				stopper1 = i;
-				waypoints.RemoveAt(i+1);
-			}
-		}
-		altWaypoints.Add(waypoints[altBegindex].GetComponent<AIWaypoint>().nextInAltChain);
-		for (int i = 0; i < stopper2; i++) {
-			altWaypoints.Add(altWaypoints[i].GetComponent<AIWaypoint>().nextInChain);
-		}
-		Debug.LogFormat("Listed {0} waypoints and {1} alt waypoints.", waypoints.Count, altWaypoints.Count);
-		cwp = waypoints[current].GetComponent<AIWaypoint>();
-		canvas.gameObject.SetActive(false);
+		// waypoints.Add(startWaypoint);
+		// int stopper1 = 255;
+		// int stopper2 = 0;
+		// int altBegindex = 0;
+		// Debug.Log("Starting waypoint loop.");
+		// for (int i = 0; i < stopper1; i++) {
+		// 	waypoints.Add(waypoints[i].GetComponent<AIWaypoint>().nextInChain);
+		// 	if (waypoints[i+1].GetComponent<AIWaypoint>().splitting) {
+		// 		Debug.Log("Splitter found.");
+		// 		altBegindex = i+1;
+		// 		stopper2 = waypoints[i+1].GetComponent<AIWaypoint>().totalInAltChain-1;
+		// 	}
+		// 	else if (waypoints[i+1] == waypoints[0]) {
+		// 		Debug.Log("End found.");
+		// 		stopper1 = i;
+		// 		waypoints.RemoveAt(i+1);
+		// 	}
+		// }
+		// altWaypoints.Add(waypoints[altBegindex].GetComponent<AIWaypoint>().nextInAltChain);
+		// for (int i = 0; i < stopper2; i++) {
+		// 	altWaypoints.Add(altWaypoints[i].GetComponent<AIWaypoint>().nextInChain);
+		// }
+		// Debug.LogFormat("Listed {0} waypoints and {1} alt waypoints.", waypoints.Count, altWaypoints.Count);
+		// pwpScript = prevWaypoint.GetComponent<AIWaypoint>();
+		if (rPhys.playerNum != 0) canvas.gameObject.SetActive(false);
 	}
 
 	void Update() {
-		if (!finished && !locked) {
+		if (!finished && !pCon.lockControls) {
 			//Jump when slowed down
 			if (rPhys.relVel.z <= rPhys.speed*.4f) {
 				StartCoroutine(Jump());
 			}
 
 			//Update Waypoints
-			float a;
-			float b;
-			float c;
-			if (!usingAlt) {
-				a = (transform.position - waypoints[current].transform.position).sqrMagnitude;
-				b = (transform.position - waypoints[current+1].transform.position).sqrMagnitude;
-				c = (waypoints[current].transform.position - waypoints[current+1].transform.position).sqrMagnitude;
-			}
-			else {
-				a = (transform.position - altWaypoints[altCurrent].transform.position).sqrMagnitude;
-				b = (transform.position - altWaypoints[altCurrent+1].transform.position).sqrMagnitude;
-				c = (altWaypoints[altCurrent].transform.position - altWaypoints[altCurrent+1].transform.position).sqrMagnitude;
-			}
-
-			if (a - b >= c) {
-				SwitchCheckpoint();
+			float a = (transform.position - prevWaypoint.transform.position).sqrMagnitude;
+			float b = (transform.position - nextWaypoint.transform.position).sqrMagnitude;
+			float c = (prevWaypoint.transform.position - nextWaypoint.transform.position).sqrMagnitude;
+			if (a - b >= c * wayPointChangePoint) {
+				SwitchWaypoint();
 			}
 
 			//Search for Waypoints
@@ -90,18 +82,11 @@ public class AIControls : MonoBehaviour {
 
 			//Follow Waypoints
 			// if (!foundTarget) {
-				if (!usingAlt) {
-					turnAng = Vector3.SignedAngle(transform.forward, transform.position - waypoints[current+1].transform.position, transform.up);
-					Debug.DrawLine(transform.position, waypoints[current].transform.position, Color.cyan, .1f);
-					Debug.DrawLine(transform.position, waypoints[current+1].transform.position, Color.magenta, .1f);
-				}
-				else {
-					turnAng = Vector3.SignedAngle(transform.forward, transform.position - altWaypoints[altCurrent+1].transform.position, transform.up);
-					Debug.DrawLine(transform.position, altWaypoints[altCurrent].transform.position, Color.cyan, .1f);
-					Debug.DrawLine(transform.position, altWaypoints[altCurrent+1].transform.position, Color.magenta, .1f);
-				}
-				if (turnAng > 45) pCon.lStickPos = new Vector2(-.75f, -1);
-				else if (turnAng < -45) pCon.lStickPos = new Vector2(.75f, -1);
+				turnAng = Vector3.SignedAngle(transform.forward, transform.position - nextWaypoint.transform.position, transform.up);
+				Debug.DrawLine(transform.position, prevWaypoint.transform.position, Color.cyan, .1f);
+				Debug.DrawLine(transform.position, nextWaypoint.transform.position, Color.magenta, .1f);
+				if (turnAng > 45) pCon.lStickPos = new Vector2(-0.7f, -0.7f);
+				else if (turnAng < -45) pCon.lStickPos = new Vector2(0.7f, -0.7f);
 				else if (turnAng > 5) pCon.lStickPos = Vector2.left;
 				else if (turnAng < -5) pCon.lStickPos = Vector2.right;
 				else pCon.lStickPos = Vector2.zero;
@@ -118,46 +103,30 @@ public class AIControls : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.GetComponent<AIWaypoint>() != null) {
+			if (other.gameObject == nextWaypoint) {
+				SwitchWaypoint();
+			}
 			// Reset Waypoint if discovering one outside of range.
-			if (other.gameObject != waypoints[current+1] && other.gameObject != waypoints[current] && other.gameObject != altWaypoints[altCurrent+1] && other.gameObject != altWaypoints[altCurrent]) {
-				int newIndex = waypoints.IndexOf(other.gameObject);
-				if (newIndex == -1){
-					newIndex = altWaypoints.IndexOf(other.gameObject);
-					if (newIndex == -1) {
-						Debug.LogWarningFormat("{0} cannot find the index of the waypoint they just contacted at {1}.", rPhys.charName, transform.position.ToString());
-					}
-					else {
-						Debug.LogWarningFormat("{0} got distracted by a different waypoint in alt route at {1}, index {2}, from index {3} or {4}.", rPhys.charName, transform.position.ToString(), newIndex, current, altCurrent);
-						altCurrent = newIndex;
-					}
-				}
-				else {
-					Debug.LogWarningFormat("{0} got distracted by a different waypoint at {1}, index {2}, from index {3} or {4}.", rPhys.charName, transform.position.ToString(), newIndex, current, altCurrent);
-					current = newIndex;
-				}
-
-				SwitchCheckpoint();
+			if (other.gameObject != nextWaypoint && other.gameObject != prevWaypoint) {
+				GameObject lostWaypoint = nextWaypoint;
+				nextWaypoint = other.gameObject;
+				Debug.LogWarningFormat("{0} got distracted by waypoint {1} while looking for waypoint {2} at location {3}.", rPhys.charName, prevWaypoint, lostWaypoint, transform.position);
+				SwitchWaypoint();
 			}
 			// Act on Waypoint flags
-			if (cwp.tryJump && !locked && rPhys.grounded) {
+			if (pwpScript.tryJump && !pCon.lockControls && rPhys.grounded) {
 				StartCoroutine(Jump());
 			}
 		}
 	}
 
-	void SwitchCheckpoint() {
+	void SwitchWaypoint() {
 		foundTarget = false;
 		// Get new waypoint information.
-		if (usingAlt) {
-			altCurrent ++;
-			cwp = altWaypoints[altCurrent].GetComponent<AIWaypoint>();
-		}
-		else {
-			current ++;
-			cwp = waypoints[current].GetComponent<AIWaypoint>();
-		}
+		prevWaypoint = nextWaypoint;
+		pwpScript = prevWaypoint.GetComponent<AIWaypoint>();
 		// Get new goalwaypoint.
-		if (cwp.splitting) {
+		if (pwpScript.splitting) {
 			int choice;
 			if (rPhys.playerNum == GameRam.playerCount + 1) {
 				choice = WeightedRandom.Range(new IntRange(0, 0, 20), new IntRange(1, 1, 1));
@@ -172,25 +141,22 @@ public class AIControls : MonoBehaviour {
 				choice = WeightedRandom.Range(new IntRange(0, 0, 1), new IntRange(1, 1, 10));
 			}
 			if (choice == 0) {
-				usingAlt = true;
-				altCurrent = 1;
-				current = waypoints.IndexOf(altWaypoints[altWaypoints.Count-1].GetComponent<AIWaypoint>().nextInChain);
-				Debug.LogFormat("{2} is splitting from main path to alt index {1} and will rejoin at index {0}", current, altCurrent,rPhys.charName);
+				nextWaypoint = pwpScript.nextInAltChain;
 			}
+			else nextWaypoint = pwpScript.nextInChain;
 		}
-		if (cwp.joining) {
-			usingAlt = false;
-			Debug.LogFormat("{3} is rejoining main path at index {0} (predicted) from alt index {1}, waypoint named \"{2}\"", current, altCurrent, waypoints[current].gameObject.name, rPhys.charName);
+		else nextWaypoint = pwpScript.nextInChain;
+		if (pwpScript.joining) {
+			Debug.LogFormat("{0} is rejoining main path at waypoint {1} from waypoint {2}", rPhys.charName, prevWaypoint.gameObject.name, nextWaypoint.gameObject.name);
 		}
 	}
 
 	public void NewLap() {
-		current = 0;
-		if (usingAlt) Debug.LogErrorFormat("{2} reached new lap while in an alternate route at index {0}, waypoint named {1}", altCurrent, altWaypoints[altCurrent].gameObject.name, rPhys.charName);
+		nextWaypoint = startWaypoint;
 	}
 
 	public IEnumerator Jump() {
-		int jumps = cwp.tricksPossible;
+		int jumps = pwpScript.tricksPossible;
 		if (rPhys.highJumpReady) {
 			jumps ++;
 		}
@@ -209,25 +175,25 @@ public class AIControls : MonoBehaviour {
 						pCon.lStickPos = Vector2.up;
 					break;
 					case 2:
-						pCon.lStickPos = new Vector2(1, 1);
+						pCon.lStickPos = new Vector2(0.7f, 0.7f);
 					break;
 					case 3:
 						pCon.lStickPos = Vector2.right;
 					break;
 					case 4:
-						pCon.lStickPos = new Vector2(1, -1);
+						pCon.lStickPos = new Vector2(0.7f, -0.7f);
 					break;
 					case 5:
 						pCon.lStickPos = Vector2.down;
 					break;
 					case 6:
-						pCon.lStickPos = new Vector2(-1, -1);
+						pCon.lStickPos = new Vector2(-0.7f, -0.7f);
 					break;
 					case 7:
 						pCon.lStickPos = Vector2.left;
 					break;
 					case 8:
-						pCon.lStickPos = new Vector2(-1, 1);
+						pCon.lStickPos = new Vector2(-0.7f, 0.7f);
 					break;
 					default:
 						pCon.lStickPos = Vector2.zero;

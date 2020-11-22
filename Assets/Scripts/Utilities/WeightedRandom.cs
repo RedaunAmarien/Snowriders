@@ -1,4 +1,6 @@
 // This code from user lordofduct on Unity forums.
+//Example usage:
+//int/float value = RandomRange.Range(new IntRange(0, 6, 50f), new IntRange(6, 9, 30f), new IntRange(9, 11, 20f));
 using UnityEngine;
 
 public struct IntRange {
@@ -66,5 +68,3 @@ public static class WeightedRandom {
         return Random.Range(ranges[cnt].Max, ranges[cnt].Min);
     }
 }
-//Example usage:
-//var value = RandomRange.Range(new IntRange(0, 6, 50f), new IntRange(6, 9, 30f), new IntRange(9, 11, 20f));

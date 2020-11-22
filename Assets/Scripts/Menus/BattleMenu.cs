@@ -14,7 +14,7 @@ public class BattleMenu : MonoBehaviour {
 
 	public GameObject pressStart, countSet, characterSet, mainSet, optionSet, courseSet, loadSet, player3And4, readySet, bypassButton;
     public GameObject[] battleSub;
-    public BattleSubMenu[] battleSubScript;
+    public CharacterPrep[] battleSubScript;
     public AudioSource[] songLayer;
     public Sprite[] charPortSrc, playPortSrc;
     public float maxLayerVolume, volumePercentSpeed;
@@ -33,7 +33,7 @@ public class BattleMenu : MonoBehaviour {
     }
 
 	void Start () {
-        battleSubScript = new BattleSubMenu[4];
+        battleSubScript = new CharacterPrep[4];
         battleSub = new GameObject[4];
 
         GameRam.controlp = new int[4];
@@ -53,7 +53,7 @@ public class BattleMenu : MonoBehaviour {
         playersReady = 0;
 
         //Game Mode 0 = Battle(Multiplayer), 1 = Adventure, 2 = Challenge, 3 = Online(Unused).
-        if (GameRam.gameMode == 0) {
+        if (GameRam.gameMode == GameMode.Battle) {
             titleText.text = "Battle Mode";
             countSet.SetActive(false);
             characterSet.SetActive(true);
@@ -63,28 +63,6 @@ public class BattleMenu : MonoBehaviour {
             GameRam.coinsOn = true;
             items.isOn = true;
             coins.isOn = true;
-        }
-        else {
-            Debug.LogError("Trying to play singleplayer mode through multiplayer menu. Code will not work.");
-            countSet.SetActive(false);
-            characterSet.SetActive(true);
-            StartCoroutine(StartSong(1));
-            if (GameRam.gameMode == 1) {
-                titleText.text = "Adventure Mode";
-                optionButton.interactable = false;
-                GameRam.itemsOn = true;
-                GameRam.coinsOn = true;
-                items.isOn = true;
-                coins.isOn = true;
-            }
-            else if (GameRam.gameMode == 2) {
-                titleText.text = "Challenge Mode";
-                optionButton.interactable = true;
-                GameRam.itemsOn = false;
-                GameRam.coinsOn = false;
-                items.isOn = false;
-                coins.isOn = false;
-            }
         }
 	}
 

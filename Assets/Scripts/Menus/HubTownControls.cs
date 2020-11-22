@@ -47,9 +47,9 @@ public class HubTownControls : MonoBehaviour {
 		int silvers = 0;
 		int bronzes = 0;
 		for (int i = 0; i < GameRam.currentSaveFile.courseGrade.Length; i++) {
-			if (GameRam.currentSaveFile.courseGrade[i] == 3) bronzes ++;
-			if (GameRam.currentSaveFile.courseGrade[i] == 2) silvers ++;
-			if (GameRam.currentSaveFile.courseGrade[i] == 1) golds ++;
+			if (GameRam.currentSaveFile.courseGrade[i] == SaveData.CourseGrade.Bronze) bronzes ++;
+			if (GameRam.currentSaveFile.courseGrade[i] == SaveData.CourseGrade.Silver) silvers ++;
+			if (GameRam.currentSaveFile.courseGrade[i] == SaveData.CourseGrade.Gold) golds ++;
 		}
 		goldCount.text = golds.ToString();
 		silverCount.text = silvers.ToString();
@@ -146,19 +146,24 @@ public class HubTownControls : MonoBehaviour {
 					StartCoroutine(Fade(false, "CharacterEditor"));
 				break;
 				case "Story":
-					GameRam.gameMode = 1;
-					StartCoroutine(Fade(false, "AdvChallMenu"));
+					GameRam.gameMode = GameMode.Story;
+					GameRam.maxPlayerCount = 1;
+					StartCoroutine(Fade(false, "StoryMenu"));
 				break;
 				case "Battle":
-					GameRam.gameMode = 0;
-					StartCoroutine(Fade(false, "BattleMenuTemp"));
+					GameRam.gameMode = GameMode.Battle;
+					GameRam.maxPlayerCount = 4;
+					StartCoroutine(Fade(false, "BattleMenu"));
 				break;
 				case "Online":
+					GameRam.gameMode = GameMode.Online;
+					GameRam.maxPlayerCount = 2;
 					Debug.LogWarning("Unavailable");
 				break;
 				case "Challenge":
-					GameRam.gameMode = 2;
-					StartCoroutine(Fade(false, "AdvChallMenu"));
+					GameRam.gameMode = GameMode.Challenge;
+					GameRam.maxPlayerCount = 1;
+					StartCoroutine(Fade(false, "ChallengeMenu"));
 				break;
 				case "Exit":
 					StartCoroutine(Fade(false, "MainMenu"));

@@ -26,7 +26,7 @@ public class AdvSubMenu : MonoBehaviour {
         myNumber = playInput.user.index;
         advMenu = GameObject.Find("EventSystem").GetComponent<AdvMenu>();
         advMenu.advSub = gameObject;
-        advMenu.advSubScript = GetComponent<AdvSubMenu>();
+        advMenu.advSubScript = GetComponent<CharacterPrep>();
         spEvents = GameObject.Find("EventSystem").GetComponent<EventSystem>();
         playInput.uiInputModule = spEvents.GetComponent<InputSystemUIInputModule>();
         
@@ -53,7 +53,7 @@ public class AdvSubMenu : MonoBehaviour {
             StartCoroutine(ResetPress(.25f));
         }
         if (assignmentStep == 2 && !pressingSubmit) {
-            if (GameRam.currentSaveFile.boardsOwned.Contains(GameRam.boardData[GameRam.boardForP[myNumber]].name)) {
+            if (GameRam.ownedBoardData.Contains(GameRam.ownedBoardData[GameRam.boardForP[myNumber]])) {
                 boardText.color = Color.green;
                 assignmentStep = 3;
                 advMenu.playersReady ++;
@@ -102,12 +102,16 @@ public class AdvSubMenu : MonoBehaviour {
             // Select Board.
             if (v.x > .5f && !charStickMove) {
                 GameRam.boardForP[myNumber] ++;
-                if (GameRam.boardForP[myNumber] > GameRam.boardData.Count-1) GameRam.boardForP[myNumber] = 0;
+                if (GameRam.boardForP[myNumber] > GameRam.ownedBoardData.Count-1) {
+                    GameRam.boardForP[myNumber] = 0;
+                }
                 charStickMove = true;
             }
             else if (v.x < -.5f && !charStickMove) {
                 GameRam.boardForP[myNumber] --;
-                if (GameRam.boardForP[myNumber] < 0) GameRam.boardForP[myNumber] = GameRam.boardData.Count-1;
+                if (GameRam.boardForP[myNumber] < 0) {
+                    GameRam.boardForP[myNumber] = GameRam.ownedBoardData.Count-1;
+                }
                 charStickMove = true;
             }
             else if (v.x > -.5f && v.x < .5f) charStickMove = false;
@@ -156,17 +160,17 @@ public class AdvSubMenu : MonoBehaviour {
             lArrow.anchorMax = new Vector2 (0, .15f);
 
             // Keep text fields updated.
-            if (GameRam.currentSaveFile.boardsOwned.Contains(GameRam.boardData[GameRam.boardForP[myNumber]].name)) {
-                boardText.text = GameRam.boardData[GameRam.boardForP[myNumber]].name;
+            // if (GameRam.ownedBoardData.Contains(GameRam.boardData[GameRam.boardForP[myNumber]])) {
+                boardText.text = GameRam.ownedBoardData[GameRam.boardForP[myNumber]].name;
                 boardText.color = Color.white;
-            }
-            else {
-                boardText.text = GameRam.boardData[GameRam.boardForP[myNumber]].name + " (Locked)";
-                boardText.color = Color.gray;
-            }
-            speedGauge.fillAmount = (GameRam.allCharData[GameRam.charForP[myNumber]].speed + GameRam.boardData[GameRam.boardForP[myNumber]].speed)/10f;
-            turnGauge.fillAmount = (GameRam.allCharData[GameRam.charForP[myNumber]].turn + GameRam.boardData[GameRam.boardForP[myNumber]].turn)/10f;
-            jumpGauge.fillAmount = (GameRam.allCharData[GameRam.charForP[myNumber]].jump + GameRam.boardData[GameRam.boardForP[myNumber]].jump)/10f;
+            // }
+            // else {
+            //     boardText.text = GameRam.ownedBoardData[GameRam.boardForP[myNumber]].name + " (Locked)";
+            //     boardText.color = Color.gray;
+            // }
+            speedGauge.fillAmount = (GameRam.allCharData[GameRam.charForP[myNumber]].speed + GameRam.ownedBoardData[GameRam.boardForP[myNumber]].speed)/10f;
+            turnGauge.fillAmount = (GameRam.allCharData[GameRam.charForP[myNumber]].turn + GameRam.ownedBoardData[GameRam.boardForP[myNumber]].turn)/10f;
+            jumpGauge.fillAmount = (GameRam.allCharData[GameRam.charForP[myNumber]].jump + GameRam.ownedBoardData[GameRam.boardForP[myNumber]].jump)/10f;
         }
 	}
 

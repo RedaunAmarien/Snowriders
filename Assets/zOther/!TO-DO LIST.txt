@@ -10,6 +10,7 @@ Internal:
 - Lap timer not working.
 - Add a scene specifically for creating, editing, and saving permanent boards and characters.
 - List of owned boards no longer loads correctly.
+- Some scenes (especially Battle Menu) have terrible UI controls.
 
 Worlds and Maps:
 - More of a reminder when building courses: Walls meeting tracks from bottom need to be dropped -0.15m to prevent bumping from above. (Possibly fixed after moving to Blender instead of ProBuilder?)

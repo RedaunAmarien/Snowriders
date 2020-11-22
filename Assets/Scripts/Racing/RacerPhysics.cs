@@ -45,10 +45,11 @@ public class RacerPhysics : MonoBehaviour {
     // CourseControl corCon;
 	public TrackManager tManage;
 	public CourseSettings cSettings;
-    PlayerUI pUI;
-    AudioMaker aUD;
-	AudioSource audioSrc;
-    AIControls aI;
+    public PlayerUI pUI;
+    public AudioMaker aUD;
+	public AudioSource audioSrc;
+    public AIControls aI;
+	public Animator anim;
     public Transform playerStartPoint;
     public Rigidbody rigid;
     GameObject course;
@@ -84,7 +85,7 @@ public class RacerPhysics : MonoBehaviour {
 
 		// Become character.
 		if (tManage.demoMode) {
-			headSprite.gameObject.SetActive(false);
+			headSprite.sprite = headSpriteSrc[tManage.demoChars[playerNum].charSpriteIndex];
 		}
 		else if (GameRam.charForP[playerNum] < GameRam.charDataPermanent.Count) {
 			headSprite.sprite = headSpriteSrc[GameRam.charForP[playerNum]];
@@ -104,10 +105,17 @@ public class RacerPhysics : MonoBehaviour {
 
 		initialized = true;
 		replayCamOn = true;
-
-		if (boardName == "Poverty Board") StartCoroutine(Poverty());
-		if (boardName == "Wealth Board") StartCoroutine(Wealth());
     }
+
+	public void AssignSpecialBoards() {
+		if (boardName == "Pound of Feather") {
+			jumpForce.y = 300;
+			jumpForce.z = 20;
+		}
+		if (boardName == "Block of Soap") {
+			traction = 0;
+		}
+	}
 
     void Update() {
 		if (initialized) {
@@ -162,6 +170,12 @@ public class RacerPhysics : MonoBehaviour {
 					// Turn board around when going backwards.
 					if (relVel.z < -1) transform.Rotate(0,180,0);
 				}
+				else {
+					// Apply feather board
+					if (boardName == "Pound of Feather") {
+						rigid.AddRelativeForce(-Physics.gravity/2f);
+					}
+				}
 			}
 		}
     }
@@ -178,6 +192,7 @@ public class RacerPhysics : MonoBehaviour {
     void OnCollisionEnter (Collision other) {
 		if (other.gameObject.tag == "Track" || other.gameObject.tag == "OutofBounds") {
 			if (!grabbing && !tricking) {
+				anim.SetBool("Grounded", true);
 				int totalTrickGain = (grabsChained * 30) + (tricksChained * 100) + (grabsCombo * 20);
 				if (totalTrickGain > 0) {
 					coins += totalTrickGain;
@@ -192,6 +207,7 @@ public class RacerPhysics : MonoBehaviour {
 			if (other.gameObject.tag == "OutofBounds") {
 				StartCoroutine(Respawn());
 			}
+			anim.SetInteger("TrickType", 0);
 
 			jumping = false;
 			grounded = true;
@@ -210,6 +226,7 @@ public class RacerPhysics : MonoBehaviour {
 	void OnCollisionExit (Collision other) {
 		if (other.gameObject.tag == "Track" || other.gameObject.tag == "OutofBounds") {
 			grounded = false;
+			anim.SetBool("Grounded", false);
 		}
 	}
 
@@ -236,7 +253,9 @@ public class RacerPhysics : MonoBehaviour {
 				if (chPnt.isLift) {
 					lastCheckpoint = firstCheckpoint;
 					nextCheckpoint = firstCheckpoint.GetComponent<Checkpoint>().nextCheck;
-					if (pUI != null && GameRam.gameMode == 2) pUI.LapTime(currentLap);
+					if (pUI != null && GameRam.gameMode == GameMode.Challenge) {
+						pUI.LapTime(currentLap);
+					}
 					currentLap ++;
 					boostOn = false;
 					rigid.velocity = Vector3.zero;
@@ -249,7 +268,7 @@ public class RacerPhysics : MonoBehaviour {
 					// corCon.Finish(playerNum);
 					tManage.Finish(playerNum);
 					if (pUI != null) {
-						if (GameRam.gameMode == 2) pUI.LapTime(currentLap);
+						if (GameRam.gameMode == GameMode.Challenge) pUI.LapTime(currentLap);
 						pUI.finished = true;
 					}
 					aI.finished = true;
@@ -426,13 +445,16 @@ public class RacerPhysics : MonoBehaviour {
 	public void SetGo() {
 		if (pUI != null) pUI.timerOn = true;
 		if (pCon != null) pCon.lockControls = false;
-        if (aI != null) aI.locked = false;
 		spotLock = false;
+		if (boardName == "Poverty Board") StartCoroutine(Poverty());
+		if (boardName == "Wealth Board") StartCoroutine(Wealth());
     }
 
     // Physics Functions.
 	public void Jump() {
         if (!jumping) {
+			anim.SetBool("Crouching", false);
+			anim.SetBool("Grounded", false);
             jumping = true;
             if (!highJumpReady) {
                 rigid.AddRelativeForce(jumpForce, ForceMode.Acceleration);
@@ -446,50 +468,53 @@ public class RacerPhysics : MonoBehaviour {
     }
 
 	public IEnumerator Trip() {
+		anim.SetBool("Tripping", true);
 		boostOn = false;
 		invisible = false;
 		characterModel.SetActive(true);
 		rigid.velocity = Vector3.zero;
 		pCon.lockControls = true;
-		aI.locked = true;
 		spotLock = true;
 		lockParticles.SetActive(true);
 		yield return new WaitForSeconds(standTime);
 		lockParticles.SetActive(false);
 		pCon.lockControls = false;
-		aI.locked = false;
 		spotLock = false;
+		anim.SetBool("Tripping", false);
 	}
 
 	public IEnumerator Roll() {
+		anim.SetBool("Rolling", true);
 		boostOn = false;
 		invisible = false;
 		characterModel.SetActive(true);
 		pCon.lockControls = true;
-		aI.locked = true;
 		lockParticles.SetActive(true);
 		yield return new WaitForSeconds(rollTime);
+		anim.SetBool("Rolling", false);
+		anim.SetBool("Tripping", true);
 		spotLock = true;
 		yield return new WaitForSeconds(standTime);
+		anim.SetBool("Tripping", false);
 		pCon.lockControls = false;
 		lockParticles.SetActive(false);
-		aI.locked = false;
 		spotLock = false;
 	}
 
 	public IEnumerator Respawn () {
 		if (!respawning) {
+			anim.SetBool("OOB", true);
 			grounded = true;
 			respawning = true;
-			if (pCon != null) pCon.lockControls = true;
-            if (aI != null) aI.locked = true;
+			pCon.lockControls = true;
 			yield return new WaitForSeconds(3);
             Transform spawnSpot = nextCheckpoint.GetComponent<Checkpoint>().respawn.transform;
 			transform.SetPositionAndRotation(spawnSpot.position + new Vector3(0,2,0), spawnSpot.rotation);
 			rigid.velocity = Vector3.zero;
-			if (pCon != null) pCon.lockControls = false;
-            if (aI != null) aI.locked = false;
+			pCon.lockControls = false;
 			respawning = false;
+			anim.SetBool("OOB", false);
+			anim.SetBool("Grounded", true);
 		}
 	}
 
@@ -499,15 +524,19 @@ public class RacerPhysics : MonoBehaviour {
 		switch (dir) {
 			case 1:
 			// print ("Front Grab");
+				anim.SetInteger("GrabType", 1);
 			break;
 			case 3:
 			// print ("Right Grab");
+				anim.SetInteger("GrabType", 3);
 			break;
 			case 5:
-			// print ("Rear Grab");
+			// print ("Back Grab");
+				anim.SetInteger("GrabType", 5);
 			break;
 			case 7:
 			// print ("Left Grab");
+				anim.SetInteger("GrabType", 7);
 			break;
 		}
 		yield return new WaitForSeconds(0.4f);
@@ -517,6 +546,7 @@ public class RacerPhysics : MonoBehaviour {
 			lgdr = dir;
 		}
 		grabbing = false;
+		anim.SetInteger("GrabType", 0);
 	}
 
 	public IEnumerator Trick (int dir, int lastDir) {
@@ -525,35 +555,45 @@ public class RacerPhysics : MonoBehaviour {
 		switch (dir) {
 			case 1:
 			// print ("Frontflip");
+				anim.SetInteger("TrickType", 1);
 			break;
 			case 2:
 			// print ("Right Aerial");
+				anim.SetInteger("TrickType", 2);
 			break;
 			case 3:
 			// print ("Right 360");
+				anim.SetInteger("TrickType", 3);
 			break;
 			case 4:
 			// print ("Right Backaerial");
+				anim.SetInteger("TrickType", 4);
 			break;
 			case 5:
 			// print ("Backflip");
+				anim.SetInteger("TrickType", 5);
 			break;
 			case 6:
 			// print ("Left Backaerial");
+				anim.SetInteger("TrickType", 6);
 			break;
 			case 7:
 			// print ("Left 360");
+				anim.SetInteger("TrickType", 7);
 			break;
 			case 8:
 			// print ("Left Aerial");
+				anim.SetInteger("TrickType", 8);
 			break;
 		}
+		// anim.SetInteger("TrickType", 0);
 		yield return new WaitForSeconds(.5f);
 		if (!grounded) {
 			tricksChained ++;
 			if (lastDir != dir && lastDir != 0) tricksChained ++;
 			ltdr = dir;
 		}
+		anim.SetInteger("TrickType", 0);
 		pCon.comboAble = true;
 		yield return new WaitForSeconds(.25f);
 		pCon.comboAble = false;
@@ -638,11 +678,9 @@ public class RacerPhysics : MonoBehaviour {
 		iceCube.SetActive(true);
 		boostOn = false;
 		pCon.lockControls = true;
-        aI.locked = true;
 		rigid.velocity = Vector3.zero;
 		spotLock = true;
 		yield return new WaitForSeconds(statusTime);
-        aI.locked = false;
 		pCon.lockControls = false;
 		spotLock = false;
 		iceCube.SetActive(false);
@@ -652,10 +690,8 @@ public class RacerPhysics : MonoBehaviour {
 	IEnumerator Snowman() {
 		snowman.SetActive(true);
 		pCon.lockControls = true;
-        aI.locked = true;
 		yield return new WaitForSeconds(statusTime);
 		pCon.lockControls = false;
-        aI.locked = false;
 		snowman.SetActive(false);
 	}
 
@@ -663,7 +699,6 @@ public class RacerPhysics : MonoBehaviour {
 		if (!finished) {
 			boostOn = false;
 			pCon.lockControls = true;
-			aI.locked = true;
 			rigid.velocity = Vector3.zero;
 			rigid.AddRelativeForce(0,jumpForce.y*2,0);
 			yield return new WaitForSeconds(.25f);
@@ -674,7 +709,6 @@ public class RacerPhysics : MonoBehaviour {
 			rigid.velocity = Vector3.zero;
 			yield return new WaitForSeconds(2);
 			pCon.lockControls = false;
-			aI.locked = false;
 			spotLock = false;
 		}
 	}
@@ -683,7 +717,6 @@ public class RacerPhysics : MonoBehaviour {
 		if (!finished) {
 			boostOn = false;
 			pCon.lockControls = true;
-			aI.locked = true;
 			balloon.SetActive(true);
 			rigid.velocity = Vector3.zero;
 			rigid.AddRelativeForce(0,jumpForce.y*2,0);
@@ -698,20 +731,17 @@ public class RacerPhysics : MonoBehaviour {
 			yield return new WaitForSeconds(2);
 			balloon.SetActive(false);
 			pCon.lockControls = false;
-			aI.locked = false;
 		}
 	}
 	IEnumerator Bomb() {
 		boostOn = false;
 		pCon.lockControls = true;
-        aI.locked = true;
 		rigid.velocity = Vector3.zero;
 		rigid.AddExplosionForce(jumpForce.y, transform.forward, 3);
 		while (!grounded) {
 			yield return null;
 		}
 		pCon.lockControls = false;
-        aI.locked = false;
 		StartCoroutine(Roll());
 	}
     

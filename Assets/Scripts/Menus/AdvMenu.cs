@@ -11,10 +11,9 @@ using UnityEngine.InputSystem.UI;
 using System.IO;
 
 public class AdvMenu : MonoBehaviour {
-
 	public GameObject pressStart, countSet, characterSet, mainSet, optionSet, courseSet, loadSet, player3And4, readySet, bypassButton;
     public GameObject advSub;
-    public AdvSubMenu advSubScript;
+    public CharacterPrep advSubScript;
     public AudioSource[] songLayer;
     public Sprite[] charPortSrc;
     public Sprite playPortSrc;
@@ -57,39 +56,15 @@ public class AdvMenu : MonoBehaviour {
         playersReady = 0;
 
         //Game Mode 0 = Battle (Multiplayer), 1 = Adventure, 2 = Challenge, 3 = Online(Unused).
-        if (GameRam.gameMode == 0) {
-            Debug.LogError("Trying to play multiplayer gamemode through singleplayer menu. Code will not work.");
-            titleText.text = "Battle Mode";
-            countSet.SetActive(false);
-            characterSet.SetActive(true);
-            StartCoroutine(StartSong(1));
-            optionButton.interactable = true;
-            GameRam.itemsOn = true;
-            GameRam.coinsOn = true;
-            items.isOn = true;
-            coins.isOn = true;
-        }
-        else {
-            countSet.SetActive(false);
-            characterSet.SetActive(true);
-            StartCoroutine(StartSong(1));
-            if (GameRam.gameMode == 1) {
-                titleText.text = "Adventure Mode";
-                optionButton.interactable = false;
-                GameRam.itemsOn = true;
-                GameRam.coinsOn = true;
-                items.isOn = true;
-                coins.isOn = true;
-            }
-            else if (GameRam.gameMode == 2) {
-                titleText.text = "Challenge Mode";
-                optionButton.interactable = true;
-                GameRam.itemsOn = false;
-                GameRam.coinsOn = false;
-                items.isOn = false;
-                coins.isOn = false;
-            }
-        }
+        countSet.SetActive(false);
+        characterSet.SetActive(true);
+        StartCoroutine(StartSong(1));
+        titleText.text = "Adventure Mode";
+        optionButton.interactable = false;
+        GameRam.itemsOn = true;
+        GameRam.coinsOn = true;
+        items.isOn = true;
+        coins.isOn = true;
 	}
 
     void Update() {
@@ -159,9 +134,17 @@ public class AdvMenu : MonoBehaviour {
 		GameRam.coinsOn = coins.isOn;
 	}
 
-	public void ChooseCourse(string sceneName) {
-        //Can go to cutscene or menu, but not directly to course. Point name to cutscene.
-        StartCoroutine(Fade(false, sceneName));
+	public void ChooseCourse(ChosenCourse course) {
+        // if (course.isChallenge) {
+        //     GameRam.currentChallenge = challenges[course.challengeIndex];
+        // }
+        if (course.useCutscene) {
+            StartCoroutine(Fade(false, course.cutsceneName));
+        }
+        else {
+            GameRam.courseToLoad = course.trackName;
+            StartCoroutine(Fade(false, "TrackContainer"));
+        }
 	}
 
     public void ChooseCourseSkip(string sceneName) {

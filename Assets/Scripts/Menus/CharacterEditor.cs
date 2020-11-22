@@ -45,6 +45,7 @@ public class CharacterEditor : MonoBehaviour {
         currentCharData.turn = (int)turnSl.value;
         currentCharData.jump = (int)jumpSl.value;
         currentCharData.skinCol = (int)skinSL.value;
+        currentCharData.custom = true;
     }
 
     void UpdateLoadList() {

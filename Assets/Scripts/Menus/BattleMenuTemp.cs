@@ -40,7 +40,7 @@ public class BattleMenuTemp : MonoBehaviour {
         }
 
         TMP_Dropdown.OptionDataList bNameData = new TMP_Dropdown.OptionDataList();
-        for (int i = 0; i < GameRam.currentSaveFile.boardsOwned.Count; i++) {
+        for (int i = 0; i < GameRam.ownedBoardData.Count; i++) {
             bNameData.options.Add(new TMP_Dropdown.OptionData(string.Format("{0}: +{1}/{2}/{3}", GameRam.ownedBoardData[i].name, GameRam.ownedBoardData[i].speed, GameRam.ownedBoardData[i].turn, GameRam.ownedBoardData[i].jump)));
         }
         for (int i = 0; i < 4; i++) {

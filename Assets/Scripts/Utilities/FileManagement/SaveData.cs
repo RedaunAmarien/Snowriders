@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
-[System.Serializable]
+using System;
+
+[Serializable]
 public class SaveData {
     
     private static SaveData _current;
@@ -18,13 +20,14 @@ public class SaveData {
         }
     }
 
+    public enum CourseGrade {None, Black, Bronze, Silver, Gold};
     public string fileName, version;
     public int saveSlot;
     public int coins;
-    public bool[] challengeBronze, challengeSilver, challengeGold;
+    public List<int> completedChallenge;
     public int ticketBronze, ticketSilver, ticketGold;
-    public int[] courseGrade;
-    public List<string> boardsOwned = new List<string>();
+    public CourseGrade[] courseGrade;
+    public List<int> ownedBoardID, ownedItemID;
     public bool storyStarted;
-    public System.DateTime lastSaved;
+    public DateTime lastSaved;
 }

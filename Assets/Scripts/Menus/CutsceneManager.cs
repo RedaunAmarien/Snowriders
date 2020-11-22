@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+public enum SceneType {Menu, Race, NewCutscene};
 
 public class CutsceneManager : MonoBehaviour {
     [Header("Scene Settings")]
@@ -13,7 +14,7 @@ public class CutsceneManager : MonoBehaviour {
     public int staticHour, staticMinute;
     [Header("Next Scene Settings")]
     public string nextSceneName;
-    public GameRam.SceneType nextSceneType;
+    public SceneType nextSceneType;
     [Header("Object References")]
     public Sun sunlight;
     public Image fadePanel;
@@ -45,16 +46,16 @@ public class CutsceneManager : MonoBehaviour {
     }
 
     public void EndScene() {
-        if (nextSceneType == GameRam.SceneType.Race) {
+        if (nextSceneType == SceneType.Race) {
             GameRam.nextSceneToLoad = "TrackContainer";
             GameRam.courseToLoad = nextSceneName;
             SceneManager.LoadScene("LoadingScreen");
         }
-        else if (nextSceneType == GameRam.SceneType.Menu) {
+        else if (nextSceneType == SceneType.Menu) {
             GameRam.nextSceneToLoad = nextSceneName;
             SceneManager.LoadScene("LoadingScreen");
         }
-        else if (nextSceneType == GameRam.SceneType.NewCutscene) {
+        else if (nextSceneType == SceneType.NewCutscene) {
             SceneManager.LoadSceneAsync(nextSceneName);
         }
     }

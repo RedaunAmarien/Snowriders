@@ -651,11 +651,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '00,000<sprite="Tickets" index=0> 0<sprite="Tickets" index=1> 0<sprite="Tickets"
-    index=2> 0<sprite="Tickets" index=3>
+  m_text: '<mspace=1em>0,000<sprite="Tickets" index=0> 00<sprite="Tickets" index=1>
+    00<sprite="Tickets" index=2> 00<sprite="Tickets" index=3>
 
-    0<sprite="Medals" index=3> 0<sprite="Medals"
-    index=2> 0<sprite="Medals" index=1> 0<sprite="Medals" index=0>'
+    00<sprite="Medals"
+    index=3> 00<sprite="Medals" index=2> 00<sprite="Medals" index=1> 00<sprite="Medals"
+    index=0>'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a4b7143cc2a24b146bec97e793f82bf6, type: 2}
   m_sharedMaterial: {fileID: 21886771481777612, guid: a4b7143cc2a24b146bec97e793f82bf6,
@@ -683,7 +684,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 100
+  m_fontSize: 58.15
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -699,7 +700,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}

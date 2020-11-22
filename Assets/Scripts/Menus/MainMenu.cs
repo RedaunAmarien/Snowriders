@@ -7,6 +7,7 @@ using System.IO;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using TMPro;
+using System.Linq;
 
 public class MainMenu : MonoBehaviour {
 
@@ -30,7 +31,7 @@ public class MainMenu : MonoBehaviour {
 	public SaveData[] saveData;
 	public SaveData newSaveData;
 	public string saveFileVersion;
-	string dir;
+	string savesFolder;
 	int newFileNum;
 
 	void Start() {
@@ -40,9 +41,9 @@ public class MainMenu : MonoBehaviour {
 		StartCoroutine(Fade(true));
 
 		// Find Save Files.
-        dir = Application.persistentDataPath + "/Saves";
-        if (!Directory.Exists(dir)) {
-            Directory.CreateDirectory(dir);
+        savesFolder = Application.persistentDataPath + "/Saves";
+        if (!Directory.Exists(savesFolder)) {
+            Directory.CreateDirectory(savesFolder);
 			firstTime = true;
         }
 		UpdateFileList();
@@ -53,6 +54,13 @@ public class MainMenu : MonoBehaviour {
 		// for (int i = 0; i < charFilePerm.Length; i++) {
 		// 	GameRam.charDataPermanent[i] = LoadChar(charFilePerm[i]);
 		// }
+
+		//Clear if coming from internally.
+		GameRam.charDataCustom.Clear();
+		GameRam.charDataPermanent.Clear();
+		GameRam.allCharData.Clear();
+		GameRam.allBoardData.Clear();
+		GameRam.ownedBoardData.Clear();
 
 		GameRam.charDataPermanent.AddRange(GameObject.Find("Board and Char Data").GetComponent<DefaultCharacterData>().defaultCharacters);
 		FileManager.SaveFile("data_perm", GameRam.charDataPermanent, Path.Combine(Application.streamingAssetsPath, "Characters"));
@@ -81,9 +89,9 @@ public class MainMenu : MonoBehaviour {
 		// 	if (boardFile[i].EndsWith(".txt")) GameRam.boardData[i] = LoadBoard(boardFile[i]);
 		// }
 
-		GameRam.boardData.AddRange(GameObject.Find("Board and Char Data").GetComponent<AllBoardData>().boards);
-		GameRam.boardData.Sort((b1,b2)=>b1.shopIndex.CompareTo(b2.shopIndex));
-		FileManager.SaveFile("data", GameRam.boardData, Path.Combine(Application.streamingAssetsPath, "Boards"));
+		GameRam.allBoardData.AddRange(GameObject.Find("Board and Char Data").GetComponent<AllBoardData>().boards);
+		GameRam.allBoardData.Sort((b1,b2)=>b1.shopIndex.CompareTo(b2.shopIndex));
+		FileManager.SaveFile("data", GameRam.allBoardData, Path.Combine(Application.streamingAssetsPath, "Boards"));
 	}
 
 	public IEnumerator Fade(bool i) {
@@ -134,16 +142,21 @@ public class MainMenu : MonoBehaviour {
 	public void Load (int fileIndex) {
 		if (saveData[fileIndex] != null) {
 			GameRam.currentSaveFile = saveData[fileIndex];
-			GameRam.currentSaveDirectory = Path.Combine(dir, saveData[fileIndex].fileName + ".srd");
+			GameRam.currentSaveDirectory = Path.Combine(savesFolder, saveData[fileIndex].fileName + ".srd");
 			// GameRam.currentSaveFile.saveSlot = fileIndex;
 			Debug.LogFormat("File \"{0}\" loaded. Last saved on {1}.", GameRam.currentSaveFile.fileName, GameRam.currentSaveFile.lastSaved);
-			foreach (string name in GameRam.currentSaveFile.boardsOwned) {
-				foreach (BoardData board in GameRam.boardData) {
-					if (board.name == name) {
+			if (GameRam.currentSaveFile.ownedBoardID == null) GameRam.currentSaveFile.ownedBoardID = new List<int>();
+			foreach (int pin in GameRam.currentSaveFile.ownedBoardID) {
+				foreach (BoardData board in GameRam.allBoardData) {
+					if (board.boardID == pin) {
 						GameRam.ownedBoardData.Add(board);
+						// Debug.Log("Board " + board.name + " owned.");
 					}
 				}
 			}
+			GameRam.ownedBoardData = GameRam.ownedBoardData.OrderBy(x => x.shopIndex).ToList();
+			GameRam.currentSaveDirectory = FileManager.SaveFile(GameRam.currentSaveFile.fileName, GameRam.currentSaveFile, savesFolder);
+			Debug.LogFormat("Save directory set to {0}", GameRam.currentSaveDirectory);
 			StartCoroutine(Fade(false));
 		}
 		else {
@@ -165,12 +178,12 @@ public class MainMenu : MonoBehaviour {
 			newSaveData.fileName = saveBox.text;
 			newSaveData.version = saveFileVersion;
 			// newSaveData.saveSlot = newFileNum;
-			newSaveData.boardsOwned.Add("Balance Lv. 1");
-			newSaveData.boardsOwned.Add("Speed Lv. 1");
-			newSaveData.boardsOwned.Add("Trick Lv. 1");
-			newSaveData.boardsOwned.Add("Control Lv. 1");
+			newSaveData.ownedBoardID.Add(0);
+			newSaveData.ownedBoardID.Add(3);
+			newSaveData.ownedBoardID.Add(6);
+			newSaveData.ownedBoardID.Add(9);
 			newSaveData.ticketBronze = 1;
-			newSaveData.courseGrade = new int[12];
+			newSaveData.courseGrade = new SaveData.CourseGrade[12];
             newSaveData.lastSaved = System.DateTime.Now;
 			// for (int i = 0; i < 12; i++) {
 			// 	newSaveData.courseGrade[i] = 0;
@@ -196,7 +209,7 @@ public class MainMenu : MonoBehaviour {
 		for (int i = 0; i < fileContainer.Length; i++) {
 			Destroy(fileContainer[i]);
 		}
-		string[] saveFiles = Directory.GetFiles(dir, "*.srd");
+		string[] saveFiles = Directory.GetFiles(savesFolder, "*.srd");
 		saveData = new SaveData[saveFiles.Length];
 		// Debug.Log("Found " + saveFiles.Length + " save files.");
 		for (int i = 0; i < saveFiles.Length; i++)
@@ -206,6 +219,7 @@ public class MainMenu : MonoBehaviour {
 				Debug.LogErrorFormat("File {0} not read.", i);
 			}
 		}
+		saveData = saveData.OrderByDescending(x => x.lastSaved).ToArray();
 
 		fileButton = new Button[saveData.Length];
 		fileName = new TextMeshProUGUI[saveData.Length];
@@ -223,17 +237,17 @@ public class MainMenu : MonoBehaviour {
 				int golds = 0;
 				int silvers = 0;
 				int bronzes = 0;
-				int non = 0;
+				int black = 0;
 				for (int j = 0; j < saveData[i].courseGrade.Length; j++) {
-					if (saveData[i].courseGrade[j] == 4) non ++;
-					if (saveData[i].courseGrade[j] == 3) bronzes ++;
-					if (saveData[i].courseGrade[j] == 2) silvers ++;
-					if (saveData[i].courseGrade[j] == 1) golds ++;
+					if (saveData[i].courseGrade[j] == SaveData.CourseGrade.Black) black ++;
+					if (saveData[i].courseGrade[j] == SaveData.CourseGrade.Bronze) bronzes ++;
+					if (saveData[i].courseGrade[j] == SaveData.CourseGrade.Silver) silvers ++;
+					if (saveData[i].courseGrade[j] == SaveData.CourseGrade.Gold) golds ++;
 				}
 				fileScript[i].fileStats = string.Format(
-					"<mspace=1em>{0:N0}<sprite=\"Tickets\" index=0> {1}<sprite=\"Tickets\" index=3> {2}<sprite=\"Tickets\" index=2> {3}<sprite=\"Tickets\" index=1>\n{4}<sprite=\"Medals\" index=3> {5}<sprite=\"Medals\" index=2> {6}<sprite=\"Medals\" index=1> {7}<sprite=\"Medals\" index=0>",
+					"<mspace=1em>{0:N0}<sprite=\"Tickets\" index=0> {1:d2}<sprite=\"Tickets\" index=3> {2:d2}<sprite=\"Tickets\" index=2> {3:d2}<sprite=\"Tickets\" index=1>\n{4:d2}<sprite=\"Medals\" index=3> {5:d2}<sprite=\"Medals\" index=2> {6:d2}<sprite=\"Medals\" index=1> {7:d2}<sprite=\"Medals\" index=0>",
 					saveData[i].coins, saveData[i].ticketBronze, saveData[i].ticketSilver, saveData[i].ticketGold,
-					non, bronzes, silvers, golds);
+					black, bronzes, silvers, golds);
 				fileContainer[i].transform.localPosition.Set(0, 0, 0);
 
 				//Old List

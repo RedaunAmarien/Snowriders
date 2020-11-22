@@ -18,9 +18,8 @@ public class PlayerUI : MonoBehaviour {
 	public GameObject reverseView;
 	public RenderTexture[] reverseViews;
 	public Color[] placementColor;
-	public string[] lapTimeValue;
-	public int[] lapTime;
-	public int runningLapTime;
+	public System.TimeSpan[] lapTime;
+	public System.TimeSpan lapStartTime;
 	public bool timerOn, paused;
 	public Image blueItem, redItem;
 	public GameObject pauseMenu, pauseResume, finishGraphic;
@@ -42,16 +41,14 @@ public class PlayerUI : MonoBehaviour {
 		reverseView.SetActive(false);
 		events = GameObject.Find("EventSystem").GetComponent<EventSystem>();
 		inputMod = GameObject.Find("EventSystem").GetComponent<StandaloneInputModule>();
-		lapTime = new int[rPhys.totalLaps];
-		lapTimeValue = new string[rPhys.totalLaps];
-
+		lapTime = new System.TimeSpan[rPhys.totalLaps];
 		// Initialize camera
 		assignedCam.transform.SetPositionAndRotation(transform.position, transform.rotation);
 		reverseCam.transform.SetPositionAndRotation(transform.position, transform.rotation);
 		// subCam.transform.position = transform.position + camOffset;
 		assignedCam.transform.LookAt(transform.position + camAngle);
 		reverseCam.transform.LookAt(transform.position + camAngle);
-		if (GameRam.gameMode == 2) placementText.gameObject.SetActive(false);
+		if (GameRam.gameMode == GameMode.Challenge) placementText.gameObject.SetActive(false);
 		if (!GameRam.itemsOn) itemDisplay.SetActive(false);
 		//Are these canvas assignments correct??
 		canvas.worldCamera = assignedCam.GetComponent<Camera>();
@@ -179,7 +176,7 @@ public class PlayerUI : MonoBehaviour {
 		TextMeshProUGUI textBox = Instantiate(trickText, new Vector2(0,0), Quaternion.Euler(0,0,0), canvas.gameObject.transform);
 		textBox.rectTransform.localPosition = new Vector3(0,0,0);
 		textBox.rectTransform.localEulerAngles = new Vector3(0,0,0);
-		textBox.text = "TRICK!  " + total;
+		textBox.text = string.Format("Trick! +{0}", total);
 		yield return new WaitForSeconds(1.5f);
 		Destroy(textBox.gameObject);
 	}
@@ -188,33 +185,14 @@ public class PlayerUI : MonoBehaviour {
 		TextMeshProUGUI textBox = Instantiate(lapTimeDisplay, new Vector3(0,0,0), Quaternion.Euler(0,0,0), timeText.gameObject.transform);
 		textBox.rectTransform.anchoredPosition3D = new Vector3(0, -50*lap, 0);
 		textBox.rectTransform.localEulerAngles = new Vector3(0,0,0);
-		int newLapTime = rPhys.tManage.totalTimer;
+		System.TimeSpan newLapTime = rPhys.tManage.totalTime;
 		if (lap == 1) {
 			lapTime[lap-1] = newLapTime;
 		}
 		else {
-			lapTime[lap-1] = newLapTime - runningLapTime;
+			lapTime[lap-1] = newLapTime - lapStartTime;
 		}
-		int t1 = 0, t2 = 0, t3 = 0, t4 = 0, t5 = 0;
-		t1 = lapTime[lap-1];
-		for (int i = t1; i >= 10; i -= 10) {
-			t2 ++;
-			t1 -= 10;
-			if (t2 >= 10) {
-				t2 -= 10;
-				t3 ++;
-			}
-			if (t3 >= 10) {
-				t3 -= 10;
-				t4 ++;
-			}
-			if (t4 >= 6) {
-				t4 -= 6;
-				t5 ++;
-			}
-		}
-		lapTimeValue[lap-1] = t5 + ":" + t4 + t3 + "." + t2 + t1;
-		textBox.text = lapTimeValue[lap-1] + " Lap " + lap;
-		runningLapTime = rPhys.tManage.totalTimer;
+		textBox.text = string.Format("{0:d2}:{1:d2}.{2:d2} Lap {3}", lapTime[lap-1].Minutes, lapTime[lap-1].Seconds, lapTime[lap-1].Milliseconds/10, lap);
+		lapStartTime = newLapTime;
 	}
 }

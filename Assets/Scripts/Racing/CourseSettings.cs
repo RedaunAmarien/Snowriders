@@ -14,7 +14,6 @@ public class CourseSettings : MonoBehaviour {
 	public int[] defaultCpuBoard;
 	[Tooltip("Bonus coins added to file total for playing in multiplayer.")]
 	public int[] prize;
-	public int challengeTicketLevel;
 	public Vector2 miniMapAnchorMinDefault, miniMapAnchorMaxDefault, miniMapAnchorMin1p, miniMapAnchorMax1p, miniMapAnchorMin3p, miniMapAnchorMax3p;
     public Transform[] playerSpawn;
 	public Transform startPoint;

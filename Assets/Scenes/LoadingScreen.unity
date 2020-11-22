@@ -267,12 +267,14 @@ MonoBehaviour:
   progressText: {fileID: 1278022882}
   tipText: {fileID: 353056910}
   tips:
-  - Don't eat any rotten vegetables. It will ruin your teeth.
+  - Eat vegetables with every meal, or your lips will start to peel.
   - Hold [Jump] to crouch, and release to jump.\nHold a direction before releasing
     to do a trick.
   - Turning can slow you down, unless you have high traction.
   - You get to keep the coins you earn in races.\nDo tricks to get even more!
   - Ice cream is the best food. Don't @ me.
+  - Each trick in a chain is a quarter-second long. Practice timing to do longer
+    combos.
 --- !u!114 &970307072
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ using System.IO;
 
 public class FileManager
 {
-    public static bool SaveFile(string saveName, object saveData, string saveDirectory)
+    public static string SaveFile(string saveName, object saveData, string saveDirectory)
     {
         BinaryFormatter formatter = GetBinaryFormatter();
 
@@ -20,7 +20,7 @@ public class FileManager
 
         file.Close();
 
-        return true;
+        return path;
     }
 
     public static object LoadFile(string path) {

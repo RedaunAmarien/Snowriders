@@ -41,9 +41,21 @@ public class PlayerRaceControls : MonoBehaviour {
 						float t = lStickPos.x * rPhys.turnSpeed * Time.deltaTime;
 						transform.Rotate(0,t,0);
 					}
-					if (lStickPos.y < 0) {
+					else {
 						float t = lStickPos.x * rPhys.turnSpeed * Time.deltaTime;
 						transform.Rotate(0, t + (t*Mathf.Abs(lStickPos.y)) ,0);
+					}
+					if (lStickPos.x < 0) {
+						rPhys.anim.SetBool("TurningLeft", true);
+						rPhys.anim.SetBool("TurningRight", false);
+					}
+					else if (lStickPos.x > 0) {
+						rPhys.anim.SetBool("TurningRight", true);
+						rPhys.anim.SetBool("TurningLeft", false);
+					}
+					else {
+						rPhys.anim.SetBool("TurningLeft", false);
+						rPhys.anim.SetBool("TurningRight", false);
 					}
 				}
 			}
@@ -57,24 +69,24 @@ public class PlayerRaceControls : MonoBehaviour {
 		
 		// Do board grabs.
 		if (!rPhys.grabbing && !rPhys.grounded && !rightStickinUse) {
-			if (rStickPos.x < 0) {
+			if (rStickPos.x < -.2f) {
 				StartCoroutine(rPhys.BoardGrab(7, rPhys.lgdr));
 				rightStickinUse = true;
 			}
-			else if (rStickPos.x > 0) {
+			else if (rStickPos.x > .2f) {
 				StartCoroutine(rPhys.BoardGrab(3, rPhys.lgdr));
 				rightStickinUse = true;
 			}
-			if (rStickPos.y < 0) {
+			else if (rStickPos.y < -.2f) {
 				StartCoroutine(rPhys.BoardGrab(5, rPhys.lgdr));
 				rightStickinUse = true;
 			}
-			else if (rStickPos.y > 0) {
+			else if (rStickPos.y > .2f) {
 				StartCoroutine(rPhys.BoardGrab(1, rPhys.lgdr));
 				rightStickinUse = true;
 			}
 		}
-		if (rStickPos.x == 0 && rStickPos.y == 0) rightStickinUse = false;
+		if (Mathf.Abs(rStickPos.x) < .2f && Mathf.Abs(rStickPos.y) < .2f) rightStickinUse = false;
 			// Use items and attacks, making sure one press only fires one item.
 			// if (Input.GetButtonDown(xBut) && !fire2Down) {
 			// 	rPhys.Shoot();
@@ -107,43 +119,43 @@ public class PlayerRaceControls : MonoBehaviour {
 		if (!rPhys.finished && !lockControls) {
 			if (rPhys.grounded) {
 				if (jumpPressed) {
-					// Crouch to ready tricks.
+					rPhys.anim.SetBool("Crouching", true);
 				}
 				else {
 					// Jump and perform tricks if touching the ground.
 					rPhys.Jump();
-					if (lStickPos.x > 0) {
-						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
-						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
-						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
+					if (lStickPos.x > .2f) {
+						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
+						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
+						else StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
 					}
-					else if (lStickPos.x == 0) {
-						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
-						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
+					else if (lStickPos.x < -.2f) {
+						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
+						else if (lStickPos.y < .2f) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
+						else StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
 					}
-					else if (lStickPos.x < 0) {
-						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
-						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
-						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
+					else {
+						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
+						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
 					}
 				}
 			}
 			else {
 				// Combo tricks in air
 				if (!jumpPressed && comboAble) {
-					if (lStickPos.x > 0) {
-						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
-						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
-						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
+					if (lStickPos.x > .2f) {
+						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
+						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
+						else StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
 					}
-					else if (lStickPos.x == 0) {
-						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
-						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
+					else if (lStickPos.x < -.2f) {
+						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
+						else if (lStickPos.y < .2f) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
+						else StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
 					}
-					else if (lStickPos.x < 0) {
-						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
-						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
-						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
+					else {
+						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
+						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
 					}
 					comboAble = false;
 				}
@@ -157,43 +169,43 @@ public class PlayerRaceControls : MonoBehaviour {
 		if (!rPhys.finished && !lockControls) {
 			if (rPhys.grounded) {
 				if (down) {
-					// Crouch to ready tricks.
+					rPhys.anim.SetBool("Crouching", true);
 				}
 				else {
 					// Jump and perform tricks if touching the ground.
 					rPhys.Jump();
-					if (lStickPos.x > 0) {
-						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
-						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
-						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
+					if (lStickPos.x > .2f) {
+						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
+						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
+						else StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
 					}
-					else if (lStickPos.x == 0) {
-						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
-						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
+					else if (lStickPos.x < -.2f) {
+						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
+						else if (lStickPos.y < .2f) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
+						else StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
 					}
-					else if (lStickPos.x < 0) {
-						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
-						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
-						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
+					else {
+						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
+						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
 					}
 				}
 			}
 			else {
 				// Combo tricks in air
 				if (!down && comboAble) {
-					if (lStickPos.x > 0) {
-						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
-						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
-						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
+					if (lStickPos.x > .2f) {
+						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
+						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
+						else StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
 					}
-					else if (lStickPos.x == 0) {
-						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
-						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
+					else if (lStickPos.x < -.2f) {
+						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
+						else if (lStickPos.y < .2f) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
+						else StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
 					}
-					else if (lStickPos.x < 0) {
-						if (lStickPos.y > 0) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
-						else if (lStickPos.y == 0) StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
-						else if (lStickPos.y < 0) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
+					else {
+						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
+						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
 					}
 					comboAble = false;
 				}
