@@ -18,18 +18,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Menus/HubTown.unity
     guid: 9dbcda9ee654dd14292eb951d8eabed7
   - enabled: 1
-    path: Assets/Scenes/Menus/StoryMenu.unity
-    guid: 1b6e2c32d2176cd4cb9023b36330fb5e
-  - enabled: 1
-    path: Assets/Scenes/Menus/BattleMenu.unity
+    path: Assets/Scenes/Menus/RacePrepMenu.unity
     guid: 70b17113d17295d48a7086e9949f475d
-  - enabled: 1
-    path: Assets/Scenes/Menus/BattleMenuTemp.unity
-    guid: f0922ed36ad96fe4eb5258599d676891
-  - enabled: 1
-    path: Assets/Scenes/Menus/ChallengeMenu.unity
-    guid: 58bd049ccb5e1684a85abc0ed8b721ab
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Menus/CharacterEditor.unity
     guid: 39eb6281672cf9243ac920400b59f2ca
   - enabled: 1

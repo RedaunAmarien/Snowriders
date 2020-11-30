@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
-using UnityEngine.InputSystem.UI;
-using System.IO;
+using TMPro;
 
 public class RacePrep : MonoBehaviour {
 
 	public GameObject pressStart, countSet, characterSet, mainSet, optionSet, courseSet, loadSet, readySet, bypassButton;
-    public GameObject[] charPrep;
+    public GameObject[] joinText, joinParent, charPrep;
     public CharacterPrep[] charPrepScript;
     public AudioSource[] songLayer;
     public Sprite[] charPortSrc;
@@ -28,17 +25,23 @@ public class RacePrep : MonoBehaviour {
     public Image fadePanel;
     bool fadingIn, fadingOut;
     public float fadeDelay, startTime;
-
+    public GameObject courseSlotPref;
+    public Transform courseSlotParent;
+    public ChosenCourse[] courses;
     public ChallengeConditions[] challenges;
+    List<GameObject> courseSlot = new List<GameObject>();
+    List<TextMeshProUGUI> ranks = new List<TextMeshProUGUI>();
 
-    void Awake() {
+    void Awake()
+    {
         songLayer[0].volume = 0;
         songLayer[1].volume = 0;
         songLayer[2].volume = 0;
         songLayer[3].volume = 0;
     }
 
-	void Start () {
+	void Start ()
+    {
 		fadePanel.gameObject.SetActive(true);
 
         charPrep = new GameObject[4];
@@ -61,7 +64,37 @@ public class RacePrep : MonoBehaviour {
         countSet.SetActive(false);
         characterSet.SetActive(true);
         StartCoroutine(StartSong(1));
-        switch (GameRam.gameMode) {
+
+        if (GameRam.gameMode == GameMode.Challenge)
+        {
+
+            for (int i = 0; i < challenges.Length; i++)
+            {
+                courseSlot.Add(GameObject.Instantiate(courseSlotPref, courseSlotParent));
+                EpisodeSlot epi = courseSlot[i].GetComponent<EpisodeSlot>();
+                epi.nameUI.text = challenges[i].challengeName;
+                epi.numUI.text = (i + 1).ToString();
+                epi.trackNumber = i;
+                epi.menu = this;
+                ranks.Add(epi.rankUI);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < courses.Length; i++)
+            {
+                courseSlot.Add(GameObject.Instantiate(courseSlotPref, courseSlotParent));
+                EpisodeSlot epi = courseSlot[i].GetComponent<EpisodeSlot>();
+                epi.nameUI.text = courses[i].trackName;
+                epi.numUI.text = (i + 1).ToString();
+                epi.trackNumber = i;
+                epi.menu = this;
+                ranks.Add(epi.rankUI);
+            }
+        }
+
+        switch (GameRam.gameMode)
+        {
             case GameMode.Challenge:
                 titleText.text = "Challenge Mode";
                 optionButton.interactable = false;
@@ -69,7 +102,11 @@ public class RacePrep : MonoBehaviour {
                 GameRam.coinsOn = false;
                 // items.isOn = false;
                 // coins.isOn = false;
+                joinParent[1].SetActive(false);
+                joinParent[2].SetActive(false);
+                joinParent[3].SetActive(false);
             break;
+
             case GameMode.Story:
                 titleText.text = "Story Mode";
                 optionButton.interactable = false;
@@ -77,7 +114,34 @@ public class RacePrep : MonoBehaviour {
                 GameRam.coinsOn = true;
                 items.isOn = true;
                 coins.isOn = true;
+                joinParent[1].SetActive(false);
+                joinParent[2].SetActive(false);
+                joinParent[3].SetActive(false);
+                for (int i = 0; i < ranks.Count; i++)
+                {
+                    if (GameRam.currentSaveFile.courseGrade[i] == SaveData.CourseGrade.None)
+                    {
+                        ranks[i].text = "";
+                    }
+                    else if (GameRam.currentSaveFile.courseGrade[i] == SaveData.CourseGrade.Black)
+                    {
+                        ranks[i].text = "<sprite=\"Medals\" index=3>";
+                    }
+                    else if (GameRam.currentSaveFile.courseGrade[i] == SaveData.CourseGrade.Bronze)
+                    {
+                        ranks[i].text = "<sprite=\"Medals\" index=2>";
+                    }
+                    else if (GameRam.currentSaveFile.courseGrade[i] == SaveData.CourseGrade.Silver)
+                    {
+                        ranks[i].text = "<sprite=\"Medals\" index=1>";
+                    }
+                    else if (GameRam.currentSaveFile.courseGrade[i] == SaveData.CourseGrade.Gold)
+                    {
+                        ranks[i].text = "<sprite=\"Medals\" index=0>";
+                    }
+                }
             break;
+
             case GameMode.Battle:
                 titleText.text = "Battle Mode";
                 optionButton.interactable = true;
@@ -86,6 +150,7 @@ public class RacePrep : MonoBehaviour {
                 items.isOn = true;
                 coins.isOn = true;
             break;
+
             default:
                 Debug.LogErrorFormat("Gamemode {0} not set up.", GameRam.gameMode);
             break;
@@ -94,86 +159,97 @@ public class RacePrep : MonoBehaviour {
 		StartCoroutine(Fade(true, null));
 	}
 
-    void Update() {
-        if (playersReady == GameRam.playerCount && GameRam.playerCount != 0) {
+    void Update()
+    {
+        if (playersReady == GameRam.playerCount && GameRam.playerCount != 0)
+        {
             readyToGo = true;
             readySet.SetActive(true);
         }
-        else {
+        else
+        {
             readyToGo = false;
             readySet.SetActive(false);
         }
     }
 
-    public void CheckGo() {
-        if (readyToGo) {
+    public void CheckGo()
+    {
+        if (readyToGo)
+        {
             readySet.SetActive(false);
-            charPrepScript[0].mpEvents.firstSelectedGameObject = bypassButton;
-            charPrep[0].transform.localPosition = new Vector3 (transform.position.x, transform.position.y, 350);
+            titleText.gameObject.SetActive(false);
+            // charPrepScript[0].mpEvents.firstSelectedGameObject = bypassButton;
+            charPrep[0].transform.localPosition = new Vector3 (transform.position.x, transform.position.y, -1000);
+            for (int i = 1; i < GameRam.playerCount; i++)
+            {
+                charPrep[i].gameObject.SetActive(false);
+            }
             mainSet.SetActive(true);
+            // characterSet.SetActive(false);
             playersReady = 0;
-            // for (int i = GameRam.playerCount; i < 4; i++) {
-            //     // Fix later to be specific levels.
-            //     GameRam.charForP[i] = Random.Range(0, GameRam.allCharData.Count);
-            //     GameRam.boardForP[i] = Random.Range(0, GameRam.boardData.Length);
-            // }
             StartCoroutine(StartSong(2));
             StartCoroutine(StopSong(1));
         }
     }
 
-    public void Backup() {
+    public void Backup()
+    {
         StartCoroutine(Fade(false, "HubTown"));
     }
 
-    public void OnPlayerJoined(PlayerInput player) {
+    public void OnPlayerJoined(PlayerInput player)
+    {
         GameRam.playerCount = player.user.index + 1;
-        // if (GameRam.playerCount > 2) {
-        //     player3And4.SetActive(true);
-        // }
         GameRam.inpUse[player.user.index] = player.user;
         GameRam.inpDev[player.user.index] = player.user.pairedDevices[0];
         Debug.LogFormat("Player {0} joined using {1}.", player.user.id, player.user.pairedDevices[0]);
     }
 
-    // public void OnPlayerLeft(PlayerInput player) {
-    //     Debug.Log("Player " + player.user.index + " disconnected.");
-    //     GameRam.playerCount --;
-    //     // advSub.SetActive(false);
-    // }
-
-	public void SetLaps() {
-        if (laps.value == 0) {
+	public void SetLaps()
+    {
+        if (laps.value == 0)
+        {
             lapCountText.text = "Lap Count: Default";
         }
-        else {
+        else
+        {
             lapCountText.text = "Lap Count: " + laps.value;
         }
         GameRam.lapCount = Mathf.RoundToInt(laps.value);
 	}
 
-	public void ItemToggle() {
+	public void ItemToggle()
+    {
 		GameRam.itemsOn = items.isOn;
 	}
 
-	public void CoinToggle() {
+	public void CoinToggle()
+    {
 		GameRam.coinsOn = coins.isOn;
 	}
 
-	public void ChooseCourse(ChosenCourse course) {
-        if (course.isChallenge) {
-            GameRam.currentChallenge = challenges[course.challengeIndex];
+	public void ChooseCourse(int course)
+    {
+        if (GameRam.gameMode == GameMode.Challenge)
+        {
+            GameRam.currentChallenge = challenges[course];
+            GameRam.courseToLoad = challenges[course].challengeTrack;
+            StartCoroutine(Fade(false, "TrackContainer"));
         }
-        if (course.useCutscene) {
-            StartCoroutine(Fade(false, course.cutsceneName));
+        else if (GameRam.gameMode == GameMode.Story)
+        {
+            StartCoroutine(Fade(false, courses[course].cutsceneRef));
         }
-        else {
-            GameRam.courseToLoad = course.trackName;
+        else
+        {
+            GameRam.courseToLoad = courses[course].trackRef;
             StartCoroutine(Fade(false, "TrackContainer"));
         }
 	}
 
-	IEnumerator LoadScene(string sceneToLoad) {
+	IEnumerator LoadScene(string sceneToLoad)
+    {
         //Reroute through loading screen to load scene.
 		GameRam.nextSceneToLoad = sceneToLoad;
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("LoadingScreen");
@@ -183,46 +259,57 @@ public class RacePrep : MonoBehaviour {
         }
     }
 
-    public void StartSongButton(int newLayer) {
+    public void StartSongButton(int newLayer)
+    {
         StartCoroutine(StartSong(newLayer));
     }
 
-    public void StopSongButton(int oldLayer) {
+    public void StopSongButton(int oldLayer)
+    {
         StartCoroutine(StopSong(oldLayer));
     }
 
-    IEnumerator StartSong(int layer) {
-        for (float i = 0; i < maxLayerVolume; i += volumePercentSpeed) {
+    IEnumerator StartSong(int layer)
+    {
+        for (float i = 0; i < maxLayerVolume; i += volumePercentSpeed)
+        {
             songLayer[layer].volume = i;
             yield return null;
         }
         if (songLayer[layer].volume > maxLayerVolume) songLayer[layer].volume = maxLayerVolume;
     }
-    IEnumerator StopSong(int layer) {
-        for (float i = maxLayerVolume; i > 0; i -= volumePercentSpeed) {
+    IEnumerator StopSong(int layer)
+    {
+        for (float i = maxLayerVolume; i > 0; i -= volumePercentSpeed)
+        {
             songLayer[layer].volume = i;
             yield return null;
         }
     }
     
-    public IEnumerator Fade(bool i, string destination) {
+    public IEnumerator Fade(bool i, string destination)
+    {
 		if (i) fadingIn = true;
 		else fadingOut = true;
 		startTime = Time.time;
 		yield return new WaitForSeconds(fadeDelay);
 		if (i) fadingIn = false;
-		else {
+		else
+        {
 			fadingOut = false;
 			StartCoroutine(LoadScene(destination));
 		}
 	}
 
-	void LateUpdate() {
-        if (fadingIn) {
+	void LateUpdate()
+    {
+        if (fadingIn)
+        {
             float t = (Time.time - startTime) / fadeDelay;
             fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(1f, 0f, t));
         }
-        else if (fadingOut) {
+        else if (fadingOut)
+        {
             float t = (Time.time - startTime) / fadeDelay;
             fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(0f, 1f, t));
         }

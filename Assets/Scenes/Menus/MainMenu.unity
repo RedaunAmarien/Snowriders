@@ -5225,7 +5225,7 @@ MonoBehaviour:
       goldTickets: 2
     specialAbility: 
   - name: Poverty Board
-    description: Novelty board.\nLose 100 coins a minute.
+    description: Novelty board. Lose 100 coins a minute.
     boardID: 15
     shopIndex: 12
     level: 0
@@ -5239,7 +5239,7 @@ MonoBehaviour:
       goldTickets: 0
     specialAbility: Drains money as you play.
   - name: Wealth Board
-    description: Novelty board.\nEarn 1000 coins a minute.
+    description: Novelty board. Earn 1000 coins a minute.
     boardID: 16
     shopIndex: 13
     level: 5
@@ -6526,8 +6526,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1819236998}
-  - component: {fileID: 1819236997}
   - component: {fileID: 1819236999}
+  - component: {fileID: 1819236997}
   - component: {fileID: 1819236996}
   m_Layer: 0
   m_Name: EventSystem
@@ -6548,27 +6548,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MoveRepeatDelay: 0.25
+  m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
-  m_ActionsAsset: {fileID: -944628639613478452, guid: b04716a6024edc949876431eb6117025,
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018,
     type: 3}
-  m_PointAction: {fileID: -312295406069628395, guid: b04716a6024edc949876431eb6117025,
+  m_PointAction: {fileID: 1054132383583890850, guid: ca9f5fa95ffab41fb9a615ab714db018,
     type: 3}
-  m_MoveAction: {fileID: 2475749323786148160, guid: b04716a6024edc949876431eb6117025,
+  m_MoveAction: {fileID: 3710738434707379630, guid: ca9f5fa95ffab41fb9a615ab714db018,
     type: 3}
-  m_SubmitAction: {fileID: -1143520590968643433, guid: b04716a6024edc949876431eb6117025,
+  m_SubmitAction: {fileID: 2064916234097673511, guid: ca9f5fa95ffab41fb9a615ab714db018,
     type: 3}
-  m_CancelAction: {fileID: 7622304409271032329, guid: b04716a6024edc949876431eb6117025,
+  m_CancelAction: {fileID: -1967631576421560919, guid: ca9f5fa95ffab41fb9a615ab714db018,
     type: 3}
-  m_LeftClickAction: {fileID: 7029335082783050110, guid: b04716a6024edc949876431eb6117025,
+  m_LeftClickAction: {fileID: 8056856818456041789, guid: ca9f5fa95ffab41fb9a615ab714db018,
     type: 3}
-  m_MiddleClickAction: {fileID: 0}
-  m_RightClickAction: {fileID: 0}
-  m_ScrollWheelAction: {fileID: 0}
-  m_TrackedDevicePositionAction: {fileID: 0}
-  m_TrackedDeviceOrientationAction: {fileID: 0}
-  m_DeselectOnBackgroundClick: 1
-  m_PointerBehavior: 1
+  m_MiddleClickAction: {fileID: 3279352641294131588, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_RightClickAction: {fileID: 3837173908680883260, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_ScrollWheelAction: {fileID: 4502412055082496612, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_TrackedDevicePositionAction: {fileID: 4754684134866288074, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 1025543830046995696, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_DeselectOnBackgroundClick: 0
+  m_PointerBehavior: 0
 --- !u!114 &1819236997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6646,12 +6651,12 @@ MonoBehaviour:
     ownedItemID: 
     storyStarted: 0
   newSaveData:
-    fileName: 
-    version: 
+    fileName: default
+    version: 2
     saveSlot: 0
     coins: 0
     completedChallenge: 
-    ticketBronze: 0
+    ticketBronze: 1
     ticketSilver: 0
     ticketGold: 0
     courseGrade: 

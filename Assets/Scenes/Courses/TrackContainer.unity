@@ -270,7 +270,7 @@ MonoBehaviour:
   fadePanel: {fileID: 1411847694}
   fadeDelay: 1
   demoMode: 0
-  demoCourse: Track5
+  demoCourse: Track1
   demoPlayerCount: 0
   demoChars:
   - name: Redaun

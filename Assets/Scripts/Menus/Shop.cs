@@ -18,28 +18,15 @@ public class Shop : MonoBehaviour {
     public Slider progressBar;
     bool stickMove;
     SaveData reloadData;
-    public InputAction cheatAction;
     public Image fadePanel;
     bool fadingIn, fadingOut;
     public float fadeDelay, startTime;
-
-    void Awake() {
-        cheatAction.Enable();
-        // cheatAction.performed += OnCheat;
-    }
 
     void Start() {
         currentChoice = 4;
 		fadePanel.gameObject.SetActive(true);
 		StartCoroutine(Fade(true));
     }
-
-    // void OnCheatAction () {
-    //     GameRam.currentSaveFile.coins += 10000;
-    //     GameRam.currentSaveFile.ticketBronze += 5;
-    //     GameRam.currentSaveFile.ticketSilver += 5;
-    //     GameRam.currentSaveFile.ticketGold += 5;
-    // }
 
     void Update() {
         funds[0].text = GameRam.currentSaveFile.coins.ToString("N0");

@@ -28,11 +28,18 @@ public class CharacterPrep : MonoBehaviour {
         prepMenu.charPrepScript[myNumber] = GetComponent<CharacterPrep>();
         
         //Update Visuals
-        prepMenu.pressStart.SetActive(false);
-        transform.SetParent(GameObject.Find("Grid1").transform);
+        if (GameRam.gameMode != GameMode.Battle)
+        {
+            prepMenu.pressStart.SetActive(false);
+            prepMenu.GetComponent<PlayerInputManager>().enabled = false;
+        }
+        transform.SetParent(prepMenu.joinParent[myNumber].transform);
+        prepMenu.joinText[myNumber].SetActive(false);
         playPort.sprite = prepMenu.playPortSrc;
         thissun.localScale = new Vector3(1,1,1);
         thissun.localPosition = new Vector3(transform.position.x, transform.position.y, 0);
+        thissun.offsetMin = new Vector2(0,0);
+        thissun.offsetMax = new Vector2(0,0);
 
         charText.gameObject.SetActive(false);
         boardText.gameObject.SetActive(false);

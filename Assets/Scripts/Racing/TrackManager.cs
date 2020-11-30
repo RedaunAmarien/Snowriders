@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using System.IO;
 using TMPro;
 using System.Linq;
 using System;
@@ -590,32 +589,33 @@ public class TrackManager : MonoBehaviour {
 		}
 
 		// Challenge Mode
-		else if (GameRam.gameMode == GameMode.Challenge) {
+		else if (GameRam.gameMode == GameMode.Challenge)
+		{
 			GameRam.currentSaveFile.coins += rPhys[0].coins;
 			ChallengeConditions cond = GameRam.currentChallenge;
 			bool succeeded = true;
 			string failReason = string.Empty;
-			cond.timeLimit = new System.TimeSpan(0,0,cond.timeLimitMin,cond.timeLimitSec,cond.timeLimitMil);
+			cond.timeLimit = new System.TimeSpan(0, 0, cond.timeLimitInSeconds);
 
 			//Test Challenge Conditions
-			if (cSettings.courseIndex != cond.requiredCourse) {
-				succeeded = false;
-				failReason = string.Format("you should have played on course {0}", cond.requiredCourse);
-			}
-			if (rPhys[0].coins < cond.requiredCoinCoint) {
+			if (rPhys[0].coins < cond.requiredCoinCoint)
+			{
 				succeeded = false;
 				failReason = string.Format("you did not finish with more than {0} coins", cond.requiredCoinCoint);
 			}
-			if (GameRam.ownedBoardData[GameRam.boardForP[0]].boardID != cond.requiredBoardID) {
+			if (GameRam.ownedBoardData[GameRam.boardForP[0]].boardID != cond.requiredBoardID)
+			{
 				succeeded = false;
 				string boardName = string.Empty;
-				foreach (BoardData board in GameRam.allBoardData) {
+				foreach (BoardData board in GameRam.allBoardData)
+				{
 					if (board.boardID == cond.requiredBoardID)
 						boardName = board.name;
 				}
 				failReason = string.Format("you did not use the board {0}", boardName);
 			}
-			if (totalTime > cond.timeLimit) {
+			if (totalTime > cond.timeLimit)
+			{
 				succeeded = false;
 				failReason = string.Format("you did not finish within {0:d2}:{1:d2}.{2:d2}", cond.timeLimit.Minutes, cond.timeLimit.Seconds, cond.timeLimit.Milliseconds/10);
 			}

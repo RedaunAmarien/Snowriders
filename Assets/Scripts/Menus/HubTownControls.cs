@@ -9,10 +9,6 @@ using TMPro;
 
 public class HubTownControls : MonoBehaviour {
 
-	[Header("ControlSetup")]
-    public InputAction turn;
-    public InputAction select;
-
 	public float moveTime;
 	int conNum;
 	public GameObject cam;
@@ -31,13 +27,6 @@ public class HubTownControls : MonoBehaviour {
     public Image fadePanel;
     bool fadingIn, fadingOut;
     public float fadeDelay, startTime;
-
-	void Awake() {
-        select.performed += ctx => Select();
-        select.Enable();
-        turn.performed += ctx => Turn();
-        turn.Enable();
-	}
 
 	void Start() {
 		fadePanel.gameObject.SetActive(true);
@@ -60,35 +49,84 @@ public class HubTownControls : MonoBehaviour {
 		highTicketCount.text = GameRam.currentSaveFile.ticketGold.ToString();
 	}
 
-	void FixedUpdate () {
-		Vector3 a = Vector3.zero;
-		transform.SetPositionAndRotation(Vector3.SmoothDamp(transform.position, place[currentPlace].transform.position, ref a, moveTime), transform.rotation);
-		transform.LookAt(2 * transform.position - cam.transform.position);
-		if (turn.ReadValue<float>() == 0) {
+	void OnNavigate(InputValue val)
+	{
+		float v = val.Get<Vector2>().x;
+		if (v <.5f && v > -.5f)
+		{
 			bump = false;
 		}
-		if (!bump && turn.ReadValue<float>() > 0.5f) {
+		if (!bump && v > 0.5f)
+		{
 			currentPlace += 1;
-			if (currentPlace >= place.Count) {
+			if (currentPlace >= place.Count)
+			{
 				currentPlace = 0;
 			}
 			bump = true;
 		}
-		if (!bump && turn.ReadValue<float>() < -0.5f) {
+		if (!bump && v < -0.5f)
+		{
 			currentPlace -= 1;
-			if (currentPlace <= -1) {
+			if (currentPlace <= -1)
+			{
 				currentPlace = place.Count-1;
 			}
 			bump = true;
 		}
 	}
 
-	void Turn() {
-		
+	void OnSubmit()
+	{
+		switch (currentPlace) {
+			case 0:
+				GameRam.gameMode = GameMode.Story;
+				GameRam.maxPlayerCount = 1;
+				StartCoroutine(Fade(false, "RacePrepMenu"));
+			break;
+
+			case 1:
+				GameRam.gameMode = GameMode.Battle;
+				GameRam.maxPlayerCount = 4;
+				StartCoroutine(Fade(false, "RacePrepMenu"));
+			break;
+
+			case 2:
+				GameRam.gameMode = GameMode.Online;
+				GameRam.maxPlayerCount = 2;
+				Debug.LogWarning("Unavailable");
+			break;
+
+			case 3:
+				Debug.LogWarning("Unavailable");
+			break;
+
+			case 4:
+				StartCoroutine(Fade(false, "MainMenu"));
+			break;
+
+			case 5:
+				StartCoroutine(Fade(false, "Shop"));
+			break;
+
+			case 6:
+				// StartCoroutine(Fade(false, "CharacterEditor"));
+				Debug.LogWarning("Unavailable");
+			break;
+
+			case 7:
+				GameRam.gameMode = GameMode.Challenge;
+				GameRam.maxPlayerCount = 1;
+				StartCoroutine(Fade(false, "RacePrepMenu"));
+			break;
+		}
 	}
 
-	void Select() {
-
+	void FixedUpdate ()
+	{
+		Vector3 a = Vector3.zero;
+		transform.SetPositionAndRotation(Vector3.SmoothDamp(transform.position, place[currentPlace].transform.position, ref a, moveTime), transform.rotation);
+		transform.LookAt(2 * transform.position - cam.transform.position);
 	}
 
 	void LateUpdate() {
@@ -130,45 +168,6 @@ public class HubTownControls : MonoBehaviour {
 				case "Exit":
 					destDesc.text = "Return to the <color=green>Title Menu</color>.";
 				break;
-		}
-	}
-
-	void OnTriggerStay (Collider other) {
-		if (select.ReadValue<float>() > 0 && !selected) {
-			switch (other.name) {
-				case "Option":
-					Debug.LogWarning("Unavailable");
-				break;
-				case "Shop":
-					StartCoroutine(Fade(false, "Shop"));
-				break;
-				case "Custom":
-					StartCoroutine(Fade(false, "CharacterEditor"));
-				break;
-				case "Story":
-					GameRam.gameMode = GameMode.Story;
-					GameRam.maxPlayerCount = 1;
-					StartCoroutine(Fade(false, "StoryMenu"));
-				break;
-				case "Battle":
-					GameRam.gameMode = GameMode.Battle;
-					GameRam.maxPlayerCount = 4;
-					StartCoroutine(Fade(false, "BattleMenu"));
-				break;
-				case "Online":
-					GameRam.gameMode = GameMode.Online;
-					GameRam.maxPlayerCount = 2;
-					Debug.LogWarning("Unavailable");
-				break;
-				case "Challenge":
-					GameRam.gameMode = GameMode.Challenge;
-					GameRam.maxPlayerCount = 1;
-					StartCoroutine(Fade(false, "ChallengeMenu"));
-				break;
-				case "Exit":
-					StartCoroutine(Fade(false, "MainMenu"));
-				break;
-			}
 		}
 	}
 
