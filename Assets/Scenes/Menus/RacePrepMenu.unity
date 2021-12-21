@@ -6042,6 +6042,9 @@ MonoBehaviour:
   - trackName: Silver Lake
     trackRef: Track5
     cutsceneRef: Track5cut
+  - trackName: Steep Cliff (WIP)
+    trackRef: Track6
+    cutsceneRef: Track6cut
   challenges:
   - challengeName: Fighting Poverty
     challengeTrack: Track4

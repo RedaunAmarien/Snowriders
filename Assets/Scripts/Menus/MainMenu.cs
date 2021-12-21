@@ -170,6 +170,11 @@ public class MainMenu : MonoBehaviour {
 		Debug.Log(val);
 	}
 
+	public void OnVolumeChange(Slider slider)
+	{
+		GameRam.masterVol = slider.value;
+	}
+
 	public void NameNewSave() {
 		if (saveBox.text == "") {
 			// Do nothing.
@@ -347,7 +352,7 @@ public class MainMenu : MonoBehaviour {
 	}
 
 	static void SaveChar (CharacterData charData, string path) {
-		string jsonString = JsonUtility.ToJson (charData);
+		string jsonString = JsonUtility.ToJson (charData, true);
 		using (StreamWriter streamWriter = File.CreateText(path)) {
 			streamWriter.Write (jsonString);
 		}

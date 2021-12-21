@@ -30,6 +30,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Courses/TrackContainer.unity
     guid: f85d826321302ad4495458ae42684273
   - enabled: 1
+    path: Assets/Scenes/Courses/Track0.unity
+    guid: 6be796cb1c9089a488bf014292aaf484
+  - enabled: 1
     path: Assets/Scenes/Courses/Track1.unity
     guid: 535d2bc54514ba4458ea58e269fcd119
   - enabled: 1
@@ -45,6 +48,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Courses/Track5.unity
     guid: 9821b506894fa8849b2a4fe6cf8e8ed1
   - enabled: 1
+    path: Assets/Scenes/Courses/Track6.unity
+    guid: 112aabaa49d181a488b49771f0bd99ba
+  - enabled: 1
     path: Assets/Scenes/Cutscenes/Track1cut.unity
     guid: 143e261248459fa46b3d89602e0120ed
   - enabled: 1
@@ -59,6 +65,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Cutscenes/Track5cut.unity
     guid: 6e000a594bd7c6f468a7c1bf2ba50031
+  - enabled: 1
+    path: Assets/Scenes/Cutscenes/Track6cut.unity
+    guid: ce8ec1b65e9c7bb48b9bfb08f5bce8d4
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: b84da0b72ac75e74080a5cbd6411b950,
       type: 2}

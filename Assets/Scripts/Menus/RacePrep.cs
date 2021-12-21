@@ -273,7 +273,7 @@ public class RacePrep : MonoBehaviour {
     {
         for (float i = 0; i < maxLayerVolume; i += volumePercentSpeed)
         {
-            songLayer[layer].volume = i;
+            songLayer[layer].volume = i * GameRam.masterVol;
             yield return null;
         }
         if (songLayer[layer].volume > maxLayerVolume) songLayer[layer].volume = maxLayerVolume;
@@ -282,7 +282,7 @@ public class RacePrep : MonoBehaviour {
     {
         for (float i = maxLayerVolume; i > 0; i -= volumePercentSpeed)
         {
-            songLayer[layer].volume = i;
+            songLayer[layer].volume = i * GameRam.masterVol;
             yield return null;
         }
     }

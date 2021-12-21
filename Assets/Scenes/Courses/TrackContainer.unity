@@ -269,9 +269,9 @@ MonoBehaviour:
   readySetSet: {fileID: 2082302441}
   fadePanel: {fileID: 1411847694}
   fadeDelay: 1
-  demoMode: 0
+  demoMode: 1
   demoCourse: Track1
-  demoPlayerCount: 0
+  demoPlayerCount: 1
   demoChars:
   - name: Redaun
     creator: 

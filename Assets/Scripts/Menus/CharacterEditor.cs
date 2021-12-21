@@ -144,7 +144,7 @@ public class CharacterEditor : MonoBehaviour {
 	}
 
 	static void SaveChar (CharacterData charData, string path) {
-		string jsonString = JsonUtility.ToJson (charData);
+		string jsonString = JsonUtility.ToJson (charData, true);
 		using (StreamWriter streamWriter = File.CreateText(path)) {
 			streamWriter.Write (jsonString);
 		}
