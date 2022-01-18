@@ -1,7 +1,7 @@
 # Snowriders
 
-Current version: Alpha 0.02.3
-Public version available at http://redaun.itch.io/snowriders (Alpha 0.02.0).
+Current version: 0.00.4a
+Public version available at http://redaun.itch.io/snowriders (Alpha 0.04.3).
 
 All assets made by Redaun Amarién EXCEPT:
 -  A few item sprites ripped from Snowboard Kids 2.
