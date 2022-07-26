@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b557dd034a45c34fa36b82f950ae5dc, type: 3}
+  m_Name: Poverty Board
+  m_EditorClassIdentifier: 
+  name: Poverty Board
+  description: Novely board. Lose 100 coins per minute.
+  boardID: 15
+  shopIndex: 12
+  level: 0
+  speed: 1
+  turn: 1
+  jump: 1
+  boardCost:
+    coins: 10
+    bronzeTickets: 0
+    silverTickets: 0
+    goldTickets: 0
+  specialAbility: Spends money as you play.

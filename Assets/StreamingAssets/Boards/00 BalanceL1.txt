@@ -1,1 +1,0 @@
-{"name":"Balance Lv. 1","description":"A well-balanced board.","boardNumber":1,"level":1,"speed":1,"turn":1,"jump":1,"price":0,"specialAbility":""}

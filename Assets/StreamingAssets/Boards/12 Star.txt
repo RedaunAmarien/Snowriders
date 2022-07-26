@@ -1,1 +1,0 @@
-{"name":"Star Board","description":"A really good board.","boardNumber":13,"level":4,"speed":4,"turn":4,"jump":4,"price":100000,"specialAbility":""}

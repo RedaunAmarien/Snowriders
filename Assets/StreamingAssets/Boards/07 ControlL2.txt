@@ -1,1 +1,0 @@
-{"name":"Control Lv. 2","description":"A fast-turning board.","boardNumber":8,"level":2,"speed":1,"turn":3,"jump":1,"price":5000,"specialAbility":""}
