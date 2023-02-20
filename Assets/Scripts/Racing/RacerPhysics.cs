@@ -122,9 +122,9 @@ public class RacerPhysics : MonoBehaviour {
 			// Update Checkpoints
 			checkDist = (transform.position - lastCheckpoint.transform.position).sqrMagnitude - (transform.position - nextCheckpoint.transform.position).sqrMagnitude;
 			// if (finished) checkDist += 1000000;
-			Debug.DrawLine(transform.position, lastCheckpoint.transform.position, Color.green, .25f);
-			Debug.DrawLine(transform.position, nextCheckpoint.transform.position, Color.blue, .25f);
-			Debug.DrawLine(lastCheckpoint.transform.position, nextCheckpoint.transform.position, Color.red, .1f);
+			Debug.DrawLine(transform.position, lastCheckpoint.transform.position, Color.gray, .25f);
+			Debug.DrawLine(transform.position, nextCheckpoint.transform.position, Color.green, .25f);
+			//Debug.DrawLine(lastCheckpoint.transform.position, nextCheckpoint.transform.position, Color.red, .1f);
 
 			// Update variable limits.
 			if (coins < 0) coins = 0;

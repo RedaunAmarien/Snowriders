@@ -45,7 +45,7 @@ public class AIControls : MonoBehaviour {
 
 			//Follow Waypoints
 			turnAng = Vector3.SignedAngle(transform.forward, transform.position - offsetWaypoint, transform.up);
-			Debug.DrawLine(transform.position, prevWaypoint.transform.position, Color.cyan, .1f);
+			Debug.DrawLine(transform.position, prevWaypoint.transform.position, Color.white, .1f);
 			Debug.DrawLine(transform.position, offsetWaypoint, Color.magenta, .1f);
 
 			if (turnAng > 45) pCon.lStickPos = new Vector2(-0.7f, -0.7f);
@@ -136,36 +136,19 @@ public class AIControls : MonoBehaviour {
 			for (int i = 0; i < jumps; i++) {
 				pCon.OnJumpAI(true);
 				int z = Random.Range(1,9);
-				switch (z) {
-					case 1:
-						pCon.lStickPos = Vector2.up;
-					break;
-					case 2:
-						pCon.lStickPos = new Vector2(0.7f, 0.7f);
-					break;
-					case 3:
-						pCon.lStickPos = Vector2.right;
-					break;
-					case 4:
-						pCon.lStickPos = new Vector2(0.7f, -0.7f);
-					break;
-					case 5:
-						pCon.lStickPos = Vector2.down;
-					break;
-					case 6:
-						pCon.lStickPos = new Vector2(-0.7f, -0.7f);
-					break;
-					case 7:
-						pCon.lStickPos = Vector2.left;
-					break;
-					case 8:
-						pCon.lStickPos = new Vector2(-0.7f, 0.7f);
-					break;
-					default:
-						pCon.lStickPos = Vector2.zero;
-					break;
-				}
-				yield return new WaitForSeconds(jumpDelay);
+                pCon.lStickPos = z switch
+                {
+                    1 => Vector2.up,
+                    2 => new Vector2(0.7f, 0.7f),
+                    3 => Vector2.right,
+                    4 => new Vector2(0.7f, -0.7f),
+                    5 => Vector2.down,
+                    6 => new Vector2(-0.7f, -0.7f),
+                    7 => Vector2.left,
+                    8 => new Vector2(-0.7f, 0.7f),
+                    _ => Vector2.zero,
+                };
+                yield return new WaitForSeconds(jumpDelay);
 				pCon.OnJumpAI(false);
 				// Debug.Log(i + " tricks attempted. Current direction " + z + ".");
 				yield return new WaitForSeconds(chainTrickDelay);
