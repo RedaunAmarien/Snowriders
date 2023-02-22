@@ -94,7 +94,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 261.4
+  m_fontSize: 257.15
   m_fontSizeBase: 300
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -622,16 +622,16 @@ MonoBehaviour:
   grabsCombo: 0
   tricksChained: 0
   slows: 0
-  tManage: {fileID: 0}
-  cSettings: {fileID: 0}
-  pUI: {fileID: 1918638145114799637}
-  aUD: {fileID: 1919277164611420591}
-  audioSrc: {fileID: 1878534776056094869}
-  aI: {fileID: 6104156553658430391}
-  anim: {fileID: 4079147485254934116}
+  trackManager: {fileID: 0}
+  courseSettings: {fileID: 0}
+  playerUI: {fileID: 0}
+  audioMaker: {fileID: 0}
+  audioSource: {fileID: 0}
+  aiControls: {fileID: 0}
+  animator: {fileID: 4079147485254934116}
   playerStartPoint: {fileID: 0}
   rigid: {fileID: 2015200323473864437}
-  relVel: {x: 0, y: 0, z: 0}
+  relativeVelocity: {x: 0, y: 0, z: 0}
 --- !u!114 &6104156553658430391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -644,6 +644,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64bbfa407f75a4641b1a41a825a0cad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isNotAI: 0
   startWaypoint: {fileID: 0}
   prevWaypoint: {fileID: 0}
   nextWaypoint: {fileID: 0}
@@ -667,7 +668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29dfdd2280b514b45aa72c192122681f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conNum: 0
+  controllerIndex: 0
   fire1Down: 0
   fire2Down: 0
   rightStickinUse: 0
@@ -1170,13 +1171,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5d8a7697424d274b94fe55806f17798, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  vol: 0.75
   trickStart: {fileID: 8300000, guid: 384d725c164d7dd409e49f684912ab3f, type: 3}
   trickSuccess: {fileID: 8300000, guid: 33ba082ccf99303489a38951cc3df6c8, type: 3}
-  coin: {fileID: 8300000, guid: 638670ef50985e149a791c1134f62b2e, type: 3}
-  reflect: {fileID: 8300000, guid: 02db5893cf164c24aa80902658762dbc, type: 3}
+  coinPickup: {fileID: 8300000, guid: 638670ef50985e149a791c1134f62b2e, type: 3}
+  reflectAttack: {fileID: 8300000, guid: 02db5893cf164c24aa80902658762dbc, type: 3}
   error: {fileID: 8300000, guid: ace1006087a398340afd3ddf1ef6cdd0, type: 3}
-  item: {fileID: 8300000, guid: 0d6c1cb9362e9e945b5c62ee3e355942, type: 3}
-  vol: 0.75
+  collectItem: {fileID: 8300000, guid: 0d6c1cb9362e9e945b5c62ee3e355942, type: 3}
 --- !u!1 &2154039407641976351
 GameObject:
   m_ObjectHideFlags: 0

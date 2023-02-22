@@ -7,255 +7,312 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
-public class PlayerRaceControls : MonoBehaviour {
+public class PlayerRaceControls : MonoBehaviour
+{
 
-	Rigidbody rigid;
-	public int conNum;
-	public bool fire1Down, fire2Down, rightStickinUse, jumpPressed;
-	public bool lockControls, raceOver, comboAble;
-	PlayerUI pUI;
-	RacerPhysics rPhys;
-	// public string lStickH, lStickV, rStickH, rStickV, aBut, bBut, xBut, yBut, stBut, bkBut;
-	public Vector2 lStickPos, rStickPos;
+    Rigidbody rigid;
+    public int controllerIndex;
+    public bool fire1Down, fire2Down, rightStickinUse, jumpPressed;
+    public bool lockControls, raceOver, comboAble;
+    PlayerUI playerUI;
+    RacerCore racerCore;
+    // public string lStickH, lStickV, rStickH, rStickV, aBut, bBut, xBut, yBut, stBut, bkBut;
+    public Vector2 lStickPos, rStickPos;
 
-	void Start () {
-		//Find objects.
-		pUI = GetComponent<PlayerUI>();
-		rPhys = GetComponent<RacerPhysics>();
+    void Start()
+    {
+        //Find objects.
+        playerUI = GetComponent<PlayerUI>();
+        racerCore = GetComponent<RacerCore>();
 
-		//Initialize objects.
-		rigid = gameObject.GetComponent<Rigidbody>();
-		rPhys.spotLock = true;
-		lockControls = true;
-		rigid.maxAngularVelocity = 0.05f;
-	}
+        //Initialize objects.
+        rigid = gameObject.GetComponent<Rigidbody>();
+        racerCore.spotLock = true;
+        lockControls = true;
+        rigid.maxAngularVelocity = 0.05f;
+    }
 
-	void Update () {
+    void Update()
+    {
 
-		// Control player if not finished.
-		if (!rPhys.finished && !lockControls) {
-		// Steer
-			if (rPhys.grounded) {
-				if (!jumpPressed) {
-					if (lStickPos.y >= 0) {
-						float t = lStickPos.x * rPhys.turnSpeed * Time.deltaTime;
-						transform.Rotate(0,t,0);
-					}
-					else {
-						float t = lStickPos.x * rPhys.turnSpeed * Time.deltaTime;
-						transform.Rotate(0, t + (t*Mathf.Abs(lStickPos.y)) ,0);
-					}
-					if (lStickPos.x < 0) {
-						rPhys.anim.SetBool("TurningLeft", true);
-						rPhys.anim.SetBool("TurningRight", false);
-					}
-					else if (lStickPos.x > 0) {
-						rPhys.anim.SetBool("TurningRight", true);
-						rPhys.anim.SetBool("TurningLeft", false);
-					}
-					else {
-						rPhys.anim.SetBool("TurningLeft", false);
-						rPhys.anim.SetBool("TurningRight", false);
-					}
-				}
-			}
-			else {
-				// Turn slower when not grounded, but not at all when tricking
-				if (!rPhys.tricking) {
-					var t = lStickPos.x * rPhys.turnSpeed * Time.deltaTime;
-					transform.Rotate(0,t/2,0);
-				}
-			}
-		
-		// Do board grabs.
-		if (!rPhys.grabbing && !rPhys.grounded && !rightStickinUse) {
-			if (rStickPos.x < -.2f) {
-				StartCoroutine(rPhys.BoardGrab(7, rPhys.lgdr));
-				rightStickinUse = true;
-			}
-			else if (rStickPos.x > .2f) {
-				StartCoroutine(rPhys.BoardGrab(3, rPhys.lgdr));
-				rightStickinUse = true;
-			}
-			else if (rStickPos.y < -.2f) {
-				StartCoroutine(rPhys.BoardGrab(5, rPhys.lgdr));
-				rightStickinUse = true;
-			}
-			else if (rStickPos.y > .2f) {
-				StartCoroutine(rPhys.BoardGrab(1, rPhys.lgdr));
-				rightStickinUse = true;
-			}
-		}
-		if (Mathf.Abs(rStickPos.x) < .2f && Mathf.Abs(rStickPos.y) < .2f) rightStickinUse = false;
-			// Use items and attacks, making sure one press only fires one item.
-			// if (Input.GetButtonDown(xBut) && !fire2Down) {
-			// 	rPhys.Shoot();
-			// 	fire2Down = true;
-			// }
-			// if (Input.GetButtonDown(bBut) && !fire1Down) {
-			// 	rPhys.Item();
-			// 	fire1Down = true;
-			// }
-		}
-	}
+        // Control player if not finished.
+        if (!racerCore.finished && !lockControls)
+        {
+            // Steer
+            if (racerCore.grounded)
+            {
+                if (!jumpPressed)
+                {
+                    if (lStickPos.y >= 0)
+                    {
+                        float t = lStickPos.x * racerCore.turnSpeed * Time.deltaTime;
+                        transform.Rotate(0, t, 0);
+                    }
+                    else
+                    {
+                        float t = lStickPos.x * racerCore.turnSpeed * Time.deltaTime;
+                        transform.Rotate(0, t + (t * Mathf.Abs(lStickPos.y)), 0);
+                    }
+                    if (lStickPos.x < 0)
+                    {
+                        racerCore.animator.SetBool("TurningLeft", true);
+                        racerCore.animator.SetBool("TurningRight", false);
+                    }
+                    else if (lStickPos.x > 0)
+                    {
+                        racerCore.animator.SetBool("TurningRight", true);
+                        racerCore.animator.SetBool("TurningLeft", false);
+                    }
+                    else
+                    {
+                        racerCore.animator.SetBool("TurningLeft", false);
+                        racerCore.animator.SetBool("TurningRight", false);
+                    }
+                }
+            }
+            else
+            {
+                // Turn slower when not grounded, but not at all when tricking
+                if (!racerCore.tricking)
+                {
+                    var t = lStickPos.x * racerCore.turnSpeed * Time.deltaTime;
+                    transform.Rotate(0, t / 2, 0);
+                }
+            }
 
-	public void OnLookBack(InputValue val) {
-		float p = val.Get<float>();
-		//Look Backwards.
-		if (p == 0) pUI.camIsReversed = false;
-		else pUI.camIsReversed = true;
-	}
+            // Do board grabs.
+            if (!racerCore.grabbing && !racerCore.grounded && !rightStickinUse)
+            {
+                if (rStickPos.x < -.2f)
+                {
+                    StartCoroutine(racerCore.BoardGrab(7, racerCore.lgdr));
+                    rightStickinUse = true;
+                }
+                else if (rStickPos.x > .2f)
+                {
+                    StartCoroutine(racerCore.BoardGrab(3, racerCore.lgdr));
+                    rightStickinUse = true;
+                }
+                else if (rStickPos.y < -.2f)
+                {
+                    StartCoroutine(racerCore.BoardGrab(5, racerCore.lgdr));
+                    rightStickinUse = true;
+                }
+                else if (rStickPos.y > .2f)
+                {
+                    StartCoroutine(racerCore.BoardGrab(1, racerCore.lgdr));
+                    rightStickinUse = true;
+                }
+            }
+            if (Mathf.Abs(rStickPos.x) < .2f && Mathf.Abs(rStickPos.y) < .2f) rightStickinUse = false;
+            // Use items and attacks, making sure one press only fires one collectItem.
+            // if (Input.GetButtonDown(xBut) && !fire2Down) {
+            // 	racerCore.Shoot();
+            // 	fire2Down = true;
+            // }
+            // if (Input.GetButtonDown(bBut) && !fire1Down) {
+            // 	racerCore.Item();
+            // 	fire1Down = true;
+            // }
+        }
+    }
 
-	public void OnJump(InputValue val) {
-		float p = val.Get<float>();
-		//Tell scripts A is pressed.
-		if (p == 0) jumpPressed = false;
-		else jumpPressed = true;
+    public void OnLookBack(InputValue val)
+    {
+        float p = val.Get<float>();
+        //Look Backwards.
+        if (p == 0) playerUI.camIsReversed = false;
+        else playerUI.camIsReversed = true;
+    }
 
-		// Return to Menu
-		if (raceOver && jumpPressed) StartCoroutine(rPhys.tManage.Fade(false));
+    public void OnJump(InputValue val)
+    {
+        float p = val.Get<float>();
+        //Tell scripts A is pressed.
+        if (p == 0) jumpPressed = false;
+        else jumpPressed = true;
 
-		// During Race
-		if (!rPhys.finished && !lockControls) {
-			if (rPhys.grounded) {
-				if (jumpPressed) {
-					rPhys.anim.SetBool("Crouching", true);
-				}
-				else {
-					// Jump and perform tricks if touching the ground.
-					rPhys.Jump();
-					if (lStickPos.x > .2f) {
-						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
-						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
-						else StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
-					}
-					else if (lStickPos.x < -.2f) {
-						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
-						else if (lStickPos.y < .2f) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
-						else StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
-					}
-					else {
-						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
-						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
-					}
-				}
-			}
-			else {
-				// Combo tricks in air
-				if (!jumpPressed && comboAble) {
-					if (lStickPos.x > .2f) {
-						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
-						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
-						else StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
-					}
-					else if (lStickPos.x < -.2f) {
-						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
-						else if (lStickPos.y < .2f) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
-						else StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
-					}
-					else {
-						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
-						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
-					}
-					comboAble = false;
-				}
-			}
-		}
-	}
+        // Return to Menu
+        if (raceOver && jumpPressed) StartCoroutine(racerCore.trackManager.Fade(false));
 
-	public void OnJumpAI(bool down) {
+        // During Race
+        if (!racerCore.finished && !lockControls)
+        {
+            if (racerCore.grounded)
+            {
+                if (jumpPressed)
+                {
+                    racerCore.animator.SetBool("Crouching", true);
+                }
+                else
+                {
+                    // Jump and perform tricks if touching the ground.
+                    racerCore.Jump();
+                    if (lStickPos.x > .2f)
+                    {
+                        if (lStickPos.y > .2f) StartCoroutine(racerCore.Trick(2, racerCore.ltdr));
+                        else if (lStickPos.y < -.2f) StartCoroutine(racerCore.Trick(4, racerCore.ltdr));
+                        else StartCoroutine(racerCore.Trick(3, racerCore.ltdr));
+                    }
+                    else if (lStickPos.x < -.2f)
+                    {
+                        if (lStickPos.y > .2f) StartCoroutine(racerCore.Trick(8, racerCore.ltdr));
+                        else if (lStickPos.y < .2f) StartCoroutine(racerCore.Trick(6, racerCore.ltdr));
+                        else StartCoroutine(racerCore.Trick(7, racerCore.ltdr));
+                    }
+                    else
+                    {
+                        if (lStickPos.y > .2f) StartCoroutine(racerCore.Trick(1, racerCore.ltdr));
+                        else if (lStickPos.y < -.2f) StartCoroutine(racerCore.Trick(5, racerCore.ltdr));
+                    }
+                }
+            }
+            else
+            {
+                // Combo tricks in air
+                if (!jumpPressed && comboAble)
+                {
+                    if (lStickPos.x > .2f)
+                    {
+                        if (lStickPos.y > .2f) StartCoroutine(racerCore.Trick(2, racerCore.ltdr));
+                        else if (lStickPos.y < -.2f) StartCoroutine(racerCore.Trick(4, racerCore.ltdr));
+                        else StartCoroutine(racerCore.Trick(3, racerCore.ltdr));
+                    }
+                    else if (lStickPos.x < -.2f)
+                    {
+                        if (lStickPos.y > .2f) StartCoroutine(racerCore.Trick(8, racerCore.ltdr));
+                        else if (lStickPos.y < .2f) StartCoroutine(racerCore.Trick(6, racerCore.ltdr));
+                        else StartCoroutine(racerCore.Trick(7, racerCore.ltdr));
+                    }
+                    else
+                    {
+                        if (lStickPos.y > .2f) StartCoroutine(racerCore.Trick(1, racerCore.ltdr));
+                        else if (lStickPos.y < -.2f) StartCoroutine(racerCore.Trick(5, racerCore.ltdr));
+                    }
+                    comboAble = false;
+                }
+            }
+        }
+    }
 
-		// During Race
-		if (!rPhys.finished && !lockControls) {
-			if (rPhys.grounded) {
-				if (down) {
-					rPhys.anim.SetBool("Crouching", true);
-				}
-				else {
-					// Jump and perform tricks if touching the ground.
-					rPhys.Jump();
-					if (lStickPos.x > .2f) {
-						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
-						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
-						else StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
-					}
-					else if (lStickPos.x < -.2f) {
-						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
-						else if (lStickPos.y < .2f) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
-						else StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
-					}
-					else {
-						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
-						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
-					}
-				}
-			}
-			else {
-				// Combo tricks in air
-				if (!down && comboAble) {
-					if (lStickPos.x > .2f) {
-						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(2, rPhys.ltdr));
-						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(4, rPhys.ltdr));
-						else StartCoroutine(rPhys.Trick(3, rPhys.ltdr));
-					}
-					else if (lStickPos.x < -.2f) {
-						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(8, rPhys.ltdr));
-						else if (lStickPos.y < .2f) StartCoroutine(rPhys.Trick(6, rPhys.ltdr));
-						else StartCoroutine(rPhys.Trick(7, rPhys.ltdr));
-					}
-					else {
-						if (lStickPos.y > .2f) StartCoroutine(rPhys.Trick(1, rPhys.ltdr));
-						else if (lStickPos.y < -.2f) StartCoroutine(rPhys.Trick(5, rPhys.ltdr));
-					}
-					comboAble = false;
-				}
-			}
-		}
-	}
+    public void OnJumpAI(bool down)
+    {
 
-	public void OnShoot(InputValue val) {
-		var v = val.Get<float>();
-		if (v > 0) fire1Down = true;
-		else fire1Down = false;
-		if (!rPhys.finished && !lockControls && !fire1Down) {
-			rPhys.Shoot();
-		}
-	}
+        // During Race
+        if (!racerCore.finished && !lockControls)
+        {
+            if (racerCore.grounded)
+            {
+                if (down)
+                {
+                    racerCore.animator.SetBool("Crouching", true);
+                }
+                else
+                {
+                    // Jump and perform tricks if touching the ground.
+                    racerCore.Jump();
+                    if (lStickPos.x > .2f)
+                    {
+                        if (lStickPos.y > .2f) StartCoroutine(racerCore.Trick(2, racerCore.ltdr));
+                        else if (lStickPos.y < -.2f) StartCoroutine(racerCore.Trick(4, racerCore.ltdr));
+                        else StartCoroutine(racerCore.Trick(3, racerCore.ltdr));
+                    }
+                    else if (lStickPos.x < -.2f)
+                    {
+                        if (lStickPos.y > .2f) StartCoroutine(racerCore.Trick(8, racerCore.ltdr));
+                        else if (lStickPos.y < .2f) StartCoroutine(racerCore.Trick(6, racerCore.ltdr));
+                        else StartCoroutine(racerCore.Trick(7, racerCore.ltdr));
+                    }
+                    else
+                    {
+                        if (lStickPos.y > .2f) StartCoroutine(racerCore.Trick(1, racerCore.ltdr));
+                        else if (lStickPos.y < -.2f) StartCoroutine(racerCore.Trick(5, racerCore.ltdr));
+                    }
+                }
+            }
+            else
+            {
+                // Combo tricks in air
+                if (!down && comboAble)
+                {
+                    if (lStickPos.x > .2f)
+                    {
+                        if (lStickPos.y > .2f) StartCoroutine(racerCore.Trick(2, racerCore.ltdr));
+                        else if (lStickPos.y < -.2f) StartCoroutine(racerCore.Trick(4, racerCore.ltdr));
+                        else StartCoroutine(racerCore.Trick(3, racerCore.ltdr));
+                    }
+                    else if (lStickPos.x < -.2f)
+                    {
+                        if (lStickPos.y > .2f) StartCoroutine(racerCore.Trick(8, racerCore.ltdr));
+                        else if (lStickPos.y < .2f) StartCoroutine(racerCore.Trick(6, racerCore.ltdr));
+                        else StartCoroutine(racerCore.Trick(7, racerCore.ltdr));
+                    }
+                    else
+                    {
+                        if (lStickPos.y > .2f) StartCoroutine(racerCore.Trick(1, racerCore.ltdr));
+                        else if (lStickPos.y < -.2f) StartCoroutine(racerCore.Trick(5, racerCore.ltdr));
+                    }
+                    comboAble = false;
+                }
+            }
+        }
+    }
 
-	public void OnShootAI() {
-		if (!rPhys.finished && !lockControls) {
-			rPhys.Shoot();
-		}
-	}
+    public void OnShoot(InputValue val)
+    {
+        var v = val.Get<float>();
+        if (v > 0) fire1Down = true;
+        else fire1Down = false;
+        if (!racerCore.finished && !lockControls && !fire1Down)
+        {
+            racerCore.Shoot();
+        }
+    }
 
-	public void OnItem(InputValue val) {
-		var v = val.Get<float>();
-		if (v > 0) fire2Down = true;
-		else fire2Down = false;
-		if (!rPhys.finished && !lockControls && !fire2Down) {
-			rPhys.Item();
-		}
-	}
+    public void OnShootAI()
+    {
+        if (!racerCore.finished && !lockControls)
+        {
+            racerCore.Shoot();
+        }
+    }
 
-	public void OnItemAI() {
-		if (!rPhys.finished && !lockControls) {
-			rPhys.Item();
-		}
-	}
+    public void OnItem(InputValue val)
+    {
+        var v = val.Get<float>();
+        if (v > 0) fire2Down = true;
+        else fire2Down = false;
+        if (!racerCore.finished && !lockControls && !fire2Down)
+        {
+            racerCore.Item();
+        }
+    }
 
-	public void OnTurn(InputValue val) {
-		lStickPos = val.Get<Vector2>();
-	}
+    public void OnItemAI()
+    {
+        if (!racerCore.finished && !lockControls)
+        {
+            racerCore.Item();
+        }
+    }
 
-	public void OnGrab(InputValue val) {
-		rStickPos = val.Get<Vector2>();
-	}
+    public void OnTurn(InputValue val)
+    {
+        lStickPos = val.Get<Vector2>();
+    }
 
-	public void OnPause(InputValue val) {
-		if (val.Get<float>() < .5f) {
-			// Pause or unpause.
-			if (!pUI.paused) pUI.Pause(0);
-			else pUI.Pause(1);
-		}
-	}
+    public void OnGrab(InputValue val)
+    {
+        rStickPos = val.Get<Vector2>();
+    }
+
+    public void OnPause(InputValue val)
+    {
+        if (val.Get<float>() < .5f)
+        {
+            // Pause or unpause.
+            if (!playerUI.paused) playerUI.Pause(0);
+            else playerUI.Pause(1);
+        }
+    }
 }

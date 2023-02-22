@@ -13,7 +13,7 @@ public class MainMenu : MonoBehaviour {
 
 	public GameObject mainSet, loadSet, newFileSet, chooseSet, firstTimeSet, firstLoad, fileSelectDefault;
 	public TMP_InputField saveBox, deleteBox;
-	// public Text[] fileName, fileCoins, bTickCount, sTickCount, gTickCount, nonCount, bronzeCount, silverCount, goldCount;
+	// public Text[] fileName, fileCoins, bTickCount, sTickCount, gTickCount, nonCount, bronzeMedalDisplay, silverMedalDisplay, goldMedalDisplay;
 	// public Image[] file0Medal, file1Medal, file2Medal, file0Icon, file1Icon, file2Icon;
 	public Button[] fileButton;
 	public FileButton[] fileScript;
@@ -261,9 +261,9 @@ public class MainMenu : MonoBehaviour {
 				// bTickCount[i].text = saveData[i].ticketBronze.ToString();
 				// sTickCount[i].text = saveData[i].ticketSilver.ToString();
 				// gTickCount[i].text = saveData[i].ticketGold.ToString();
-				// goldCount[i].text = golds.ToString();
-				// silverCount[i].text = silvers.ToString();
-				// bronzeCount[i].text = bronzes.ToString();
+				// goldMedalDisplay[i].text = golds.ToString();
+				// silverMedalDisplay[i].text = silvers.ToString();
+				// bronzeMedalDisplay[i].text = bronzes.ToString();
 				// nonCount[i].text = non.ToString();
 				// for (int j = 0; j < file0Icon.Length; j++) {
 				// 	if (i == 0) file0Icon[j].color = Color.white;

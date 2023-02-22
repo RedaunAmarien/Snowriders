@@ -23,7 +23,8 @@ public class FileManager
         return path;
     }
 
-    public static object LoadFile(string path) {
+    public static object LoadFile(string path)
+    {
 
         if (!File.Exists(path))
         {
@@ -49,25 +50,30 @@ public class FileManager
         }
     }
 
-    public static bool DeleteFile(string path) {
-        if (!File.Exists(path)) 
+    public static bool DeleteFile(string path)
+    {
+        if (!File.Exists(path))
         {
             Debug.LogErrorFormat("Tried deleting nonexistant file at {0}", path);
             return false;
         }
-        else {
-            try {
+        else
+        {
+            try
+            {
                 File.Delete(path);
                 return true;
             }
-            catch {
+            catch
+            {
                 Debug.LogErrorFormat("Failed to delete file at {0}", path);
                 return false;
             }
         }
     }
 
-    public static BinaryFormatter GetBinaryFormatter() {
+    public static BinaryFormatter GetBinaryFormatter()
+    {
         BinaryFormatter formatter = new BinaryFormatter();
 
         return formatter;

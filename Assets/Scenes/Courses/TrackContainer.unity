@@ -157,6 +157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
   m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018,
     type: 3}
   m_PointAction: {fileID: 1054132383583890850, guid: ca9f5fa95ffab41fb9a615ab714db018,
@@ -181,6 +182,7 @@ MonoBehaviour:
     type: 3}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!114 &252819879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,6 +208,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -253,7 +256,7 @@ MonoBehaviour:
   - {fileID: 1431601235}
   - {fileID: 1431601234}
   - {fileID: 1431601233}
-  pp: []
+  playerPosition: []
   miniMap: {fileID: 1411847692}
   mapPanel: {fileID: 1411847691}
   resultsPanel: {fileID: 1411847690}
@@ -269,7 +272,7 @@ MonoBehaviour:
   readySetSet: {fileID: 2082302441}
   fadePanel: {fileID: 1411847694}
   fadeDelay: 1
-  demoMode: 1
+  demoMode: 0
   demoCourse: Track1
   demoPlayerCount: 1
   demoChars:
@@ -405,6 +408,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 941.375, y: 522.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
@@ -414,6 +418,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 114634345105270766, guid: f97132ac9157a854e95936b2cf116c70,
@@ -1458,6 +1463,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: f97132ac9157a854e95936b2cf116c70, type: 3}
 --- !u!114 &1411847686 stripped
 MonoBehaviour:
@@ -1548,6 +1554,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1251735243505176, guid: 4107f0f5c388acf4087bf7fbe35cc4e6, type: 3}
@@ -1618,6 +1625,7 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 4107f0f5c388acf4087bf7fbe35cc4e6, type: 3}
 --- !u!1 &1431601233 stripped
 GameObject:
@@ -1681,6 +1689,7 @@ MonoBehaviour:
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
+      m_Flags: 0
     m_Reference: {fileID: 0}
   m_PlayerPrefab: {fileID: 0}
   m_SplitScreen: 1
@@ -1736,6 +1745,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -1754,6 +1764,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
   m_ActionsAsset: {fileID: -944628639613478452, guid: b04716a6024edc949876431eb6117025,
     type: 3}
   m_PointAction: {fileID: 0}
@@ -1771,3 +1782,4 @@ MonoBehaviour:
   m_TrackedDeviceOrientationAction: {fileID: 0}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
+  m_CursorLockBehavior: 0

@@ -12,7 +12,7 @@ using UnityEngine.Animations;
 public class TrackManager : MonoBehaviour
 {
 
-    CourseSettings cSettings;
+    CourseSettings courseSettings;
     public TimeSpan totalTime = System.TimeSpan.Zero;
     public TimeSpan remainingTime;
     public string printTimer;
@@ -20,23 +20,23 @@ public class TrackManager : MonoBehaviour
     int playersFinished, totalFinished;
     public GameObject playerPrefab;
     public GameObject[] player, cameras;
-    public List<PlayerPosition> pp = new List<PlayerPosition>();
+    public List<PlayerPosition> playerPosition = new();
     GameObject[] items, weapons, coins;
     public Image miniMap;
     public RectTransform mapPanel;
     public GameObject resultsPanel;
-    Dictionary<string, TextMeshProUGUI> rankBar = new Dictionary<string, TextMeshProUGUI>();
-    Dictionary<string, GameObject> rankBarRoots = new Dictionary<string, GameObject>();
+    readonly Dictionary<string, TextMeshProUGUI> rankBar = new();
+    readonly Dictionary<string, GameObject> rankBarRoots = new();
     public Image[] spriteHead;
     public Vector3 courseMax, courseMin;
     GameObject track;
-    PlayerRaceControls[] pCon;
-    PlayerUI[] pUI;
-    AIControls[] aI;
-    RacerPhysics[] rPhys;
+    PlayerRaceControls[] playerRaceControls;
+    PlayerUI[] playerUI;
+    AIControls[] aiControls;
+    RacerCore[] racerCore;
     // public InputActionAsset playerInputs;
     public GameObject playerControlPrefab;
-    List<Checkpoint> checkpoints;
+    //List<Checkpoint> checkpoints;
     bool doneStarting;
 
     [Header("Fade Panel")]
@@ -47,7 +47,7 @@ public class TrackManager : MonoBehaviour
     float startTime;
 
     [Header("Demo Mode Overriders")]
-    public bool demoMode;
+    public bool demoMode = false;
     public string demoCourse;
     public int demoPlayerCount;
     public CharacterData[] demoChars;
@@ -57,60 +57,62 @@ public class TrackManager : MonoBehaviour
     void Awake()
     {
         fadePanel.gameObject.SetActive(true);
-        //if (GameRam.currentSaveFile == null)
-        //{
-        //    demoMode = true;
-        //    GameRam.courseToLoad = demoCourse;
-        //    GameRam.playerCount = demoPlayerCount;
-        //    GameRam.allBoardData.AddRange(demoBoards);
-        //    GameRam.charForP = new int[4];
-        //    GameRam.boardForP = new int[4];
-        //    GameRam.inpDev = new InputDevice[4];
-        //    GameRam.controlp = new int[4];
-        //    GameRam.itemsOn = true;
-        //    GameRam.coinsOn = true;
-        //    for (int i = 0; i < 4; i++)
-        //    {
-        //        GameRam.allCharData.Add(demoChars[i]);
-        //        GameRam.charForP[i] = i;
-        //        GameRam.boardForP[i] = i;
-        //        GameRam.controlp[i] = i;
-        //    }
-        //    for (int i = 0; i < demoPlayerCount; i++)
-        //    {
-        //        GameRam.inpDev[i] = InputSystem.GetDevice(demoLayout);
-        //    }
-        //}
+        if (GameRam.currentSaveFile == null)
+        {
+            Debug.LogWarning("No save file found. Activating Demo Mode. Game progress will not be saved.");
+            demoMode = true;
+            GameRam.courseToLoad = demoCourse;
+            GameRam.playerCount = demoPlayerCount;
+            GameRam.allBoardData.AddRange(demoBoards);
+            GameRam.charForP = new int[4];
+            GameRam.boardForP = new int[4];
+            GameRam.inpDev = new InputDevice[4];
+            GameRam.controlp = new int[4];
+            GameRam.itemsOn = true;
+            GameRam.coinsOn = true;
+            for (int i = 0; i < 4; i++)
+            {
+                GameRam.allCharData.Add(demoChars[i]);
+                GameRam.charForP[i] = i;
+                GameRam.boardForP[i] = i;
+                GameRam.controlp[i] = i;
+            }
+            for (int i = 0; i < demoPlayerCount; i++)
+            {
+                GameRam.inpDev[i] = InputSystem.GetDevice(demoLayout);
+            }
+        }
         if (GameRam.courseToLoad != null) SceneManager.LoadScene(GameRam.courseToLoad, LoadSceneMode.Additive);
         // Debug.Log("Loading scene " + GameRam.courseToLoad);
+        Debug.LogWarningFormat("Demo Mode?: {0}", demoMode.ToString());
     }
 
     public void Initialize()
     {
 
         //Begin referencing Course Settings
-        cSettings = GameObject.Find("CourseSettings").GetComponent<CourseSettings>();
+        courseSettings = GameObject.Find("CourseSettings").GetComponent<CourseSettings>();
 
         //Prepare for creation of players
         player = new GameObject[4];
-        rPhys = new RacerPhysics[4];
-        aI = new AIControls[4];
-        pUI = new PlayerUI[4];
-        pCon = new PlayerRaceControls[4];
+        racerCore = new RacerCore[4];
+        aiControls = new AIControls[4];
+        playerUI = new PlayerUI[4];
+        playerRaceControls = new PlayerRaceControls[4];
 
         //Create and initialize players
         for (int i = 0; i < 4; i++)
         {
-            player[i] = GameObject.Instantiate(playerPrefab, cSettings.playerSpawn[i].position, cSettings.playerSpawn[i].rotation);
-            rPhys[i] = player[i].GetComponent<RacerPhysics>();
-            rPhys[i].playerNum = i;
-            rPhys[i].firstCheckpoint = cSettings.startCheckpoint;
-            rPhys[i].playerStartPoint = cSettings.startPoint;
-            rPhys[i].spotLock = true;
-            aI[i] = player[i].GetComponent<AIControls>();
-            aI[i].startWaypoint = cSettings.startWaypoint;
-            pUI[i] = player[i].GetComponent<PlayerUI>();
-            pCon[i] = player[i].GetComponent<PlayerRaceControls>();
+            player[i] = GameObject.Instantiate(playerPrefab, courseSettings.playerSpawn[i].position, courseSettings.playerSpawn[i].rotation);
+            racerCore[i] = player[i].GetComponent<RacerCore>();
+            racerCore[i].playerNum = i;
+            racerCore[i].firstCheckpoint = courseSettings.startCheckpoint;
+            racerCore[i].playerStartPoint = courseSettings.startPoint;
+            racerCore[i].spotLock = true;
+            aiControls[i] = player[i].GetComponent<AIControls>();
+            aiControls[i].startWaypoint = courseSettings.startWaypoint;
+            playerUI[i] = player[i].GetComponent<PlayerUI>();
+            playerRaceControls[i] = player[i].GetComponent<PlayerRaceControls>();
         }
 
         //Remove all other racers in Challenge Mode.
@@ -126,7 +128,7 @@ public class TrackManager : MonoBehaviour
         //Assign cameras to players.
         for (int i = 0; i < GameRam.playerCount; i++)
         {
-            pUI[i].assignedCam = cameras[i];
+            playerUI[i].assignedCam = cameras[i];
             if (i == 3) Destroy(cameras[i].GetComponent<ReplayCam>());
             Debug.Log("Camera " + i + " assigned.");
         }
@@ -139,13 +141,13 @@ public class TrackManager : MonoBehaviour
         if (GameRam.playerCount == 3) cameras[3].SetActive(true);
         if (GameRam.playerCount == 0)
         {
-            pUI[0].assignedCam = cameras[0];
+            playerUI[0].assignedCam = cameras[0];
             cameras[0].SetActive(true);
             cameras[3].SetActive(true);
         }
 
         //Setup Minimap
-        miniMap.sprite = cSettings.miniMapSprite;
+        miniMap.sprite = courseSettings.miniMapSprite;
         miniMap.SetNativeSize();
         if (miniMap.sprite.rect.height < miniMap.sprite.rect.width)
         {
@@ -163,23 +165,23 @@ public class TrackManager : MonoBehaviour
                 spriteHead[i].rectTransform.Rotate(new Vector3(0, 0, -90));
             }
         }
-        track = cSettings.track;
+        track = courseSettings.track;
         courseMin = track.GetComponent<Collider>().bounds.min;
         courseMax = track.GetComponent<Collider>().bounds.max;
         if (GameRam.playerCount == 1)
         {
-            mapPanel.anchorMax = cSettings.miniMapAnchorMax1p;
-            mapPanel.anchorMin = cSettings.miniMapAnchorMin1p;
+            mapPanel.anchorMax = courseSettings.miniMapAnchorMax1p;
+            mapPanel.anchorMin = courseSettings.miniMapAnchorMin1p;
         }
         else if (GameRam.playerCount == 3)
         {
-            mapPanel.anchorMax = cSettings.miniMapAnchorMax3p;
-            mapPanel.anchorMin = cSettings.miniMapAnchorMin3p;
+            mapPanel.anchorMax = courseSettings.miniMapAnchorMax3p;
+            mapPanel.anchorMin = courseSettings.miniMapAnchorMin3p;
         }
         else
         {
-            mapPanel.anchorMax = cSettings.miniMapAnchorMaxDefault;
-            mapPanel.anchorMin = cSettings.miniMapAnchorMinDefault;
+            mapPanel.anchorMax = courseSettings.miniMapAnchorMaxDefault;
+            mapPanel.anchorMin = courseSettings.miniMapAnchorMinDefault;
         }
         // Debug.Log("Map size: " + (courseMax - courseMin).ToString());
         // Debug.Log("Minimap size: "+ miniMap.rectTransform.rect.height + ", " + miniMap.rectTransform.rect.width);
@@ -200,19 +202,19 @@ public class TrackManager : MonoBehaviour
         //Check custom options.
         if (GameRam.playerCount == 0)
         {
-            GameRam.lapCount = cSettings.defaultLapCount;
+            GameRam.lapCount = courseSettings.defaultLapCount;
         }
         else
         {
             if (GameRam.lapCount == 0)
             {
-                GameRam.lapCount = cSettings.defaultLapCount;
+                GameRam.lapCount = courseSettings.defaultLapCount;
             }
             if (GameRam.itemsOn == false)
             {
-                Debug.Log("Finding red item boxes");
+                Debug.Log("Finding red collectItem boxes");
                 items = GameObject.FindGameObjectsWithTag("RedBox");
-                Debug.Log("Listing red item boxes");
+                Debug.Log("Listing red collectItem boxes");
                 for (int i = 0; i < items.Length; i++)
                 {
                     items[i].SetActive(false);
@@ -235,20 +237,20 @@ public class TrackManager : MonoBehaviour
 
         //Initialize Controllers, UI, and AI scripts, and destroy unused scripts.
 
-        List<int> pCharacterList = new List<int>();
+        List<int> pCharacterList = new();
         for (int i = 0; i < GameRam.playerCount; i++)
         {
             pCharacterList.Add(GameRam.charForP[i]);
             // Debug.Log("Adding input for player " + i);
-            var pInp = PlayerInput.Instantiate(playerControlPrefab, -1, null, -1, GameRam.inpDev[i]);
-            player[i].transform.SetParent(pInp.transform);
-            pInp.ActivateInput();
-            pInp.camera = cameras[i].GetComponent<Camera>();
-            // Debug.Log("Player " + i + "'s inputs complete.\n" + pInp.user.index + ", " + GameRam.inpDev[i]);
+            var playerInput = PlayerInput.Instantiate(playerControlPrefab, -1, null, -1, GameRam.inpDev[i]);
+            player[i].transform.SetParent(playerInput.transform);
+            playerInput.ActivateInput();
+            playerInput.camera = cameras[i].GetComponent<Camera>();
+            // Debug.Log("Player " + i + "'s inputs complete.\n" + playerInput.user.index + ", " + GameRam.inpDev[i]);
 
-            pUI[i].playerNum = i;
-            pCon[i].conNum = GameRam.controlp[i];
-            Destroy(aI[i]);
+            playerUI[i].playerNum = i;
+            playerRaceControls[i].controllerIndex = GameRam.controlp[i];
+            aiControls[i].isNotAI = true;
         }
         for (int i = GameRam.playerCount; i < player.Length; i++)
         {
@@ -256,22 +258,22 @@ public class TrackManager : MonoBehaviour
             int offset = 0;
             if (!demoMode)
             {
-                GameRam.charForP[i] = cSettings.defaultCpu[i - GameRam.playerCount + offset];
-                GameRam.boardForP[i] = cSettings.defaultCpuBoard[i - GameRam.playerCount + offset];
+                GameRam.charForP[i] = courseSettings.defaultCpu[i - GameRam.playerCount + offset];
+                GameRam.boardForP[i] = courseSettings.defaultCpuBoard[i - GameRam.playerCount + offset];
                 //Check for repeat character and reassign if found.
                 for (int j = 0; j < pCharacterList.Count; j++)
                 {
                     if (GameRam.charForP[i] == pCharacterList[j])
                     {
                         offset++;
-                        GameRam.charForP[i] = cSettings.defaultCpu[i - GameRam.playerCount + offset];
-                        GameRam.boardForP[i] = cSettings.defaultCpuBoard[i - GameRam.playerCount + offset];
+                        GameRam.charForP[i] = courseSettings.defaultCpu[i - GameRam.playerCount + offset];
+                        GameRam.boardForP[i] = courseSettings.defaultCpuBoard[i - GameRam.playerCount + offset];
                     }
                 }
             }
             pCharacterList.Add(GameRam.charForP[i]);
-            // Destroy(pCon[i]);
-            if (GameRam.playerCount != 0 && i != 0) Destroy(pUI[i]);
+            // Destroy(playerRaceControls[i]);
+            if (GameRam.playerCount != 0 && i != 0) Destroy(playerUI[i]);
         }
 
         for (int i = 0; i < GameRam.playerCount; i++)
@@ -280,20 +282,20 @@ public class TrackManager : MonoBehaviour
             //Initialize character stats from data.
 
             //Speed: Max 18, Min 15.
-            rPhys[i].speed = 14f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].speed + GameRam.ownedBoardData[GameRam.boardForP[i]].speed) / 3f;
+            racerCore[i].speed = 14f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].speed + GameRam.ownedBoardData[GameRam.boardForP[i]].speed) / 3f;
 
             //Traction: Max .04, Min .015.
-            rPhys[i].traction = (11f / 900f) + (GameRam.allCharData[GameRam.charForP[i]].turn + GameRam.ownedBoardData[GameRam.boardForP[i]].turn) / 360f;
+            racerCore[i].traction = (11f / 900f) + (GameRam.allCharData[GameRam.charForP[i]].turn + GameRam.ownedBoardData[GameRam.boardForP[i]].turn) / 360f;
 
             //Jump: Max 250, Min 175.
-            rPhys[i].jumpForce.y = 166f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].jump + GameRam.ownedBoardData[GameRam.boardForP[i]].jump) * (8f + (1f / 3f));
+            racerCore[i].jumpForce.y = 166f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].jump + GameRam.ownedBoardData[GameRam.boardForP[i]].jump) * (8f + (1f / 3f));
 
             //Display stats
-            rPhys[i].charName = GameRam.allCharData[GameRam.charForP[i]].name;
-            rPhys[i].boardName = GameRam.ownedBoardData[GameRam.boardForP[i]].name;
-            rPhys[i].totalLaps = GameRam.lapCount;
+            racerCore[i].charName = GameRam.allCharData[GameRam.charForP[i]].name;
+            racerCore[i].boardName = GameRam.ownedBoardData[GameRam.boardForP[i]].name;
+            racerCore[i].totalLaps = GameRam.lapCount;
 
-            rPhys[i].AssignSpecialBoards();
+            racerCore[i].AssignSpecialBoards();
         }
 
         for (int i = GameRam.playerCount; i < 4; i++)
@@ -302,20 +304,20 @@ public class TrackManager : MonoBehaviour
             //Initialize character stats from data.
 
             //Speed: Max 18, Min 15.
-            rPhys[i].speed = 14f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].speed + GameRam.allBoardData[GameRam.boardForP[i]].speed) / 3f;
+            racerCore[i].speed = 14f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].speed + GameRam.allBoardData[GameRam.boardForP[i]].speed) / 3f;
 
             //Traction: Max .04, Min .015.
-            rPhys[i].traction = (11f / 900f) + (GameRam.allCharData[GameRam.charForP[i]].turn + GameRam.allBoardData[GameRam.boardForP[i]].turn) / 360f;
+            racerCore[i].traction = (11f / 900f) + (GameRam.allCharData[GameRam.charForP[i]].turn + GameRam.allBoardData[GameRam.boardForP[i]].turn) / 360f;
 
             //Jump: Max 250, Min 175.
-            rPhys[i].jumpForce.y = 166f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].jump + GameRam.allBoardData[GameRam.boardForP[i]].jump) * (8f + (1f / 3f));
+            racerCore[i].jumpForce.y = 166f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].jump + GameRam.allBoardData[GameRam.boardForP[i]].jump) * (8f + (1f / 3f));
 
             //Display stats
-            rPhys[i].charName = GameRam.allCharData[GameRam.charForP[i]].name;
-            rPhys[i].boardName = GameRam.allBoardData[GameRam.boardForP[i]].name;
-            rPhys[i].totalLaps = GameRam.lapCount;
+            racerCore[i].charName = GameRam.allCharData[GameRam.charForP[i]].name;
+            racerCore[i].boardName = GameRam.allBoardData[GameRam.boardForP[i]].name;
+            racerCore[i].totalLaps = GameRam.lapCount;
 
-            rPhys[i].AssignSpecialBoards();
+            racerCore[i].AssignSpecialBoards();
         }
 
         //Setup Challenges
@@ -352,27 +354,27 @@ public class TrackManager : MonoBehaviour
             {
 
                 // Check who is in first place.
-                pp.Clear();
+                playerPosition.Clear();
                 for (int i = 0; i < player.Length; i++)
                 {
-                    pp.Add(new PlayerPosition());
-                    pp[i].index = rPhys[i].playerNum;
-                    pp[i].lap = rPhys[i].currentLap;
-                    pp[i].checkpoint = rPhys[i].nextCheckVal;
-                    pp[i].distance = rPhys[i].checkDist;
-                    pp[i].finished = rPhys[i].finished;
+                    playerPosition.Add(new PlayerPosition());
+                    playerPosition[i].index = racerCore[i].playerNum;
+                    playerPosition[i].lap = racerCore[i].currentLap;
+                    playerPosition[i].checkpoint = racerCore[i].nextCheckVal;
+                    playerPosition[i].distance = racerCore[i].checkDist;
+                    playerPosition[i].finished = racerCore[i].finished;
                 }
-                pp = pp.OrderByDescending(x => x.lap).ThenByDescending(x => x.checkpoint).ThenByDescending(x => x.distance).ToList();
+                playerPosition = playerPosition.OrderByDescending(x => x.lap).ThenByDescending(x => x.checkpoint).ThenByDescending(x => x.distance).ToList();
                 for (int i = 0; i < player.Length; i++)
                 {
-                    pp[i].place = i + 1;
-                    rPhys[pp[i].index].place = i + 1;
+                    playerPosition[i].place = i + 1;
+                    racerCore[playerPosition[i].index].place = i + 1;
                 }
 
                 //Update Minimap
                 for (int i = 0; i < player.Length; i++)
                 {
-                    Vector2 sHL = new Vector2(
+                    Vector2 sHL = new(
                         Mathf.InverseLerp(courseMin.x, courseMax.x, player[i].transform.position.x),
                         Mathf.InverseLerp(courseMin.z, courseMax.z, player[i].transform.position.z)
                     );
@@ -381,7 +383,7 @@ public class TrackManager : MonoBehaviour
             }
             else
             {
-                Vector2 sHL = new Vector2(
+                Vector2 sHL = new(
                     Mathf.InverseLerp(courseMin.x, courseMax.x, player[0].transform.position.x),
                     Mathf.InverseLerp(courseMin.z, courseMax.z, player[0].transform.position.z)
                 );
@@ -429,7 +431,7 @@ public class TrackManager : MonoBehaviour
 
     }
 
-    public IEnumerator Countdown(bool boostable = true)
+    public IEnumerator Countdown(/*bool _canBoost = true*/)
     {
         //Fade In
         readySetSet.GetComponent<Animator>().SetBool("Going", false);
@@ -442,12 +444,12 @@ public class TrackManager : MonoBehaviour
 
         //Kickoff
         mapPanel.gameObject.SetActive(true);
-        rPhys[0].SetGo();
+        racerCore[0].SetGo();
         if (GameRam.gameMode < GameMode.Challenge)
         {
-            rPhys[1].SetGo();
-            rPhys[2].SetGo();
-            rPhys[3].SetGo();
+            racerCore[1].SetGo();
+            racerCore[2].SetGo();
+            racerCore[3].SetGo();
         }
         timerOn = true;
         yield return new WaitForSeconds(1);
@@ -459,56 +461,56 @@ public class TrackManager : MonoBehaviour
         int coinTotal = 0;
         for (int i = 0; i < 4; i++)
         {
-            if (i != userIndex && rPhys[i].boardName != "Wealth Board")
+            if (i != userIndex && racerCore[i].boardName != "Wealth Board")
             {
                 if (totalFinished == 0)
                 {
-                    if (rPhys[i].place == 1)
+                    if (racerCore[i].place == 1)
                     {
                         Debug.Log("Stealing from 1st place.");
-                        coinTotal = rPhys[i].coins;
-                        rPhys[i].coins = 0;
+                        coinTotal = racerCore[i].coins;
+                        racerCore[i].coins = 0;
                     }
-                    else if (rPhys[userIndex].place == 1 && rPhys[i].place == 2)
+                    else if (racerCore[userIndex].place == 1 && racerCore[i].place == 2)
                     {
                         Debug.Log("Stealing from 2nd place.");
-                        coinTotal = rPhys[i].coins;
-                        rPhys[i].coins = 0;
+                        coinTotal = racerCore[i].coins;
+                        racerCore[i].coins = 0;
                     }
                 }
                 else if (totalFinished == 1)
                 {
-                    if (rPhys[i].place == 2)
+                    if (racerCore[i].place == 2)
                     {
                         Debug.Log("Stealing from 2nd place.");
-                        coinTotal = rPhys[i].coins;
-                        rPhys[i].coins = 0;
+                        coinTotal = racerCore[i].coins;
+                        racerCore[i].coins = 0;
                     }
-                    else if (rPhys[userIndex].place == 2 && rPhys[i].place == 3)
+                    else if (racerCore[userIndex].place == 2 && racerCore[i].place == 3)
                     {
                         Debug.Log("Stealing from 3rd place.");
-                        coinTotal = rPhys[i].coins;
-                        rPhys[i].coins = 0;
+                        coinTotal = racerCore[i].coins;
+                        racerCore[i].coins = 0;
                     }
                 }
                 else if (totalFinished == 2)
                 {
-                    if (rPhys[i].place == 3)
+                    if (racerCore[i].place == 3)
                     {
                         Debug.Log("Stealing from 3rd place.");
-                        coinTotal = rPhys[i].coins;
-                        rPhys[i].coins = 0;
+                        coinTotal = racerCore[i].coins;
+                        racerCore[i].coins = 0;
                     }
-                    else if (rPhys[i].place == 4)
+                    else if (racerCore[i].place == 4)
                     {
                         Debug.Log("Stealing from 4th place.");
-                        coinTotal = rPhys[i].coins;
-                        rPhys[i].coins = 0;
+                        coinTotal = racerCore[i].coins;
+                        racerCore[i].coins = 0;
                     }
                 }
             }
         }
-        rPhys[userIndex].coins += coinTotal;
+        racerCore[userIndex].coins += coinTotal;
     }
 
     public void UseTripleSteal(int userIndex)
@@ -516,20 +518,20 @@ public class TrackManager : MonoBehaviour
         int coinTotal = 0;
         for (int i = 0; i < 4; i++)
         {
-            if (i != userIndex && !rPhys[i].finished && rPhys[i].boardName != "Wealth Board")
+            if (i != userIndex && !racerCore[i].finished && racerCore[i].boardName != "Wealth Board")
             {
-                coinTotal += rPhys[i].coins / 2;
-                rPhys[i].coins = rPhys[i].coins / 2;
+                coinTotal += racerCore[i].coins / 2;
+                racerCore[i].coins = racerCore[i].coins / 2;
             }
         }
-        rPhys[userIndex].coins += coinTotal;
+        racerCore[userIndex].coins += coinTotal;
     }
 
     public void UseTripleStop(int userIndex)
     {
         for (int i = 0; i < 4; i++)
         {
-            if (i != userIndex) StartCoroutine(rPhys[i].Trip());
+            if (i != userIndex) StartCoroutine(racerCore[i].Trip());
         }
     }
 
@@ -541,35 +543,35 @@ public class TrackManager : MonoBehaviour
             {
                 if (totalFinished == 0)
                 {
-                    if (rPhys[i].place == 1)
+                    if (racerCore[i].place == 1)
                     {
-                        StartCoroutine(rPhys[i].GetSlowed());
+                        StartCoroutine(racerCore[i].GetSlowed());
                     }
-                    else if (rPhys[userIndex].place == 1 && rPhys[i].place == 2)
+                    else if (racerCore[userIndex].place == 1 && racerCore[i].place == 2)
                     {
-                        StartCoroutine(rPhys[i].GetSlowed());
+                        StartCoroutine(racerCore[i].GetSlowed());
                     }
                 }
                 else if (totalFinished == 1)
                 {
-                    if (rPhys[i].place == 2)
+                    if (racerCore[i].place == 2)
                     {
-                        StartCoroutine(rPhys[i].GetSlowed());
+                        StartCoroutine(racerCore[i].GetSlowed());
                     }
-                    else if (rPhys[userIndex].place == 2 && rPhys[i].place == 3)
+                    else if (racerCore[userIndex].place == 2 && racerCore[i].place == 3)
                     {
-                        StartCoroutine(rPhys[i].GetSlowed());
+                        StartCoroutine(racerCore[i].GetSlowed());
                     }
                 }
                 else if (totalFinished == 2)
                 {
-                    if (rPhys[i].place == 3)
+                    if (racerCore[i].place == 3)
                     {
-                        StartCoroutine(rPhys[i].GetSlowed());
+                        StartCoroutine(racerCore[i].GetSlowed());
                     }
-                    else if (rPhys[i].place == 4)
+                    else if (racerCore[i].place == 4)
                     {
-                        StartCoroutine(rPhys[i].GetSlowed());
+                        StartCoroutine(racerCore[i].GetSlowed());
                     }
                 }
             }
@@ -582,14 +584,14 @@ public class TrackManager : MonoBehaviour
         {
             if (i != userIndex)
             {
-                StartCoroutine(rPhys[i].GetSlowed());
+                StartCoroutine(racerCore[i].GetSlowed());
             }
         }
     }
 
     public void Finish(int userIndex)
     {
-        int placement = rPhys[userIndex].finalPlace;
+        int placement = racerCore[userIndex].finalPlace;
         if (GameRam.gameMode == GameMode.Challenge) placement = 1;
         SaveData.CourseGrade savePlace = SaveData.CourseGrade.None;
         switch (placement)
@@ -613,36 +615,36 @@ public class TrackManager : MonoBehaviour
         if (GameRam.gameMode < GameMode.Challenge)
         {
             rankBarRoots["Root" + (placement - 1)].SetActive(true);
-            rankBar["Name" + (placement - 1)].text = rPhys[userIndex].charName;
+            rankBar["Name" + (placement - 1)].text = racerCore[userIndex].charName;
             rankBar["Time" + (placement - 1)].text = printTimer;
-            rPhys[userIndex].coins += cSettings.prize[placement - 1];
-            rankBar["Reward" + (placement - 1)].text = rPhys[userIndex].coins.ToString("N0");
-            // Debug.Log(rPhys[userIndex].charName + " finished in " + savePlace + " at " + printTimer + ".");
+            racerCore[userIndex].coins += courseSettings.prize[placement - 1];
+            rankBar["Reward" + (placement - 1)].text = racerCore[userIndex].coins.ToString("N0");
+            // Debug.Log(racerCore[userIndex].charName + " finished in " + savePlace + " at " + printTimer + ".");
         }
         else
         {
             rankBarRoots["Root0"].SetActive(true);
-            rankBar["Name0"].text = rPhys[0].charName;
+            rankBar["Name0"].text = racerCore[0].charName;
             rankBar["Time0"].text = printTimer;
-            rankBar["Reward0"].text = rPhys[0].coins.ToString("N0");
+            rankBar["Reward0"].text = racerCore[0].coins.ToString("N0");
             for (int i = 1; i < 4; i++)
             {
                 rankBar["Name" + i].text = "";
                 rankBar["Time" + i].text = "";
                 rankBar["Reward" + i].text = "";
             }
-            // Debug.LogFormat("{0} finshed at {1} with {2:N0}.", rPhys[userIndex].charName, printTimer, rPhys[userIndex].coins);
+            // Debug.LogFormat("{0} finshed at {1} with {2:N0}.", racerCore[userIndex].charName, printTimer, racerCore[userIndex].coins);
         }
 
         if (GameRam.gameMode == GameMode.Story && userIndex == 0)
         {
-            if (GameRam.currentSaveFile.courseGrade[cSettings.courseIndex] == 0)
+            if (GameRam.currentSaveFile.courseGrade[courseSettings.courseIndex] == 0)
             {
-                GameRam.currentSaveFile.courseGrade[cSettings.courseIndex] = savePlace;
+                GameRam.currentSaveFile.courseGrade[courseSettings.courseIndex] = savePlace;
             }
-            else if (savePlace > GameRam.currentSaveFile.courseGrade[cSettings.courseIndex])
+            else if (savePlace > GameRam.currentSaveFile.courseGrade[courseSettings.courseIndex])
             {
-                GameRam.currentSaveFile.courseGrade[cSettings.courseIndex] = savePlace;
+                GameRam.currentSaveFile.courseGrade[courseSettings.courseIndex] = savePlace;
             }
         }
 
@@ -666,8 +668,8 @@ public class TrackManager : MonoBehaviour
         mapPanel.gameObject.SetActive(false);
         for (int i = 0; i < GameRam.playerCount; i++)
         {
-            pCon[i].raceOver = true; ;
-            pUI[i].finishGraphic.SetActive(false);
+            playerRaceControls[i].raceOver = true; ;
+            playerUI[i].finishGraphic.SetActive(false);
         }
 
         // Battle Mode
@@ -676,8 +678,8 @@ public class TrackManager : MonoBehaviour
             int coinTotal = 0;
             for (int i = 0; i < GameRam.playerCount; i++)
             {
-                coinTotal += (rPhys[i].coins + cSettings.prize[i]);
-                rPhys[i].coins = 0;
+                coinTotal += (racerCore[i].coins + courseSettings.prize[i]);
+                racerCore[i].coins = 0;
             }
             GameRam.currentSaveFile.coins += coinTotal;
         }
@@ -685,52 +687,52 @@ public class TrackManager : MonoBehaviour
         // Adventure Mode
         else if (GameRam.gameMode == GameMode.Story)
         {
-            GameRam.currentSaveFile.coins += rPhys[0].coins;
-            rPhys[0].coins = 0;
+            GameRam.currentSaveFile.coins += racerCore[0].coins;
+            racerCore[0].coins = 0;
         }
 
         // Challenge Mode
         else if (GameRam.gameMode == GameMode.Challenge)
         {
-            GameRam.currentSaveFile.coins += rPhys[0].coins;
-            ChallengeConditions cond = GameRam.currentChallenge;
+            GameRam.currentSaveFile.coins += racerCore[0].coins;
+            ChallengeConditions conditions = GameRam.currentChallenge;
             bool succeeded = true;
             string failReason = string.Empty;
-            cond.timeLimit = new System.TimeSpan(0, 0, cond.timeLimitInSeconds);
+            conditions.timeLimit = new System.TimeSpan(0, 0, conditions.timeLimitInSeconds);
 
             //Test Challenge Conditions
-            if (rPhys[0].coins < cond.requiredCoinCoint)
+            if (racerCore[0].coins < conditions.requiredCoinCoint)
             {
                 succeeded = false;
-                failReason = string.Format("you did not finish with more than {0} coins", cond.requiredCoinCoint);
+                failReason = string.Format("you did not finish with more than {0} coins", conditions.requiredCoinCoint);
             }
-            if (GameRam.ownedBoardData[GameRam.boardForP[0]].boardID != cond.requiredBoardID)
+            if (GameRam.ownedBoardData[GameRam.boardForP[0]].boardID != conditions.requiredBoardID)
             {
                 succeeded = false;
                 string boardName = string.Empty;
                 foreach (BoardData board in GameRam.allBoardData)
                 {
-                    if (board.boardID == cond.requiredBoardID)
+                    if (board.boardID == conditions.requiredBoardID)
                         boardName = board.name;
                 }
                 failReason = string.Format("you did not use the board {0}", boardName);
             }
-            if (totalTime > cond.timeLimit)
+            if (totalTime > conditions.timeLimit)
             {
                 succeeded = false;
-                failReason = string.Format("you did not finish within {0:d2}:{1:d2}.{2:d2}", cond.timeLimit.Minutes, cond.timeLimit.Seconds, cond.timeLimit.Milliseconds / 10);
+                failReason = string.Format("you did not finish within {0:d2}:{1:d2}.{2:d2}", conditions.timeLimit.Minutes, conditions.timeLimit.Seconds, conditions.timeLimit.Milliseconds / 10);
             }
 
             //Save Results
             if (!succeeded)
             {
-                Debug.LogFormat("Challenge {0} failed because {1}. Please try again.", cond.challengeName, failReason);
+                Debug.LogFormat("Challenge {0} failed because {1}. Please try again.", conditions.challengeName, failReason);
             }
             else
             {
-                if (GameRam.currentSaveFile.completedChallenge == null) GameRam.currentSaveFile.completedChallenge = new List<int>();
-                GameRam.currentSaveFile.completedChallenge.Add(cond.challengeIndex);
-                switch (cond.challengeLevel)
+                GameRam.currentSaveFile.completedChallenge ??= new List<int>();
+                GameRam.currentSaveFile.completedChallenge.Add(conditions.challengeIndex);
+                switch (conditions.challengeLevel)
                 {
                     case ChallengeConditions.TicketLevel.Gold:
                         GameRam.currentSaveFile.ticketGold++;
@@ -746,6 +748,7 @@ public class TrackManager : MonoBehaviour
         }
 
         //Save File
+        Debug.LogWarningFormat("Demo Mode?: {0}", demoMode.ToString());
         if (!demoMode)
         {
             Debug.LogWarningFormat("Autosaving to file {0} at {1} in directory {2}.", GameRam.currentSaveFile.fileName, System.DateTime.Now, GameRam.currentSaveDirectory);
@@ -753,6 +756,6 @@ public class TrackManager : MonoBehaviour
             FileManager.SaveFile(GameRam.currentSaveFile.fileName, GameRam.currentSaveFile, Application.persistentDataPath + "/Saves");
             GameRam.currentSaveFile = (SaveData)FileManager.LoadFile(GameRam.currentSaveDirectory);
         }
-        else Debug.LogWarningFormat("Demo Mode: Autosave disabled.");
+        else Debug.LogWarningFormat("Autosaving is disabled.");
     }
 }

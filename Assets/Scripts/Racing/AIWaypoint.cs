@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AIWaypoint : MonoBehaviour {
+public class AIWaypoint : MonoBehaviour
+{
 
     public GameObject nextInChain;
     public bool splitting;
@@ -14,7 +15,8 @@ public class AIWaypoint : MonoBehaviour {
     public float targetableRadius = 4;
     public float targetRadius = 0.5f;
 
-    private void OnDrawGizmos() {
+    private void OnDrawGizmos()
+    {
         Gizmos.DrawWireSphere(gameObject.transform.position, targetableRadius);
     }
 }

@@ -2,25 +2,26 @@
 using System;
 
 [Serializable]
-public class SaveData {
-    
+public class SaveData
+{
     private static SaveData _current;
-    public static SaveData current {
-        get {
-            if (_current == null) {
-                _current = new SaveData();
-            }
+    public static SaveData Current
+    {
+        get
+        {
+            _current ??= new SaveData();
             return _current;
         }
         set
         {
-            if (value != null) {
+            if (value != null)
+            {
                 _current = value;
             }
         }
     }
 
-    public enum CourseGrade {None, Black, Bronze, Silver, Gold};
+    public enum CourseGrade { None, Black, Bronze, Silver, Gold };
     public string fileName, version;
     public int saveSlot;
     public int coins;
