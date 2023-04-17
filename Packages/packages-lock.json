@@ -69,7 +69,7 @@
       "depth": 0,
       "source": "builtin",
       "dependencies": {
-        "com.unity.timeline": "1.7.3",
+        "com.unity.timeline": "1.7.4",
         "com.unity.sequences": "2.0.1",
         "com.unity.formats.fbx": "4.2.1",
         "com.unity.formats.alembic": "2.3.0",
@@ -115,7 +115,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
-      "version": "1.5.0",
+      "version": "1.5.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -124,7 +124,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.newtonsoft-json": {
-      "version": "3.0.2",
+      "version": "3.1.0",
       "depth": 2,
       "source": "registry",
       "dependencies": {},
@@ -163,18 +163,18 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.services.analytics": {
-      "version": "4.3.0",
+      "version": "4.4.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.ugui": "1.0.0",
-        "com.unity.services.core": "1.4.0",
+        "com.unity.services.core": "1.8.1",
         "com.unity.nuget.newtonsoft-json": "3.0.2"
       },
       "url": "https://packages.unity.com"
     },
     "com.unity.services.core": {
-      "version": "1.7.1",
+      "version": "1.8.1",
       "depth": 2,
       "source": "registry",
       "dependencies": {
@@ -212,7 +212,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.7.3",
+      "version": "1.7.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
