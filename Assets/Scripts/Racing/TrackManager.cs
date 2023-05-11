@@ -19,7 +19,7 @@ public class TrackManager : MonoBehaviour
     public bool timerOn;
     int playersFinished, totalFinished;
     public GameObject playerPrefab;
-    public GameObject[] player, cameras;
+    public GameObject[] player;
     public List<PlayerPosition> playerPosition = new();
     GameObject[] items, weapons, coins;
     public Image miniMap;
@@ -84,7 +84,7 @@ public class TrackManager : MonoBehaviour
         }
         if (GameRam.courseToLoad != null) SceneManager.LoadScene(GameRam.courseToLoad, LoadSceneMode.Additive);
         // Debug.Log("Loading scene " + GameRam.courseToLoad);
-        Debug.LogWarningFormat("Demo Mode?: {0}", demoMode.ToString());
+        Debug.LogFormat("Demo Mode?: {0}", demoMode.ToString());
     }
 
     public void Initialize()
@@ -99,6 +99,7 @@ public class TrackManager : MonoBehaviour
         aiControls = new AIControls[4];
         playerUI = new PlayerUI[4];
         playerRaceControls = new PlayerRaceControls[4];
+        //cameras = new GameObject[4,2];
 
         //Create and initialize players
         for (int i = 0; i < 4; i++)
@@ -113,6 +114,9 @@ public class TrackManager : MonoBehaviour
             aiControls[i].startWaypoint = courseSettings.startWaypoint;
             playerUI[i] = player[i].GetComponent<PlayerUI>();
             playerRaceControls[i] = player[i].GetComponent<PlayerRaceControls>();
+            playerUI[i].reverseVCam.gameObject.layer = 13 + i;
+            playerUI[i].forwardVCam.gameObject.layer = 13 + i;
+            //cameras[i] = player[i];
         }
 
         //Remove all other racers in Challenge Mode.
@@ -125,25 +129,20 @@ public class TrackManager : MonoBehaviour
             }
         }
 
-        //Assign cameras to players.
-        for (int i = 0; i < GameRam.playerCount; i++)
-        {
-            playerUI[i].assignedCam = cameras[i];
-            if (i == 3) Destroy(cameras[i].GetComponent<ReplayCam>());
-            Debug.Log("Camera " + i + " assigned.");
-        }
-
-        //Deactive unused cameras.
-        for (int i = GameRam.playerCount; i < 4; i++)
-        {
-            cameras[i].SetActive(false);
-        }
-        if (GameRam.playerCount == 3) cameras[3].SetActive(true);
         if (GameRam.playerCount == 0)
         {
-            playerUI[0].assignedCam = cameras[0];
-            cameras[0].SetActive(true);
-            cameras[3].SetActive(true);
+            foreach (PlayerUI p in playerUI)
+            {
+                p.playerCamera.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            //Deactivate unused cameras.
+            for (int i = GameRam.playerCount; i < 4; i++)
+            {
+                playerUI[i].playerCamera.gameObject.SetActive(false);
+            }
         }
 
         //Setup Minimap
@@ -245,10 +244,10 @@ public class TrackManager : MonoBehaviour
             var playerInput = PlayerInput.Instantiate(playerControlPrefab, -1, null, -1, GameRam.inpDev[i]);
             player[i].transform.SetParent(playerInput.transform);
             playerInput.ActivateInput();
-            playerInput.camera = cameras[i].GetComponent<Camera>();
+            //playerInput.camera = cameras[i].GetComponent<Camera>();
             // Debug.Log("Player " + i + "'s inputs complete.\n" + playerInput.user.index + ", " + GameRam.inpDev[i]);
 
-            playerUI[i].playerNum = i;
+            //playerUI[i].playerNum = i;
             playerRaceControls[i].controllerIndex = GameRam.controlp[i];
             aiControls[i].isNotAI = true;
         }
@@ -282,17 +281,17 @@ public class TrackManager : MonoBehaviour
             //Initialize character stats from data.
 
             //Speed: Max 18, Min 15.
-            racerCore[i].speed = 14f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].speed + GameRam.ownedBoardData[GameRam.boardForP[i]].speed) / 3f;
+            racerCore[i].speed = demoMode ? 15f : 14f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].speed + GameRam.ownedBoardData[GameRam.boardForP[i]].speed) / 3f;
 
             //Traction: Max .04, Min .015.
-            racerCore[i].traction = (11f / 900f) + (GameRam.allCharData[GameRam.charForP[i]].turn + GameRam.ownedBoardData[GameRam.boardForP[i]].turn) / 360f;
+            racerCore[i].traction = demoMode ? .015f : (11f / 900f) + (GameRam.allCharData[GameRam.charForP[i]].turn + GameRam.ownedBoardData[GameRam.boardForP[i]].turn) / 360f;
 
             //Jump: Max 250, Min 175.
-            racerCore[i].jumpForce.y = 166f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].jump + GameRam.ownedBoardData[GameRam.boardForP[i]].jump) * (8f + (1f / 3f));
+            racerCore[i].jumpForce.y = demoMode ? 175f : 166f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].jump + GameRam.ownedBoardData[GameRam.boardForP[i]].jump) * (8f + (1f / 3f));
 
             //Display stats
             racerCore[i].charName = GameRam.allCharData[GameRam.charForP[i]].name;
-            racerCore[i].boardName = GameRam.ownedBoardData[GameRam.boardForP[i]].name;
+            racerCore[i].boardName = demoMode ? "Demo Board" : GameRam.ownedBoardData[GameRam.boardForP[i]].name;
             racerCore[i].totalLaps = GameRam.lapCount;
 
             racerCore[i].AssignSpecialBoards();
@@ -748,10 +747,10 @@ public class TrackManager : MonoBehaviour
         }
 
         //Save File
-        Debug.LogWarningFormat("Demo Mode?: {0}", demoMode.ToString());
+        //Debug.LogWarningFormat("Demo Mode?: {0}", demoMode.ToString());
         if (!demoMode)
         {
-            Debug.LogWarningFormat("Autosaving to file {0} at {1} in directory {2}.", GameRam.currentSaveFile.fileName, System.DateTime.Now, GameRam.currentSaveDirectory);
+            Debug.LogFormat("Autosaving to file {0} at {1} in directory {2}.", GameRam.currentSaveFile.fileName, System.DateTime.Now, GameRam.currentSaveDirectory);
             GameRam.currentSaveFile.lastSaved = System.DateTime.Now;
             FileManager.SaveFile(GameRam.currentSaveFile.fileName, GameRam.currentSaveFile, Application.persistentDataPath + "/Saves");
             GameRam.currentSaveFile = (SaveData)FileManager.LoadFile(GameRam.currentSaveDirectory);

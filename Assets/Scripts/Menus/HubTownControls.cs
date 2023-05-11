@@ -29,7 +29,7 @@ public class HubTownControls : MonoBehaviour
     [SerializeField] private Image fadePanel;
     [SerializeField] private float fadeDelay, startTime;
     private bool fadingIn, fadingOut;
-    private bool hasNavReset = true;
+    private bool navHasReset = true;
 
     void Start()
     {
@@ -39,6 +39,11 @@ public class HubTownControls : MonoBehaviour
         int bronzeMedals = 0;
         int silverMedals = 0;
         int goldMedals = 0;
+        GameObject.Find("StartCam").GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority = 0;
+
+        if (GameRam.currentSaveFile == null)
+            return;
+
         for (int i = 0; i < GameRam.currentSaveFile.courseGrade.Length; i++)
         {
             if (GameRam.currentSaveFile.courseGrade[i] == SaveData.CourseGrade.Bronze) bronzeMedals++;
@@ -56,29 +61,31 @@ public class HubTownControls : MonoBehaviour
 
     void OnNavigate(InputValue val)
     {
+        place[currentPlace].GetComponentInChildren<Cinemachine.CinemachineVirtualCamera>().Priority = 0;
         float v = val.Get<Vector2>().x;
         if (v < .5f && v > -.5f)
         {
-            hasNavReset = true;
+            navHasReset = true;
         }
-        if (hasNavReset && v > 0.5f)
+        if (navHasReset && v > 0.5f)
         {
             currentPlace += 1;
             if (currentPlace >= place.Count)
             {
                 currentPlace = 0;
             }
-            hasNavReset = false;
+            navHasReset = false;
         }
-        if (hasNavReset && v < -0.5f)
+        if (navHasReset && v < -0.5f)
         {
             currentPlace -= 1;
             if (currentPlace <= -1)
             {
                 currentPlace = place.Count - 1;
             }
-            hasNavReset = false;
+            navHasReset = false;
         }
+        place[currentPlace].GetComponentInChildren<Cinemachine.CinemachineVirtualCamera>().Priority = 1;
     }
 
     void OnSubmit()
@@ -128,16 +135,16 @@ public class HubTownControls : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
-    {
-        Vector3 a = Vector3.zero;
-        transform.SetPositionAndRotation(Vector3.SmoothDamp(transform.position, place[currentPlace].transform.position, ref a, moveTime), transform.rotation);
-        transform.LookAt(2 * transform.position - cam.transform.position);
-    }
+    //void FixedUpdate()
+    //{
+    //    Vector3 a = Vector3.zero;
+    //    transform.SetPositionAndRotation(Vector3.SmoothDamp(transform.position, place[currentPlace].transform.position, ref a, moveTime), transform.rotation);
+    //    transform.LookAt(2 * transform.position - cam.transform.position);
+    //}
 
     void LateUpdate()
     {
-        cam.transform.LookAt(transform.position);
+        //cam.transform.LookAt(transform.position);
         if (fadingIn)
         {
             float t = (Time.time - startTime) / fadeDelay;
@@ -148,35 +155,34 @@ public class HubTownControls : MonoBehaviour
             float t = (Time.time - startTime) / fadeDelay;
             fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(0f, 1f, t));
         }
-
     }
 
-    void OnTriggerEnter(Collider other)
+    void Update()
     {
-        switch (other.name)
+        switch (currentPlace)
         {
-            case "Option":
+            case 3:
                 selectionDescription.text = "Change game settings and options.\n<color=red>(Unavailable)</color>";
                 break;
-            case "Shop":
+            case 5:
                 selectionDescription.text = "Buy boards with <color=yellow>tickets</color> from <color=green>Challenges</color>.\nBuy outfits and accessories with <color=yellow>coins</color>.\n<color=red>(Under Construction)</color>";
                 break;
-            case "Custom":
+            case 6:
                 selectionDescription.text = "Create and customize personal characters.\nUse <color=yellow>coins</color> to buy new outfits and accessories at the <color=green>Shop</color>.\n<color=red>(Under Construction)</color>";
                 break;
-            case "Story":
+            case 0:
                 selectionDescription.text = "Earn <color=yellow>medals</color> and <color=yellow>coins</color> as you progress through the story.";
                 break;
-            case "Battle":
+            case 1:
                 selectionDescription.text = "Earn <color=yellow>coins</color> with friends connected to the same computer.";
                 break;
-            case "Online":
+            case 2:
                 selectionDescription.text = "Earn <color=yellow>coins</color> with friends and other players online.\n<color=red>(Unavailable)</color>";
                 break;
-            case "Challenge":
+            case 7:
                 selectionDescription.text = "Earn <color=yellow>tickets</color> by completing various challenges, like time trials, trick combos, and expert boss battles.\n<color=red>(Under Construction)</color>";
                 break;
-            case "Exit":
+            case 4:
                 selectionDescription.text = "Return to the <color=green>Title Menu</color>.";
                 break;
         }

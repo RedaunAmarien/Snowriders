@@ -2,7 +2,7 @@
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
-public class FileManager
+public static class FileManager
 {
     public static string SaveFile(string saveName, object saveData, string saveDirectory)
     {
@@ -28,7 +28,7 @@ public class FileManager
 
         if (!File.Exists(path))
         {
-            Debug.LogErrorFormat("Tried loading nonexistant file at {0}", path);
+            Debug.LogErrorFormat("Could not find file to load at {0}", path);
             return null;
         }
 

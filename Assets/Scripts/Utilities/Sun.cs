@@ -26,14 +26,18 @@ public class Sun : MonoBehaviour {
     void Reset() {
         staticTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, staticHour, staticMinute, 0);
         for (int i = 0; i < sceneNightLights.Length; i++) {
-            if (timeOfDayPercent > sceneSunrise && timeOfDayPercent < sceneSunset) sceneNightLights[i].SetActive(false);
-            else sceneNightLights[i].SetActive(true);
+            if (timeOfDayPercent > sceneSunrise && timeOfDayPercent < sceneSunset)
+                sceneNightLights[i].SetActive(false);
+            else
+                sceneNightLights[i].SetActive(true);
         }
     }
 
     void LateUpdate() {
-        if (timeStatic) timeOfDayPercent = (float)staticTime.TimeOfDay.TotalMinutes/1440f;
-        else timeOfDayPercent = (float)DateTime.Now.TimeOfDay.TotalMinutes/1440f;
+        if (timeStatic)
+            timeOfDayPercent = (float)staticTime.TimeOfDay.TotalMinutes/1440f;
+        else
+            timeOfDayPercent = (float)DateTime.Now.TimeOfDay.TotalMinutes/1440f;
         rotator = (timeOfDayPercent*360f) + offsetLight.x;
         child.transform.SetPositionAndRotation(transform.position, Quaternion.Euler(rotator, offsetLight.y, offsetLight.z));
     }

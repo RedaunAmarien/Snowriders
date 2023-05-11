@@ -52,6 +52,7 @@ public class RacerCore : MonoBehaviour
     public Animator animator;
     public Transform playerStartPoint;
     public Rigidbody rigid;
+    public GameObject playerCamera;
     public Vector3 relativeVelocity;
     bool initialized, replayCamOn;
 
@@ -272,8 +273,8 @@ public class RacerCore : MonoBehaviour
     {
         if (other.gameObject.CompareTag("CamZone") && replayCamOn)
         {
-            if (trackManager.cameras[3].TryGetComponent<ReplayCam>(out var rep)) rep.EnterCamZone(playerNum, other.transform);
-            else replayCamOn = false;
+            //if (trackManager.cameras[3].TryGetComponent<ReplayCam>(out var rep)) rep.EnterCamZone(playerNum, other.transform);
+            //else replayCamOn = false;
         }
         // Checkpoint
         if (other.gameObject.CompareTag("Checkpoint"))

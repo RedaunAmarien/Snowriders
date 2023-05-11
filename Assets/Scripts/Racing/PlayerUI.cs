@@ -5,12 +5,13 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using TMPro;
+using Cinemachine;
 
 public class PlayerUI : MonoBehaviour
 {
 
     // UI Section
-    public int playerNum;
+    //public int playerNum;
     public float camRotSpeed;
     public Vector3 camAngle, camOffset, revCamOffset;
     public float camSmoothTime;
@@ -26,59 +27,70 @@ public class PlayerUI : MonoBehaviour
     public GameObject pauseMenu, pauseResume, finishGraphic;
     public EventSystem events;
     public StandaloneInputModule inputMod;
-    public GameObject itemDisplay, assignedCam;
+    public GameObject itemDisplay;
+    public Camera playerCamera;
+    public CinemachineVirtualCamera forwardVCam, reverseVCam;
     public Sprite[] itemSprite, weaponSprite, placeSprite;
     public bool finished, camIsReversed;
     RacerCore racerCore;
     // CourseControl corCon;
-    public Camera reverseCam;
+    //public Camera reverseCam;
 
     void Start()
     {
         // Find objects.
         // corCon = GameObject.Find("CourseSettings").GetComponent<CourseControl>();
         racerCore = GetComponent<RacerCore>();
-        reverseCam = GameObject.Find("Reverse Camera " + playerNum).GetComponent<Camera>();
-        reverseView.GetComponent<RawImage>().texture = reverseViews[playerNum];
-        reverseView.SetActive(false);
+        //reverseCam = GameObject.Find("Reverse Camera " + playerNum).GetComponent<Camera>();
+        //reverseView.GetComponent<RawImage>().texture = reverseViews[playerNum];
+        //reverseView.SetActive(false);
         events = GameObject.Find("EventSystem").GetComponent<EventSystem>();
         inputMod = GameObject.Find("EventSystem").GetComponent<StandaloneInputModule>();
         lapTime = new System.TimeSpan[racerCore.totalLaps];
         // Initialize camera
-        assignedCam.transform.SetPositionAndRotation(transform.position, transform.rotation);
-        reverseCam.transform.SetPositionAndRotation(transform.position, transform.rotation);
+        //playerCamera.transform.SetPositionAndRotation(transform.position, transform.rotation);
+        //reverseCam.transform.SetPositionAndRotation(transform.position, transform.rotation);
         // subCam.transform.position = transform.position + camOffset;
-        assignedCam.transform.LookAt(transform.position + camAngle);
-        reverseCam.transform.LookAt(transform.position + camAngle);
+        //playerCamera.transform.LookAt(transform.position + camAngle);
+        //reverseCam.transform.LookAt(transform.position + camAngle);
         if (GameRam.gameMode == GameMode.Challenge) placementText.gameObject.SetActive(false);
         if (!GameRam.itemsOn) itemDisplay.SetActive(false);
         //Are these canvas assignments correct??
-        canvas.worldCamera = assignedCam.GetComponent<Camera>();
+        canvas.worldCamera = playerCamera.GetComponent<Camera>();
         // if (GameRam.playerCount == 1) canvas.worldCamera = GameObject.Find("Main Camera 0").GetComponent<Camera>();
         // if (GameRam.playerCount >= 2) canvas.worldCamera = GameObject.Find("Main Camera "+playerNum).GetComponent<Camera>();
         canvas.planeDistance = .5f;
 
-        switch (playerNum)
+        switch (racerCore.playerNum)
         {
             case 0:
-                if (GameRam.playerCount == 1) assignedCam.GetComponent<Camera>().rect = new Rect(Vector2.zero, Vector2.one);
-                else if (GameRam.playerCount == 2) assignedCam.GetComponent<Camera>().rect = new Rect(Vector2.zero, new Vector2(.5f, 1));
-                else assignedCam.GetComponent<Camera>().rect = new Rect(new Vector2(0, .5f), new Vector2(.5f, .5f));
+                playerCamera.cullingMask = ~(1 << LayerMask.NameToLayer("P2Cam") | 1 << LayerMask.NameToLayer("P3Cam") | 1 << LayerMask.NameToLayer("P4Cam"));
+                if (GameRam.playerCount == 1)
+                    playerCamera.rect = new Rect(Vector2.zero, Vector2.one);
+                else if (GameRam.playerCount == 2)
+                    playerCamera.rect = new Rect(Vector2.zero, new Vector2(.5f, 1));
+                else
+                    playerCamera.rect = new Rect(new Vector2(0, .5f), new Vector2(.5f, .5f));
                 break;
             case 1:
-                if (GameRam.playerCount == 2) assignedCam.GetComponent<Camera>().rect = new Rect(new Vector2(.5f, 0), new Vector2(.5f, 1));
-                else assignedCam.GetComponent<Camera>().rect = new Rect(new Vector2(.5f, .5f), new Vector2(.5f, .5f));
+                playerCamera.cullingMask = ~(1 << LayerMask.NameToLayer("P1Cam") | 1 << LayerMask.NameToLayer("P3Cam") | 1 << LayerMask.NameToLayer("P4Cam"));
+                if (GameRam.playerCount == 2)
+                    playerCamera.rect = new Rect(new Vector2(.5f, 0), new Vector2(.5f, 1));
+                else
+                    playerCamera.rect = new Rect(new Vector2(.5f, .5f), new Vector2(.5f, .5f));
                 break;
             case 2:
-                assignedCam.GetComponent<Camera>().rect = new Rect(Vector2.zero, new Vector2(.5f, .5f));
+                playerCamera.cullingMask = ~(1 << LayerMask.NameToLayer("P1Cam") | 1 << LayerMask.NameToLayer("P2Cam") | 1 << LayerMask.NameToLayer("P4Cam"));
+                playerCamera.rect = new Rect(Vector2.zero, new Vector2(.5f, .5f));
                 break;
             case 3:
-                assignedCam.GetComponent<Camera>().rect = new Rect(new Vector2(.5f, 0), new Vector2(.5f, .5f));
+                playerCamera.cullingMask = ~(1 << LayerMask.NameToLayer("P1Cam") | 1 << LayerMask.NameToLayer("P2Cam") | 1 << LayerMask.NameToLayer("P3Cam"));
+                playerCamera.rect = new Rect(new Vector2(.5f, 0), new Vector2(.5f, .5f));
                 break;
         }
 
         // Fix Audio Listeners at some point.
-        assignedCam.GetComponent<AudioListener>().enabled = true;
+        playerCamera.GetComponent<AudioListener>().enabled = true;
         finishGraphic.SetActive(false);
         pauseMenu.SetActive(false);
     }
@@ -129,30 +141,32 @@ public class PlayerUI : MonoBehaviour
     void FixedUpdate()
     {
         // Camera Follow
-        Vector3 vel = Vector3.zero;
-        assignedCam.transform.position = Vector3.SmoothDamp(assignedCam.transform.position, transform.TransformPoint(camOffset), ref vel, camSmoothTime);
+        //Vector3 vel = Vector3.zero;
+        //playerCamera.transform.position = Vector3.SmoothDamp(playerCamera.transform.position, transform.TransformPoint(camOffset), ref vel, camSmoothTime);
 
-        vel = Vector3.zero;
-        reverseCam.transform.position = Vector3.SmoothDamp(reverseCam.transform.localPosition, transform.TransformPoint(revCamOffset), ref vel, camSmoothTime);
+        //vel = Vector3.zero;
+        //reverseCam.transform.position = Vector3.SmoothDamp(reverseCam.transform.localPosition, transform.TransformPoint(revCamOffset), ref vel, camSmoothTime);
 
-        if (finished)
-        {
-            assignedCam.transform.RotateAround(transform.position, Vector3.up, camRotSpeed);
-            reverseCam.transform.RotateAround(transform.position, Vector3.up, camRotSpeed);
-        }
-        else
-        {
-            assignedCam.transform.LookAt(transform.position + camAngle, Vector3.up);
-            reverseCam.transform.LookAt(transform.position + camAngle, Vector3.up);
-        }
+        //if (finished)
+        //{
+        //    playerCamera.transform.RotateAround(transform.position, Vector3.up, camRotSpeed);
+        //    reverseCam.transform.RotateAround(transform.position, Vector3.up, camRotSpeed);
+        //}
+        //else
+        //{
+        //    playerCamera.transform.LookAt(transform.position + camAngle, Vector3.up);
+        //    reverseCam.transform.LookAt(transform.position + camAngle, Vector3.up);
+        //}
 
         if (camIsReversed)
         {
-            reverseView.SetActive(true);
+            forwardVCam.Priority = 0;
+            //reverseView.SetActive(true);
         }
         else
         {
-            reverseView.SetActive(false);
+            forwardVCam.Priority = 10;
+            //reverseView.SetActive(false);
         }
     }
 
