@@ -165,10 +165,10 @@ public class HubTownControls : MonoBehaviour
                 selectionDescription.text = "Change game settings and options.\n<color=red>(Unavailable)</color>";
                 break;
             case 5:
-                selectionDescription.text = "Buy boards with <color=yellow>tickets</color> from <color=green>Challenges</color>.\nBuy outfits and accessories with <color=yellow>coins</color>.\n<color=red>(Under Construction)</color>";
+                selectionDescription.text = "Buy boards with <color=yellow>tickets</color> from <color=green>Challenges</color>.\n<color=orange>(Mostly Working)</color>\nBuy outfits and accessories with <color=yellow>coins</color>.\n<color=red>(Unavailable)</color>";
                 break;
             case 6:
-                selectionDescription.text = "Create and customize personal characters.\nUse <color=yellow>coins</color> to buy new outfits and accessories at the <color=green>Shop</color>.\n<color=red>(Under Construction)</color>";
+                selectionDescription.text = "Create and customize personal characters.\nUse <color=yellow>coins</color> to buy new outfits and accessories at the <color=green>Shop</color>.\n<color=red>(Unavailable)</color>";
                 break;
             case 0:
                 selectionDescription.text = "Earn <color=yellow>medals</color> and <color=yellow>coins</color> as you progress through the story.";
@@ -180,10 +180,10 @@ public class HubTownControls : MonoBehaviour
                 selectionDescription.text = "Earn <color=yellow>coins</color> with friends and other players online.\n<color=red>(Unavailable)</color>";
                 break;
             case 7:
-                selectionDescription.text = "Earn <color=yellow>tickets</color> by completing various challenges, like time trials, trick combos, and expert boss battles.\n<color=red>(Under Construction)</color>";
+                selectionDescription.text = "Earn <color=yellow>tickets</color> by completing various challenges, like time trials, trick combos, and expert boss battles.\n<color=orange>(Sorta Working...)</color>";
                 break;
             case 4:
-                selectionDescription.text = "Return to the <color=green>Title Menu</color>.";
+                selectionDescription.text = "Save and return to the <color=green>Title Menu</color>.";
                 break;
         }
     }
