@@ -6,14 +6,17 @@ using UnityEngine.UI;
 using System.IO;
 using UnityEngine.InputSystem;
 using TMPro;
+using UnityEngine.Events;
+using Cinemachine;
 
 public class HubTownControls : MonoBehaviour
 {
-
+    public enum TownState { Browsing, StoryPrep, BattlePrep, OnlinePrep, Options, FileSelect, Shop, Customize, ChallengePrep };
+    public TownState townState;
     [SerializeField] private float moveTime;
     [SerializeField] private GameObject cam;
     [SerializeField] private GameObject loadSet;
-    [SerializeField] private List<GameObject> place;
+    [SerializeField] private List<HubTownLocation> locations;
     [SerializeField] private int currentPlace;
     [SerializeField] private Slider progressBar;
 
@@ -57,90 +60,15 @@ public class HubTownControls : MonoBehaviour
         silverTicketDisplay.text = GameRam.currentSaveFile.ticketSilver.ToString();
         goldTicketDisplay.text = GameRam.currentSaveFile.ticketGold.ToString();
         coinDisplay.text = GameRam.currentSaveFile.coins.ToString("N0");
+        currentPlace = GameRam.lastHubSelection;
+        locations[currentPlace].virtualCamera.Priority = 1;
+        if (locations[currentPlace].door != null) locations[currentPlace].door.ActivateDoor();
     }
 
-    void OnNavigate(InputValue val)
+    void Update()
     {
-        place[currentPlace].GetComponentInChildren<Cinemachine.CinemachineVirtualCamera>().Priority = 0;
-        float v = val.Get<Vector2>().x;
-        if (v < .5f && v > -.5f)
-        {
-            navHasReset = true;
-        }
-        if (navHasReset && v > 0.5f)
-        {
-            currentPlace += 1;
-            if (currentPlace >= place.Count)
-            {
-                currentPlace = 0;
-            }
-            navHasReset = false;
-        }
-        if (navHasReset && v < -0.5f)
-        {
-            currentPlace -= 1;
-            if (currentPlace <= -1)
-            {
-                currentPlace = place.Count - 1;
-            }
-            navHasReset = false;
-        }
-        place[currentPlace].GetComponentInChildren<Cinemachine.CinemachineVirtualCamera>().Priority = 1;
+        selectionDescription.text = locations[currentPlace].locationDescription;
     }
-
-    void OnSubmit()
-    {
-        switch (currentPlace)
-        {
-            case 0:
-                GameRam.gameMode = GameMode.Story;
-                GameRam.maxPlayerCount = 1;
-                StartCoroutine(Fade(false, "RacePrepMenu"));
-                break;
-
-            case 1:
-                GameRam.gameMode = GameMode.Battle;
-                GameRam.maxPlayerCount = 4;
-                StartCoroutine(Fade(false, "RacePrepMenu"));
-                break;
-
-            case 2:
-                GameRam.gameMode = GameMode.Online;
-                GameRam.maxPlayerCount = 2;
-                Debug.LogWarning("Unavailable");
-                break;
-
-            case 3:
-                Debug.LogWarning("Unavailable");
-                break;
-
-            case 4:
-                StartCoroutine(Fade(false, "MainMenu"));
-                break;
-
-            case 5:
-                StartCoroutine(Fade(false, "Shop"));
-                break;
-
-            case 6:
-                // StartCoroutine(Fade(false, "CharacterEditor"));
-                Debug.LogWarning("Unavailable");
-                break;
-
-            case 7:
-                GameRam.gameMode = GameMode.Challenge;
-                GameRam.maxPlayerCount = 1;
-                StartCoroutine(Fade(false, "RacePrepMenu"));
-                break;
-        }
-    }
-
-    //void FixedUpdate()
-    //{
-    //    Vector3 a = Vector3.zero;
-    //    transform.SetPositionAndRotation(Vector3.SmoothDamp(transform.position, place[currentPlace].transform.position, ref a, moveTime), transform.rotation);
-    //    transform.LookAt(2 * transform.position - cam.transform.position);
-    //}
 
     void LateUpdate()
     {
@@ -157,33 +85,111 @@ public class HubTownControls : MonoBehaviour
         }
     }
 
-    void Update()
+    void OnNavigate(InputValue val)
     {
-        switch (currentPlace)
+        locations[currentPlace].virtualCamera.Priority = 0;
+        if (locations[currentPlace].door != null) locations[currentPlace].door.ActivateDoor();
+        float v = val.Get<Vector2>().x;
+        if (v < .5f && v > -.5f)
         {
-            case 3:
-                selectionDescription.text = "Change game settings and options.\n<color=red>(Unavailable)</color>";
+            navHasReset = true;
+        }
+        if (navHasReset && v > 0.5f)
+        {
+            currentPlace += 1;
+            if (currentPlace >= locations.Count)
+            {
+                currentPlace = 0;
+            }
+            navHasReset = false;
+        }
+        if (navHasReset && v < -0.5f)
+        {
+            currentPlace -= 1;
+            if (currentPlace <= -1)
+            {
+                currentPlace = locations.Count - 1;
+            }
+            navHasReset = false;
+        }
+        locations[currentPlace].virtualCamera.Priority = 1;
+        if (locations[currentPlace].door != null) locations[currentPlace].door.ActivateDoor();
+        GameRam.lastHubSelection = currentPlace;
+    }
+
+    void OnSubmit()
+    {
+        switch (townState)
+        {
+            case TownState.Browsing:
+                townState = (TownState)currentPlace + 1;
+                switch (locations[currentPlace].locationName)
+                {
+                    case "Story Mode":
+                        GameRam.gameMode = GameMode.Story;
+                        GameRam.maxPlayerCount = 1;
+                        StartCoroutine(Fade(false, "RacePrepMenu"));
+                        break;
+
+                    case "Local Multiplayer":
+                        GameRam.gameMode = GameMode.Battle;
+                        GameRam.maxPlayerCount = 4;
+                        StartCoroutine(Fade(false, "RacePrepMenu"));
+                        break;
+
+                    case "Online Multiplayer":
+                        GameRam.gameMode = GameMode.Online;
+                        GameRam.maxPlayerCount = 2;
+                        Debug.LogWarning("Unavailable");
+                        break;
+
+                    case "Options":
+                        Debug.LogWarning("Unavailable");
+                        break;
+
+                    case "Main Menu":
+                        StartCoroutine(Fade(false, "MainMenu"));
+                        break;
+
+                    case "Shop":
+                        StartCoroutine(Fade(false, "Shop"));
+                        break;
+
+                    case "Character Customization":
+                        // StartCoroutine(Fade(false, "CharacterEditor"));
+                        Debug.LogWarning("Unavailable");
+                        break;
+
+                    case "Challenges":
+                        GameRam.gameMode = GameMode.Challenge;
+                        GameRam.maxPlayerCount = 1;
+                        StartCoroutine(Fade(false, "RacePrepMenu"));
+                        break;
+                }
                 break;
-            case 5:
-                selectionDescription.text = "Buy boards with <color=yellow>tickets</color> from <color=green>Challenges</color>.\n<color=orange>(Mostly Working)</color>\nBuy outfits and accessories with <color=yellow>coins</color>.\n<color=red>(Unavailable)</color>";
+            case TownState.StoryPrep:
+                townState = TownState.Browsing;
                 break;
-            case 6:
-                selectionDescription.text = "Create and customize personal characters.\nUse <color=yellow>coins</color> to buy new outfits and accessories at the <color=green>Shop</color>.\n<color=red>(Unavailable)</color>";
+            case TownState.BattlePrep:
+                townState = TownState.Browsing;
                 break;
-            case 0:
-                selectionDescription.text = "Earn <color=yellow>medals</color> and <color=yellow>coins</color> as you progress through the story.";
+            case TownState.OnlinePrep:
+                townState = TownState.Browsing;
                 break;
-            case 1:
-                selectionDescription.text = "Earn <color=yellow>coins</color> with friends connected to the same computer.";
+            case TownState.Options:
+                townState = TownState.Browsing;
                 break;
-            case 2:
-                selectionDescription.text = "Earn <color=yellow>coins</color> with friends and other players online.\n<color=red>(Unavailable)</color>";
+            case TownState.FileSelect:
+                townState = TownState.Browsing;
                 break;
-            case 7:
-                selectionDescription.text = "Earn <color=yellow>tickets</color> by completing various challenges, like time trials, trick combos, and expert boss battles.\n<color=orange>(Sorta Working...)</color>";
+            case TownState.Shop:
+                townState = TownState.Browsing;
                 break;
-            case 4:
-                selectionDescription.text = "Save and return to the <color=green>Title Menu</color>.";
+            case TownState.Customize:
+                townState = TownState.Browsing;
+                break;
+            case TownState.ChallengePrep:
+                townState = TownState.Browsing;
                 break;
         }
     }
@@ -212,4 +218,15 @@ public class HubTownControls : MonoBehaviour
             StartCoroutine(LoadScene(destination));
         }
     }
+}
+
+[System.Serializable]
+public class HubTownLocation
+{
+    public string locationName;
+    [Multiline]
+    public string locationDescription;
+    public CinemachineVirtualCamera virtualCamera;
+    public DoorOpener door;
+    public UnityEvent events;
 }

@@ -23,4 +23,5 @@ public static class GameRam
     public static InputUser[] inpUse;
     public static int currentChallengeIndex;
     public static ChallengeConditions currentChallenge;
+    public static int lastHubSelection;
 }
