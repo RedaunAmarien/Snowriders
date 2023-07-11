@@ -11,13 +11,15 @@ using Cinemachine;
 
 public class HubTownControls : MonoBehaviour
 {
-    public enum TownState { Browsing, StoryPrep, BattlePrep, OnlinePrep, Options, FileSelect, Shop, Customize, ChallengePrep };
+    public enum TownState { Browsing, RacePrep, Options, FileSelect, Mall, Shop, Customize };
     public TownState townState;
     [SerializeField] private float moveTime;
     [SerializeField] private GameObject cam;
     [SerializeField] private GameObject loadSet;
     [SerializeField] private List<HubTownLocation> locations;
+    private HubTownLocation[] subLocations;
     [SerializeField] private int currentPlace;
+    [SerializeField] private int currentSubPlace;
     [SerializeField] private Slider progressBar;
 
     [SerializeField] private TextMeshProUGUI bronzeMedalDisplay;
@@ -31,6 +33,7 @@ public class HubTownControls : MonoBehaviour
 
     [SerializeField] private Image fadePanel;
     [SerializeField] private float fadeDelay, startTime;
+    [SerializeField] private AudioSource[] audioSources;
     private bool fadingIn, fadingOut;
     private bool navHasReset = true;
 
@@ -63,11 +66,18 @@ public class HubTownControls : MonoBehaviour
         currentPlace = GameRam.lastHubSelection;
         locations[currentPlace].virtualCamera.Priority = 1;
         if (locations[currentPlace].door != null) locations[currentPlace].door.ActivateDoor();
+        foreach (AudioSource audio in audioSources)
+        {
+            audio.Play();
+        }
     }
 
     void Update()
     {
-        selectionDescription.text = locations[currentPlace].locationDescription;
+        if (townState == TownState.Browsing)
+            selectionDescription.text = locations[currentPlace].locationDescription;
+        else
+            selectionDescription.text = subLocations[currentSubPlace].locationDescription;
     }
 
     void LateUpdate()
@@ -87,34 +97,76 @@ public class HubTownControls : MonoBehaviour
 
     void OnNavigate(InputValue val)
     {
-        locations[currentPlace].virtualCamera.Priority = 0;
-        if (locations[currentPlace].door != null) locations[currentPlace].door.ActivateDoor();
-        float v = val.Get<Vector2>().x;
-        if (v < .5f && v > -.5f)
+        if (townState == TownState.Browsing)
         {
-            navHasReset = true;
-        }
-        if (navHasReset && v > 0.5f)
-        {
-            currentPlace += 1;
-            if (currentPlace >= locations.Count)
+            locations[currentPlace].virtualCamera.Priority = 0;
+            if (locations[currentPlace].door != null) locations[currentPlace].door.ActivateDoor();
+            float v = val.Get<Vector2>().x;
+            if (v < .5f && v > -.5f)
             {
-                currentPlace = 0;
+                navHasReset = true;
             }
-            navHasReset = false;
-        }
-        if (navHasReset && v < -0.5f)
-        {
-            currentPlace -= 1;
-            if (currentPlace <= -1)
+            if (navHasReset && v > 0.5f)
             {
-                currentPlace = locations.Count - 1;
+                currentPlace += 1;
+                if (currentPlace >= locations.Count)
+                {
+                    currentPlace = 0;
+                }
+                navHasReset = false;
             }
-            navHasReset = false;
+            if (navHasReset && v < -0.5f)
+            {
+                currentPlace -= 1;
+                if (currentPlace <= -1)
+                {
+                    currentPlace = locations.Count - 1;
+                }
+                navHasReset = false;
+            }
+            locations[currentPlace].virtualCamera.Priority = 1;
+            if (locations[currentPlace].door != null) locations[currentPlace].door.ActivateDoor();
+            GameRam.lastHubSelection = currentPlace;
         }
-        locations[currentPlace].virtualCamera.Priority = 1;
-        if (locations[currentPlace].door != null) locations[currentPlace].door.ActivateDoor();
-        GameRam.lastHubSelection = currentPlace;
+        else
+        {
+            subLocations[currentSubPlace].virtualCamera.Priority = 0;
+            if (subLocations[currentSubPlace].door != null) subLocations[currentSubPlace].door.ActivateDoor();
+            float v = val.Get<Vector2>().x;
+            if (v < .5f && v > -.5f)
+            {
+                navHasReset = true;
+            }
+            if (navHasReset && v > 0.5f)
+            {
+                currentSubPlace += 1;
+                if (currentSubPlace >= subLocations.Length)
+                {
+                    currentSubPlace = 0;
+                }
+                navHasReset = false;
+            }
+            if (navHasReset && v < -0.5f)
+            {
+                currentSubPlace -= 1;
+                if (currentSubPlace <= -1)
+                {
+                    currentSubPlace = subLocations.Length - 1;
+                }
+                navHasReset = false;
+            }
+            subLocations[currentSubPlace].virtualCamera.Priority = 2;
+            if (subLocations[currentSubPlace].door != null) subLocations[currentSubPlace].door.ActivateDoor();
+        }
+    }
+
+    void OnCancel()
+    {
+        if (townState != TownState.Browsing)
+        {
+            townState = TownState.Browsing;
+            subLocations[currentSubPlace].virtualCamera.Priority = 0;
+        }
     }
 
     void OnSubmit()
@@ -122,8 +174,33 @@ public class HubTownControls : MonoBehaviour
         switch (townState)
         {
             case TownState.Browsing:
-                townState = (TownState)currentPlace + 1;
                 switch (locations[currentPlace].locationName)
+                {
+                    case "Race":
+                        townState = TownState.RacePrep;
+                        subLocations = locations[currentPlace].subLocations;
+                        currentSubPlace = 0;
+                        subLocations[currentSubPlace].virtualCamera.Priority = 2;
+                        break;
+
+                    case "Options":
+                        Debug.LogWarning("Unavailable");
+                        break;
+
+                    case "Main Menu":
+                        StartCoroutine(Fade(false, "MainMenu"));
+                        break;
+
+                    case "Mall":
+                        townState = TownState.Mall;
+                        subLocations = locations[currentPlace].subLocations;
+                        currentSubPlace = 0;
+                        subLocations[currentSubPlace].virtualCamera.Priority = 2;
+                        break;
+                }
+                break;
+            case TownState.RacePrep:
+                switch (subLocations[currentSubPlace].locationName)
                 {
                     case "Story Mode":
                         GameRam.gameMode = GameMode.Story;
@@ -143,14 +220,20 @@ public class HubTownControls : MonoBehaviour
                         Debug.LogWarning("Unavailable");
                         break;
 
-                    case "Options":
-                        Debug.LogWarning("Unavailable");
+                    case "Challenges":
+                        GameRam.gameMode = GameMode.Challenge;
+                        GameRam.maxPlayerCount = 1;
+                        StartCoroutine(Fade(false, "RacePrepMenu"));
                         break;
-
-                    case "Main Menu":
-                        StartCoroutine(Fade(false, "MainMenu"));
-                        break;
-
+                }
+                break;
+            case TownState.Options:
+                break;
+            case TownState.FileSelect:
+                break;
+            case TownState.Mall:
+                switch (subLocations[currentSubPlace].locationName)
+                {
                     case "Shop":
                         StartCoroutine(Fade(false, "Shop"));
                         break;
@@ -159,37 +242,7 @@ public class HubTownControls : MonoBehaviour
                         // StartCoroutine(Fade(false, "CharacterEditor"));
                         Debug.LogWarning("Unavailable");
                         break;
-
-                    case "Challenges":
-                        GameRam.gameMode = GameMode.Challenge;
-                        GameRam.maxPlayerCount = 1;
-                        StartCoroutine(Fade(false, "RacePrepMenu"));
-                        break;
                 }
-                break;
-            case TownState.StoryPrep:
-                townState = TownState.Browsing;
-                break;
-            case TownState.BattlePrep:
-                townState = TownState.Browsing;
-                break;
-            case TownState.OnlinePrep:
-                townState = TownState.Browsing;
-                break;
-            case TownState.Options:
-                townState = TownState.Browsing;
-                break;
-            case TownState.FileSelect:
-                townState = TownState.Browsing;
-                break;
-            case TownState.Shop:
-                townState = TownState.Browsing;
-                break;
-            case TownState.Customize:
-                townState = TownState.Browsing;
-                break;
-            case TownState.ChallengePrep:
-                townState = TownState.Browsing;
                 break;
         }
     }
@@ -228,5 +281,5 @@ public class HubTownLocation
     public string locationDescription;
     public CinemachineVirtualCamera virtualCamera;
     public DoorOpener door;
-    public UnityEvent events;
+    public HubTownLocation[] subLocations;
 }
