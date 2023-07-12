@@ -9,7 +9,7 @@ public class FileButton : MonoBehaviour {
     public int fileSlot;
     public string fileName, fileStats;
     public TextMeshProUGUI fileNameText, fileStatsText;
-    public MainMenu mainMenu;
+    public FileSelect mainMenu;
     public Button fileButton;
 
     void Start() {

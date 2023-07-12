@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 using TMPro;
 using System.Linq;
 
-public class MainMenu : MonoBehaviour {
+public class FileSelect : MonoBehaviour {
 
 	public GameObject mainSet, loadSet, newFileSet, chooseSet, firstTimeSet, firstLoad, fileSelectDefault;
 	public TMP_InputField saveBox, deleteBox;

@@ -48,7 +48,12 @@ public class HubTownControls : MonoBehaviour
         GameObject.Find("StartCam").GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority = 0;
 
         if (GameRam.currentSaveFile == null)
+        {
+            currentPlace = 0;
+            gameObject.GetComponent<HubFileSelect>().Activate();
+            townState = TownState.FileSelect;
             return;
+        }
 
         for (int i = 0; i < GameRam.currentSaveFile.courseGrade.Length; i++)
         {
@@ -188,7 +193,7 @@ public class HubTownControls : MonoBehaviour
                         break;
 
                     case "Main Menu":
-                        StartCoroutine(Fade(false, "MainMenu"));
+                        StartCoroutine(Fade(false, "FileSelect"));
                         break;
 
                     case "Mall":
@@ -230,12 +235,16 @@ public class HubTownControls : MonoBehaviour
             case TownState.Options:
                 break;
             case TownState.FileSelect:
+                gameObject.GetComponent<HubFileSelect>().Activate();
+                townState = TownState.FileSelect;
                 break;
             case TownState.Mall:
                 switch (subLocations[currentSubPlace].locationName)
                 {
                     case "Shop":
-                        StartCoroutine(Fade(false, "Shop"));
+                        //StartCoroutine(Fade(false, "Shop"));
+                        gameObject.GetComponent<HubShop>().Activate();
+                        townState = TownState.Shop;
                         break;
 
                     case "Character Customization":

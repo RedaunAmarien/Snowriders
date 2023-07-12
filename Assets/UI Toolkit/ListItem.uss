@@ -1,0 +1,31 @@
+.sprite {
+    flex-grow: 1;
+    -unity-background-scale-mode: scale-to-fit;
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 100%;
+    max-height: 50%;
+}
+
+.big-label {
+    -unity-text-align: middle-center;
+    color: rgb(255, 255, 255);
+    max-width: 100%;
+    max-height: 50%;
+    min-width: 32px;
+    min-height: 32px;
+    -unity-font-style: bold;
+    text-shadow: 1px 1px 1px rgb(0, 0, 0);
+}
+
+.container {
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    min-width: 32px;
+}

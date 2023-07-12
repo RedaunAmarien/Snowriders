@@ -14,7 +14,7 @@ public class LoadingScreen : MonoBehaviour {
         tipText.text = tips[Random.Range(0, tips.Length)];
         if (GameRam.nextSceneToLoad == null) {
             GameRam.nextSceneType = SceneType.Menu;
-            GameRam.nextSceneToLoad = "MainMenu";
+            GameRam.nextSceneToLoad = "FileSelect";
             StartCoroutine(LoadScene("OpeningCinematic"));
         }
         else {
