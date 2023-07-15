@@ -11,7 +11,7 @@ public class CharacterEditor : MonoBehaviour {
     public InputField newName;
     public Slider speedSl, turnSl, jumpSl, skinSL, progressBar;
     public Dropdown loadChars;
-    public CharacterData currentCharData;
+    public Character currentCharData;
     // public SaveFileData saveData;
     public GameObject warningPanel, loadSet;
     public Texture[] skins;
@@ -49,20 +49,20 @@ public class CharacterEditor : MonoBehaviour {
     }
 
     void UpdateLoadList() {
-        GameRam.charDataCustom.Clear();
+        //GameRam.charDataCustom.Clear();
         // Update Custom list for customization.
         charFile = Directory.GetFiles(charDir, "*.sbcc");
         // GameRam.charDataCustom = new CharacterData[charFile.Length];
         List<string> savedChars = new List<string> {};
         for (int i = 0; i < charFile.Length; i++) {
-            GameRam.charDataCustom.Add(LoadChar(charFile[i]));
-            savedChars.Add(GameRam.charDataCustom[i].name);
+            GameRam.customCharacters.Add(LoadChar(charFile[i]));
+            savedChars.Add(GameRam.customCharacters[i].name);
         }
 
         // Update Total list for gameplay.
-        GameRam.allCharData.Clear();
-        GameRam.allCharData.AddRange(GameRam.charDataPermanent);
-        GameRam.allCharData.AddRange(GameRam.charDataCustom);
+        GameRam.allCharacters.Clear();
+        GameRam.allCharacters.AddRange(GameRam.defaultCharacters);
+        GameRam.allCharacters.AddRange(GameRam.customCharacters);
 		// for (int i = 0; i < GameRam.charDataPermanent.Count; i++) {
 		// 	GameRam.allCharData.Add(GameRam.charDataPermanent[i]);
 		// }
@@ -136,14 +136,14 @@ public class CharacterEditor : MonoBehaviour {
         jumpSl.value = currentCharData.jump;
     }
 
-	static CharacterData LoadChar (string path) {
+	static Character LoadChar (string path) {
 		using (StreamReader streamReader = File.OpenText (path)) {
 			string jsonString = streamReader.ReadToEnd();
-			return JsonUtility.FromJson<CharacterData> (jsonString);
+			return JsonUtility.FromJson<Character> (jsonString);
 		}
 	}
 
-	static void SaveChar (CharacterData charData, string path) {
+	static void SaveChar (Character charData, string path) {
 		string jsonString = JsonUtility.ToJson (charData, true);
 		using (StreamWriter streamWriter = File.CreateText(path)) {
 			streamWriter.Write (jsonString);

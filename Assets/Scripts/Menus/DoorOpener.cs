@@ -40,16 +40,16 @@ public class DoorOpener : MonoBehaviour
         }
     }
 
-    public void ActivateDoor()
+    public void ActivateDoor(bool open)
     {
         for (int i = 0; i < doors.Count; i++)
         {
-            if (!isOpen)
+            if (!isOpen && open)
             {
                 doorTargetPosition[i] = doorStartPosition[i] + (i % 2 == 0 ? slideFactor : -slideFactor);
                 doorTargetRotation[i].eulerAngles = doorStartRotation[i].eulerAngles + new Vector3(0, (i % 2 == 0 ? swingFactor : -swingFactor), 0);
             }
-            else
+            else if (isOpen && !open)
             {
                 doorTargetPosition[i] = doorStartPosition[i];
                 doorTargetRotation[i] = doorStartRotation[i];

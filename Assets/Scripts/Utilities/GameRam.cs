@@ -13,8 +13,10 @@ public static class GameRam
     public static float masterVol, sfxVol, musicVol;
     public static bool itemsOn, coinsOn;
     public static int[] controlp, charForP, boardForP;
-    public static List<CharacterData> charDataCustom = new List<CharacterData>(), charDataPermanent = new List<CharacterData>(), allCharData = new List<CharacterData>();
-    public static List<BoardData> allBoardData = new List<BoardData>(), ownedBoardData = new List<BoardData>();
+    //public static List<CharacterData> charDataCustom = new List<CharacterData>(), charDataPermanent = new List<CharacterData>(), allCharData = new List<CharacterData>();
+    public static List<Character> customCharacters = new(), defaultCharacters = new(), allCharacters = new();
+    //public static List<BoardData> allBoardData = new List<BoardData>(), ownedBoardData = new List<BoardData>();
+    public static List<Board> allBoards = new(), ownedBoards = new();
     public static SaveData currentSaveFile;
     public static string currentSaveDirectory;
     public static string nextSceneToLoad, courseToLoad;

@@ -1,0 +1,29 @@
+.unity-label {
+    color: rgb(255, 255, 255);
+    -unity-font-definition: url('project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans%20SDF%201.asset?fileID=11400000&guid=fafd0aad09833434aa190a407109affa&type=2#LiberationSans SDF 1');
+    text-shadow: 1px 1px 1px rgb(0, 0, 0);
+}
+
+.sprite {
+    -unity-background-scale-mode: scale-to-fit;
+    width: 32px;
+    height: 32px;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+}
+
+.medalLabel {
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 35px;
+    -unity-text-align: middle-left;
+}

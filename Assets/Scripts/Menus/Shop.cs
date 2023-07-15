@@ -36,23 +36,23 @@ public class Shop : MonoBehaviour {
 
         lazySusan.transform.SetPositionAndRotation(lazySusan.transform.position, Quaternion.Euler(0, currentChoice*36f, 0));
 
-        boardInfoText[0].text = GameRam.allBoardData[currentChoice].name;
-        boardInfoText[1].text = "Speed: " + GameRam.allBoardData[currentChoice].speed;
-        boardInfoText[2].text = "Turn: " + GameRam.allBoardData[currentChoice].turn;
-        boardInfoText[3].text = "Jump: " + GameRam.allBoardData[currentChoice].jump;
-        boardInfoText[4].text = GameRam.allBoardData[currentChoice].description;
+        boardInfoText[0].text = GameRam.allBoards[currentChoice].name;
+        boardInfoText[1].text = "Speed: " + GameRam.allBoards[currentChoice].speed;
+        boardInfoText[2].text = "Turn: " + GameRam.allBoards[currentChoice].turn;
+        boardInfoText[3].text = "Jump: " + GameRam.allBoards[currentChoice].jump;
+        boardInfoText[4].text = GameRam.allBoards[currentChoice].description;
 
-        if (GameRam.ownedBoardData.Contains(GameRam.allBoardData[currentChoice])) {
+        if (GameRam.ownedBoards.Contains(GameRam.allBoards[currentChoice])) {
             for (int i = 0; i < 4; i++) {
                 boardInfoText[i].color = Color.gray;
             }
             soldOutSign.SetActive(true);
         }
         else {
-            costs[0].text = GameRam.allBoardData[currentChoice].boardCost.coins.ToString("N0");
-            costs[1].text = GameRam.allBoardData[currentChoice].boardCost.bronzeTickets.ToString();
-            costs[2].text = GameRam.allBoardData[currentChoice].boardCost.silverTickets.ToString();
-            costs[3].text = GameRam.allBoardData[currentChoice].boardCost.goldTickets.ToString();
+            costs[0].text = GameRam.allBoards[currentChoice].boardCost.coins.ToString("N0");
+            costs[1].text = GameRam.allBoards[currentChoice].boardCost.bronzeTickets.ToString();
+            costs[2].text = GameRam.allBoards[currentChoice].boardCost.silverTickets.ToString();
+            costs[3].text = GameRam.allBoards[currentChoice].boardCost.goldTickets.ToString();
             for (int i = 0; i < 4; i++) {
                 boardInfoText[i].color = Color.white;
             }
@@ -61,7 +61,7 @@ public class Shop : MonoBehaviour {
     }
 
     public void OnSubmit() {
-        ItemCost board = GameRam.allBoardData[currentChoice].boardCost;
+        ItemCost board = GameRam.allBoards[currentChoice].boardCost;
         SaveData save = GameRam.currentSaveFile;
         if (board.coins > save.coins
             || board.bronzeTickets > save.ticketBronze
@@ -69,22 +69,22 @@ public class Shop : MonoBehaviour {
             || board.goldTickets > save.ticketGold) {
             // Not Enough.
         }
-        else if (GameRam.ownedBoardData.Contains(GameRam.allBoardData[currentChoice])) {
+        else if (GameRam.ownedBoards.Contains(GameRam.allBoards[currentChoice])) {
             // Already Owned.
         }
         else {
-            GameRam.currentSaveFile.ownedBoardID.Add(GameRam.allBoardData[currentChoice].boardID);
+            GameRam.currentSaveFile.ownedBoardID.Add(GameRam.allBoards[currentChoice].boardID);
             GameRam.currentSaveFile.coins -= board.coins;
             GameRam.currentSaveFile.ticketBronze -= board.bronzeTickets;
             GameRam.currentSaveFile.ticketSilver -= board.silverTickets;
             GameRam.currentSaveFile.ticketGold -= board.goldTickets;
             GameRam.currentSaveFile.lastSaved = System.DateTime.Now;
 			FileManager.SaveFile(GameRam.currentSaveFile.fileName, GameRam.currentSaveFile, Application.persistentDataPath + "/Saves");
-            GameRam.ownedBoardData.Clear();
+            GameRam.ownedBoards.Clear();
 			foreach (int id in GameRam.currentSaveFile.ownedBoardID) {
-				foreach (BoardData boardData in GameRam.allBoardData) {
+				foreach (Board boardData in GameRam.allBoards) {
 					if (boardData.boardID == id) {
-						GameRam.ownedBoardData.Add(boardData);
+						GameRam.ownedBoards.Add(boardData);
 					}
 				}
 			}
@@ -101,12 +101,12 @@ public class Shop : MonoBehaviour {
 
         if (v.x > .5f && !stickMove) {
             currentChoice ++;
-            if (currentChoice > GameRam.allBoardData.Count-1) currentChoice = 4;
+            if (currentChoice > GameRam.allBoards.Count-1) currentChoice = 4;
             stickMove = true;
         }
         else if (v.x < -.5f && !stickMove) {
             currentChoice --;
-            if (currentChoice < 4) currentChoice = GameRam.allBoardData.Count-1;
+            if (currentChoice < 4) currentChoice = GameRam.allBoards.Count-1;
             stickMove = true;
         }
         else if (v.x > -.5f && v.x < .5f) stickMove = false;

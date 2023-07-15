@@ -89,7 +89,7 @@ public class RacerCore : MonoBehaviour
         {
             headSprite.sprite = headSpriteSrc[trackManager.demoChars[playerNum].charSpriteIndex];
         }
-        else if (GameRam.charForP[playerNum] < GameRam.charDataPermanent.Count)
+        else if (GameRam.charForP[playerNum] < GameRam.defaultCharacters.Count)
         {
             headSprite.sprite = headSpriteSrc[GameRam.charForP[playerNum]];
         }

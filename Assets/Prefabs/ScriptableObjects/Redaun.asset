@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee24f8c4e8a0a25428cdf59076279896, type: 3}
-  m_Name: 00 Redaun
+  m_Name: Redaun
   m_EditorClassIdentifier: 
-  name: Redaun
-  creator: "Amari\xE9n Games"
+  name: 
+  creator: 
   updateTimeStamp: 
   charSpriteIndex: 0
-  speed: 3
-  turn: 3
-  jump: 3
+  speed: 0
+  turn: 0
+  jump: 0
   special: 0
   skinCol: 0
   head: 0

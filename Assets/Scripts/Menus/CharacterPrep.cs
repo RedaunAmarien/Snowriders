@@ -95,12 +95,12 @@ public class CharacterPrep : MonoBehaviour {
             //Select Character.
             if (v.x > .5f && !charStickMove) {
                 GameRam.charForP[myNumber] ++;
-                if (GameRam.charForP[myNumber] > GameRam.allCharData.Count-1) GameRam.charForP[myNumber] = 0;
+                if (GameRam.charForP[myNumber] > GameRam.allCharacters.Count-1) GameRam.charForP[myNumber] = 0;
                 charStickMove = true;
             }
             else if (v.x < -.5f && !charStickMove) {
                 GameRam.charForP[myNumber] --;
-                if (GameRam.charForP[myNumber] < 0) GameRam.charForP[myNumber] = GameRam.allCharData.Count-1;
+                if (GameRam.charForP[myNumber] < 0) GameRam.charForP[myNumber] = GameRam.allCharacters.Count-1;
                 charStickMove = true;
             }
             else if (v.x > -.5f && v.x < .5f) charStickMove = false;
@@ -110,7 +110,7 @@ public class CharacterPrep : MonoBehaviour {
             // Select Board.
             if (v.x > .5f && !charStickMove) {
                 GameRam.boardForP[myNumber] ++;
-                if (GameRam.boardForP[myNumber] > GameRam.ownedBoardData.Count-1) {
+                if (GameRam.boardForP[myNumber] > GameRam.ownedBoards.Count-1) {
                     GameRam.boardForP[myNumber] = 0;
                 }
                 charStickMove = true;
@@ -118,7 +118,7 @@ public class CharacterPrep : MonoBehaviour {
             else if (v.x < -.5f && !charStickMove) {
                 GameRam.boardForP[myNumber] --;
                 if (GameRam.boardForP[myNumber] < 0) {
-                    GameRam.boardForP[myNumber] = GameRam.ownedBoardData.Count-1;
+                    GameRam.boardForP[myNumber] = GameRam.ownedBoards.Count-1;
                 }
                 charStickMove = true;
             }
@@ -142,14 +142,14 @@ public class CharacterPrep : MonoBehaviour {
             lArrow.anchorMax = new Vector2 (0, .95f);
 
             // Keep text and image fields updated.
-            charText.text = GameRam.allCharData[GameRam.charForP[myNumber]].name;
-            pSpeed.fillAmount = GameRam.allCharData[GameRam.charForP[myNumber]].speed/10f;
+            charText.text = GameRam.allCharacters[GameRam.charForP[myNumber]].name;
+            pSpeed.fillAmount = GameRam.allCharacters[GameRam.charForP[myNumber]].speed/10f;
             tSpeed.fillAmount = 0;
-            pTurn.fillAmount = GameRam.allCharData[GameRam.charForP[myNumber]].turn/10f;
+            pTurn.fillAmount = GameRam.allCharacters[GameRam.charForP[myNumber]].turn/10f;
             tTurn.fillAmount = 0;
-            pJump.fillAmount = GameRam.allCharData[GameRam.charForP[myNumber]].jump/10f;
+            pJump.fillAmount = GameRam.allCharacters[GameRam.charForP[myNumber]].jump/10f;
             tJump.fillAmount = 0;
-            if (GameRam.charForP[myNumber] < GameRam.charDataPermanent.Count) {
+            if (GameRam.charForP[myNumber] < GameRam.defaultCharacters.Count) {
                 charPort.sprite = prepMenu.charPortSrc[GameRam.charForP[myNumber]];
             }
             else charPort.sprite = prepMenu.charPortSrc[prepMenu.charPortSrc.Length-1];
@@ -172,16 +172,16 @@ public class CharacterPrep : MonoBehaviour {
 
             // Keep text fields updated.
             // if (GameRam.ownedBoardData.Contains(GameRam.boardData[GameRam.boardForP[myNumber]])) {
-                boardText.text = GameRam.ownedBoardData[GameRam.boardForP[myNumber]].name;
+                boardText.text = GameRam.ownedBoards[GameRam.boardForP[myNumber]].name;
                 boardText.color = Color.white;
             // }
             // else {
             //     boardText.text = GameRam.ownedBoardData[GameRam.boardForP[myNumber]].name + " (Locked)";
             //     boardText.color = Color.gray;
             // }
-            tSpeed.fillAmount = (GameRam.allCharData[GameRam.charForP[myNumber]].speed + GameRam.ownedBoardData[GameRam.boardForP[myNumber]].speed)/10f;
-            tTurn.fillAmount = (GameRam.allCharData[GameRam.charForP[myNumber]].turn + GameRam.ownedBoardData[GameRam.boardForP[myNumber]].turn)/10f;
-            tJump.fillAmount = (GameRam.allCharData[GameRam.charForP[myNumber]].jump + GameRam.ownedBoardData[GameRam.boardForP[myNumber]].jump)/10f;
+            tSpeed.fillAmount = (GameRam.allCharacters[GameRam.charForP[myNumber]].speed + GameRam.ownedBoards[GameRam.boardForP[myNumber]].speed)/10f;
+            tTurn.fillAmount = (GameRam.allCharacters[GameRam.charForP[myNumber]].turn + GameRam.ownedBoards[GameRam.boardForP[myNumber]].turn)/10f;
+            tJump.fillAmount = (GameRam.allCharacters[GameRam.charForP[myNumber]].jump + GameRam.ownedBoards[GameRam.boardForP[myNumber]].jump)/10f;
         }
         else if (assignmentStep == 3) {
             lArrow.gameObject.SetActive(false);

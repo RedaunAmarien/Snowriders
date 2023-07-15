@@ -8,11 +8,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using TMPro;
 using System.Linq;
+using UnityEditor.Animations;
 
 public class HubFileSelect : MonoBehaviour
 {
     [SerializeField] bool isActive;
-    public GameObject mainSet, loadSet, newFileSet, chooseSet, firstTimeSet, firstLoad, fileSelectDefault;
+    //public GameObject mainSet, loadSet, newFileSet, chooseSet, firstTimeSet, firstLoad, fileSelectDefault;
     public TMP_InputField saveBox, deleteBox;
     // public Text[] fileName, fileCoins, bTickCount, sTickCount, gTickCount, nonCount, bronzeMedalDisplay, silverMedalDisplay, goldMedalDisplay;
     // public Image[] file0Medal, file1Medal, file2Medal, file0Icon, file1Icon, file2Icon;
@@ -52,33 +53,41 @@ public class HubFileSelect : MonoBehaviour
         }
         UpdateFileList();
 
-        GameRam.charDataCustom.Clear();
-        GameRam.charDataPermanent.Clear();
-        GameRam.allCharData.Clear();
-        GameRam.allBoardData.Clear();
-        GameRam.ownedBoardData.Clear();
+        //GameRam.charDataCustom.Clear();
+        //GameRam.charDataPermanent.Clear();
+        //GameRam.allCharData.Clear();
+        //GameRam.allBoardData.Clear();
+        //GameRam.ownedBoardData.Clear();
 
-        GameRam.charDataPermanent.AddRange(GameObject.Find("Board and Char Data").GetComponent<DefaultCharacterData>().defaultCharacters);
-        FileManager.SaveFile("data_perm", GameRam.charDataPermanent, Path.Combine(Application.streamingAssetsPath, "Characters"));
+        //GameRam.charDataPermanent.AddRange(GameObject.Find("Board and Char Data").GetComponent<DefaultCharacterData>().defaultCharacters);
+        //FileManager.SaveFile("data_perm", GameRam.charDataPermanent, Path.Combine(Application.streamingAssetsPath, "Characters"));
 
-        // Initialize Custom Characters
-        if (!Directory.Exists(Path.Combine(Application.persistentDataPath, "Characters")))
-        {
-            Directory.CreateDirectory(Path.Combine(Application.persistentDataPath, "Characters"));
-        }
+        //Character[] characters = Resources.LoadAll<Character>("Objects/Characters");
 
-        charFileCust = Directory.GetFiles(Path.Combine(Application.persistentDataPath, "Characters"), "*.sbcc");
-        // GameRam.charDataCustom = new CharacterData[charFileCust.Length];
-        for (int i = 0; i < charFileCust.Length; i++)
-        {
-            GameRam.charDataCustom.Add(LoadChar(charFileCust[i]));
-        }
-        FileManager.SaveFile("data_custom", GameRam.charDataCustom, Path.Combine(Application.persistentDataPath, "Characters"));
+        //for (int i = 0; i < characters.Length; i++)
+        //{
+        //    GameRam.defaultCharacters.Add(characters[i]);
+        //}
 
-        // Combine all characters to same list for gameplay.
-        GameRam.allCharData.AddRange(GameRam.charDataPermanent);
-        GameRam.allCharData.AddRange(GameRam.charDataCustom);
-        FileManager.SaveFile("data_all", GameRam.allCharData, Path.Combine(Application.streamingAssetsPath, "Characters"));
+        //// Initialize Custom Characters
+        //if (!Directory.Exists(Path.Combine(Application.persistentDataPath, "Characters")))
+        //{
+        //    Directory.CreateDirectory(Path.Combine(Application.persistentDataPath, "Characters"));
+        //}
+
+        //charFileCust = Directory.GetFiles(Path.Combine(Application.persistentDataPath, "Characters"), "*.sbcc");
+        //for (int i = 0; i < charFileCust.Length; i++)
+        //{
+        //    GameRam.charDataCustom.Add(LoadChar(charFileCust[i]));
+        //}
+        //FileManager.SaveFile("data_custom", GameRam.charDataCustom, Path.Combine(Application.persistentDataPath, "Characters"));
+
+        //// Combine all characters to same list for gameplay.
+        //GameRam.allCharData.AddRange(GameRam.charDataPermanent);
+        //GameRam.allCharData.AddRange(GameRam.charDataCustom);
+        //FileManager.SaveFile("data_all", GameRam.allCharData, Path.Combine(Application.streamingAssetsPath, "Characters"));
+
+
 
         // Initialize Boards.
         // boardFile = Directory.GetFiles(Path.Combine(Application.streamingAssetsPath, "Boards"), "*.txt");
@@ -87,9 +96,9 @@ public class HubFileSelect : MonoBehaviour
         // 	if (boardFile[i].EndsWith(".txt")) GameRam.boardData[i] = LoadBoard(boardFile[i]);
         // }
 
-        GameRam.allBoardData.AddRange(GameObject.Find("Board and Char Data").GetComponent<AllBoardData>().boards);
-        GameRam.allBoardData.Sort((b1, b2) => b1.shopIndex.CompareTo(b2.shopIndex));
-        FileManager.SaveFile("data", GameRam.allBoardData, Path.Combine(Application.streamingAssetsPath, "Boards"));
+        //GameRam.allBoardData.AddRange(GameObject.Find("Board and Char Data").GetComponent<AllBoardData>().specialBoards);
+        //GameRam.allBoardData.Sort((b1, b2) => b1.shopIndex.CompareTo(b2.shopIndex));
+        //FileManager.SaveFile("data", GameRam.allBoardData, Path.Combine(Application.streamingAssetsPath, "Boards"));
     }
 
     public IEnumerator Fade(bool i)
@@ -125,26 +134,21 @@ public class HubFileSelect : MonoBehaviour
     {
         GameRam.controlp[0] = con;
         GameRam.playerCount = 1;
-        firstLoad.SetActive(false);
+        //firstLoad.SetActive(false);
         if (firstTime)
         {
-            firstTimeSet.SetActive(true);
+            //firstTimeSet.SetActive(true);
         }
         else
         {
-            mainSet.SetActive(true);
+            //mainSet.SetActive(true);
         }
-    }
-
-    public void ChooseQuit()
-    {
-        Application.Quit();
     }
 
     public void NewFile()
     {
-        newFileSet.SetActive(true);
-        chooseSet.SetActive(false);
+        //newFileSet.SetActive(true);
+        //chooseSet.SetActive(false);
     }
 
     public void Load(int fileIndex)
@@ -158,31 +162,37 @@ public class HubFileSelect : MonoBehaviour
             if (GameRam.currentSaveFile.ownedBoardID == null) GameRam.currentSaveFile.ownedBoardID = new List<int>();
             foreach (int pin in GameRam.currentSaveFile.ownedBoardID)
             {
-                foreach (BoardData board in GameRam.allBoardData)
+                foreach (Board board in GameRam.allBoards)
                 {
                     if (board.boardID == pin)
                     {
-                        GameRam.ownedBoardData.Add(board);
+                        GameRam.ownedBoards.Add(board);
                         // Debug.Log("Board " + board.name + " owned.");
                     }
                 }
             }
-            GameRam.ownedBoardData = GameRam.ownedBoardData.OrderBy(x => x.shopIndex).ToList();
+            GameRam.ownedBoards = GameRam.ownedBoards.OrderBy(x => x.shopIndex).ToList();
             GameRam.currentSaveDirectory = FileManager.SaveFile(GameRam.currentSaveFile.fileName, GameRam.currentSaveFile, savesFolder);
             Debug.LogFormat("Save directory set to {0}", GameRam.currentSaveDirectory);
             StartCoroutine(Fade(false));
         }
         else
         {
-            newFileSet.SetActive(true);
-            chooseSet.SetActive(false);
+            //newFileSet.SetActive(true);
+            //chooseSet.SetActive(false);
             newFileNum = fileIndex;
         }
     }
 
+    public void OnCancel()
+    {
+        GetComponent<HubTownControls>().Reactivate();
+        isActive = false;
+    }
+
     public void OnNavigate(InputValue val)
     {
-        Debug.Log(val);
+        if (!isActive) return;
     }
 
     public void OnVolumeChange(Slider slider)
@@ -214,9 +224,9 @@ public class HubFileSelect : MonoBehaviour
             FileManager.SaveFile(newSaveData.fileName, newSaveData, Path.Combine(Application.persistentDataPath, "Saves"));
             Debug.LogFormat("Created new save file \"{0}\".", newSaveData.fileName);
             UpdateFileList();
-            newFileSet.SetActive(false);
-            chooseSet.SetActive(true);
-            EventSystem.current.SetSelectedGameObject(fileSelectDefault);
+            //newFileSet.SetActive(false);
+            //chooseSet.SetActive(true);
+            //EventSystem.current.SetSelectedGameObject(fileSelectDefault);
         }
     }
 
@@ -237,7 +247,7 @@ public class HubFileSelect : MonoBehaviour
         }
         string[] saveFiles = Directory.GetFiles(savesFolder, "*.srd");
         saveData = new SaveData[saveFiles.Length];
-        // Debug.Log("Found " + saveFiles.Length + " save files.");
+         Debug.LogFormat("Found {0} save files.", saveFiles.Length);
         for (int i = 0; i < saveFiles.Length; i++)
         {
             saveData[i] = (SaveData)FileManager.LoadFile(saveFiles[i]);
@@ -253,7 +263,7 @@ public class HubFileSelect : MonoBehaviour
         //fileContainer = new GameObject[saveData.Length];
         //fileScript = new FileButton[saveData.Length];
 
-        GetComponent<HubUIBridge>().AddFiles(saveData);
+        //GetComponent<HubUIBridge>().AddFiles(saveData);
 
         for (int i = 0; i < saveData.Length; i++)
         {
@@ -339,16 +349,16 @@ public class HubFileSelect : MonoBehaviour
         }
     }
 
-    static CharacterData LoadChar(string path)
+    static Character LoadChar(string path)
     {
         using (StreamReader streamReader = File.OpenText(path))
         {
             string jsonString = streamReader.ReadToEnd();
-            return JsonUtility.FromJson<CharacterData>(jsonString);
+            return JsonUtility.FromJson<Character>(jsonString);
         }
     }
 
-    static void SaveChar(CharacterData charData, string path)
+    static void SaveChar(Character charData, string path)
     {
         string jsonString = JsonUtility.ToJson(charData, true);
         using (StreamWriter streamWriter = File.CreateText(path))
@@ -357,12 +367,12 @@ public class HubFileSelect : MonoBehaviour
         }
     }
 
-    static BoardData LoadBoard(string path)
+    static Board LoadBoard(string path)
     {
         using (StreamReader streamReader = File.OpenText(path))
         {
             string jsonString = streamReader.ReadToEnd();
-            return JsonUtility.FromJson<BoardData>(jsonString);
+            return JsonUtility.FromJson<Board>(jsonString);
         }
     }
 }

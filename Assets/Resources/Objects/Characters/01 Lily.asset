@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Lily
   creator: "Amari\xE9n Games"
-  updateTimeStamp: 7/29/2019 10:34:32 PM
+  updateTimeStamp: 
   charSpriteIndex: 0
   speed: 1
   turn: 4

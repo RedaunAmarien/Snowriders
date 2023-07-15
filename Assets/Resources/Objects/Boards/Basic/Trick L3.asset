@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b557dd034a45c34fa36b82f950ae5dc, type: 3}
   m_Name: Trick L3
   m_EditorClassIdentifier: 
-  name: 
-  description: 
-  boardID: 0
-  shopIndex: 0
-  level: 0
-  speed: 0
-  turn: 0
-  jump: 0
+  name: Trick Lv. 3
+  description: The board for jumping the highest.
+  boardID: 8
+  shopIndex: 10
+  level: 2
+  speed: 2
+  turn: 2
+  jump: 4
   boardCost:
-    coins: 0
+    coins: 15000
     bronzeTickets: 0
     silverTickets: 0
     goldTickets: 0

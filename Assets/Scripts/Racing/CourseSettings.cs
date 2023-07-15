@@ -10,7 +10,7 @@ public class CourseSettings : MonoBehaviour {
 	public int courseIndex, defaultLapCount;
 	[Tooltip("Default enemy racer character indices.\nElement 3 will only be used if the player chooses an already-taken slot.")]
 	public int[] defaultCpu;
-	[Tooltip("Default enemy racer boards.")]
+	[Tooltip("Default enemy racer specialBoards.")]
 	public int[] defaultCpuBoard;
 	[Tooltip("Bonus coins added to file total for playing in multiplayer.")]
 	public int[] prize;

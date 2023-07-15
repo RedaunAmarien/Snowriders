@@ -50,8 +50,8 @@ public class TrackManager : MonoBehaviour
     public bool demoMode = false;
     public string demoCourse;
     public int demoPlayerCount;
-    public CharacterData[] demoChars;
-    public BoardData[] demoBoards;
+    public Character[] demoChars;
+    public Board[] demoBoards;
     public string demoLayout;
 
     void Awake()
@@ -63,7 +63,7 @@ public class TrackManager : MonoBehaviour
             demoMode = true;
             GameRam.courseToLoad = demoCourse;
             GameRam.playerCount = demoPlayerCount;
-            GameRam.allBoardData.AddRange(demoBoards);
+            GameRam.allBoards.AddRange(demoBoards);
             GameRam.charForP = new int[4];
             GameRam.boardForP = new int[4];
             GameRam.inpDev = new InputDevice[4];
@@ -72,7 +72,7 @@ public class TrackManager : MonoBehaviour
             GameRam.coinsOn = true;
             for (int i = 0; i < 4; i++)
             {
-                GameRam.allCharData.Add(demoChars[i]);
+                GameRam.allCharacters.Add(demoChars[i]);
                 GameRam.charForP[i] = i;
                 GameRam.boardForP[i] = i;
                 GameRam.controlp[i] = i;
@@ -198,7 +198,7 @@ public class TrackManager : MonoBehaviour
         }
         resultsPanel.SetActive(false);
 
-        //Check custom options.
+        //Check custom rootOptions.
         if (GameRam.playerCount == 0)
         {
             GameRam.lapCount = courseSettings.defaultLapCount;
@@ -281,17 +281,17 @@ public class TrackManager : MonoBehaviour
             //Initialize character stats from data.
 
             //Speed: Max 18, Min 15.
-            racerCore[i].speed = demoMode ? 15f : 14f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].speed + GameRam.ownedBoardData[GameRam.boardForP[i]].speed) / 3f;
+            racerCore[i].speed = demoMode ? 15f : 14f + (2f / 3f) + (GameRam.allCharacters[GameRam.charForP[i]].speed + GameRam.ownedBoards[GameRam.boardForP[i]].speed) / 3f;
 
             //Traction: Max .04, Min .015.
-            racerCore[i].traction = demoMode ? .015f : (11f / 900f) + (GameRam.allCharData[GameRam.charForP[i]].turn + GameRam.ownedBoardData[GameRam.boardForP[i]].turn) / 360f;
+            racerCore[i].traction = demoMode ? .015f : (11f / 900f) + (GameRam.allCharacters[GameRam.charForP[i]].turn + GameRam.ownedBoards[GameRam.boardForP[i]].turn) / 360f;
 
             //Jump: Max 250, Min 175.
-            racerCore[i].jumpForce.y = demoMode ? 175f : 166f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].jump + GameRam.ownedBoardData[GameRam.boardForP[i]].jump) * (8f + (1f / 3f));
+            racerCore[i].jumpForce.y = demoMode ? 175f : 166f + (2f / 3f) + (GameRam.allCharacters[GameRam.charForP[i]].jump + GameRam.ownedBoards[GameRam.boardForP[i]].jump) * (8f + (1f / 3f));
 
             //Display stats
-            racerCore[i].charName = GameRam.allCharData[GameRam.charForP[i]].name;
-            racerCore[i].boardName = demoMode ? "Demo Board" : GameRam.ownedBoardData[GameRam.boardForP[i]].name;
+            racerCore[i].charName = GameRam.allCharacters[GameRam.charForP[i]].name;
+            racerCore[i].boardName = demoMode ? "Demo Board" : GameRam.ownedBoards[GameRam.boardForP[i]].name;
             racerCore[i].totalLaps = GameRam.lapCount;
 
             racerCore[i].AssignSpecialBoards();
@@ -303,17 +303,17 @@ public class TrackManager : MonoBehaviour
             //Initialize character stats from data.
 
             //Speed: Max 18, Min 15.
-            racerCore[i].speed = 14f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].speed + GameRam.allBoardData[GameRam.boardForP[i]].speed) / 3f;
+            racerCore[i].speed = 14f + (2f / 3f) + (GameRam.allCharacters[GameRam.charForP[i]].speed + GameRam.allBoards[GameRam.boardForP[i]].speed) / 3f;
 
             //Traction: Max .04, Min .015.
-            racerCore[i].traction = (11f / 900f) + (GameRam.allCharData[GameRam.charForP[i]].turn + GameRam.allBoardData[GameRam.boardForP[i]].turn) / 360f;
+            racerCore[i].traction = (11f / 900f) + (GameRam.allCharacters[GameRam.charForP[i]].turn + GameRam.allBoards[GameRam.boardForP[i]].turn) / 360f;
 
             //Jump: Max 250, Min 175.
-            racerCore[i].jumpForce.y = 166f + (2f / 3f) + (GameRam.allCharData[GameRam.charForP[i]].jump + GameRam.allBoardData[GameRam.boardForP[i]].jump) * (8f + (1f / 3f));
+            racerCore[i].jumpForce.y = 166f + (2f / 3f) + (GameRam.allCharacters[GameRam.charForP[i]].jump + GameRam.allBoards[GameRam.boardForP[i]].jump) * (8f + (1f / 3f));
 
             //Display stats
-            racerCore[i].charName = GameRam.allCharData[GameRam.charForP[i]].name;
-            racerCore[i].boardName = GameRam.allBoardData[GameRam.boardForP[i]].name;
+            racerCore[i].charName = GameRam.allCharacters[GameRam.charForP[i]].name;
+            racerCore[i].boardName = GameRam.allBoards[GameRam.boardForP[i]].name;
             racerCore[i].totalLaps = GameRam.lapCount;
 
             racerCore[i].AssignSpecialBoards();
@@ -705,11 +705,11 @@ public class TrackManager : MonoBehaviour
                 succeeded = false;
                 failReason = string.Format("you did not finish with more than {0} coins", conditions.requiredCoinCoint);
             }
-            if (GameRam.ownedBoardData[GameRam.boardForP[0]].boardID != conditions.requiredBoardID)
+            if (GameRam.ownedBoards[GameRam.boardForP[0]].boardID != conditions.requiredBoardID)
             {
                 succeeded = false;
                 string boardName = string.Empty;
-                foreach (BoardData board in GameRam.allBoardData)
+                foreach (Board board in GameRam.allBoards)
                 {
                     if (board.boardID == conditions.requiredBoardID)
                         boardName = board.name;
