@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 
 public class HubUIBridge : MonoBehaviour
 {
+    public VisualElement fileSelectRoot;
     public UIDocument uiDoc;
     public Button createButton;
     public Button deleteButton;
@@ -20,6 +21,8 @@ public class HubUIBridge : MonoBehaviour
     void Start()
     {
         //File References
+        fileSelectRoot = uiDoc.rootVisualElement.Q<VisualElement>("FileSelect");
+        fileList = uiDoc.rootVisualElement.Q<ListView>("FileList");
         fileName = uiDoc.rootVisualElement.Q<Label>("FileName");
         coinCount = uiDoc.rootVisualElement.Q<Label>("CoinCount");
         goldMed = uiDoc.rootVisualElement.Q<Label>("GoldMed");
@@ -34,8 +37,70 @@ public class HubUIBridge : MonoBehaviour
         //createButton = uiDoc.rootVisualElement.Q<Button>("CreateButton");
         //deleteButton = uiDoc.rootVisualElement.Q<Button>("DeleteButton");
         //backButton = uiDoc.rootVisualElement.Q<Button>("ReturnButton");
-        //fileList = uiDoc.rootVisualElement.Q<ListView>("FileList");
         //listItemTemplate = uiDoc.rootVisualElement.Q<VisualElement>("ListItemTemplate");
+    }
+
+    public enum WindowSet { FileSelect, Options, Boards, Clothes, Stats, Quit };
+
+    public void RevealWindow(WindowSet set)
+    {
+        switch (set)
+        {
+            case WindowSet.FileSelect:
+                fileSelectRoot.style.translate = new StyleTranslate(new Translate(0, 0, 0));
+                break;
+            case WindowSet.Options:
+                break;
+            case WindowSet.Boards:
+                break;
+            case WindowSet.Clothes:
+                break;
+            case WindowSet.Stats:
+                break;
+            case WindowSet.Quit:
+                break;
+        }
+    }
+
+    public void HideWindow(WindowSet set)
+    {
+        switch (set)
+        {
+            case WindowSet.FileSelect:
+                fileSelectRoot.style.translate = new StyleTranslate(new Translate(0, -800, 0));
+                break;
+            case WindowSet.Options:
+                break;
+            case WindowSet.Boards:
+                break;
+            case WindowSet.Clothes:
+                break;
+            case WindowSet.Stats:
+                break;
+            case WindowSet.Quit:
+                break;
+        }
+    }
+
+    public void AddListItems(SaveData[] data)
+    {
+        fileList.makeItem = () =>
+        {
+            var newListEntry = listItemTemplate.Instantiate();
+            var newListEntryLogic = new FileListEntryController();
+            newListEntry.userData = newListEntryLogic;
+            newListEntryLogic.SetVisualElement(newListEntry);
+
+            return newListEntry;
+        };
+
+        fileList.bindItem = (item, index) =>
+        {
+            (item.userData as FileListEntryController).SetFileData(data[index]);
+        };
+
+        fileList.fixedItemHeight = 100;
+        fileList.itemsSource = data;
     }
 
     //private void Update()
@@ -54,28 +119,28 @@ public class HubUIBridge : MonoBehaviour
     //}
 }
 
-//public class FileListEntryController
-//{
-//    Label nameLabel;
+public class FileListEntryController
+{
+    Label nameLabel;
 
-//    //This function retrieves a reference to the 
-//    //character name label inside the UI element.
+    //This function retrieves a reference to the 
+    //character name label inside the UI element.
 
-//    public void SetVisualElement(VisualElement visualElement)
-//    {
-//        nameLabel = visualElement.Q<Label>("FileName");
-//    }
+    public void SetVisualElement(VisualElement visualElement)
+    {
+        nameLabel = visualElement.Q<Label>("FileName");
+    }
 
-//    //This function receives the character whose name this list 
-//    //element displays. Since the elements listed 
-//    //in a `ListView` are pooled and reused, it's necessary to 
-//    //have a `Set` function to change which character's data to display.
+    //This function receives the character whose name this list 
+    //element displays. Since the elements listed 
+    //in a `ListView` are pooled and reused, it's necessary to 
+    //have a `Set` function to change which character's data to display.
 
-//    public void SetFileData(SaveData saveData)
-//    {
-//        nameLabel.text = saveData.fileName;
-//    }
-//}
+    public void SetFileData(SaveData saveData)
+    {
+        nameLabel.text = saveData.fileName;
+    }
+}
 
 //public class FileListController
 //{

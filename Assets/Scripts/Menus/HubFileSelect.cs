@@ -35,10 +35,13 @@ public class HubFileSelect : MonoBehaviour
     public string saveFileVersion;
     string savesFolder;
     int newFileNum;
+    HubUIBridge uiBridge;
 
     public void Activate()
     {
         isActive = true;
+        uiBridge = GetComponent<HubUIBridge>();
+        uiBridge.RevealWindow(HubUIBridge.WindowSet.FileSelect);
         //fadePanel.gameObject.SetActive(true);
         //chooseSet.SetActive(false);
         //mainSet.SetActive(true);
@@ -187,6 +190,7 @@ public class HubFileSelect : MonoBehaviour
     public void OnCancel()
     {
         GetComponent<HubTownControls>().Reactivate();
+        uiBridge.HideWindow(HubUIBridge.WindowSet.FileSelect);
         isActive = false;
     }
 
@@ -258,12 +262,7 @@ public class HubFileSelect : MonoBehaviour
         }
         saveData = saveData.OrderByDescending(x => x.lastSaved).ToArray();
 
-        //fileButton = new Button[saveData.Length];
-        //fileName = new TextMeshProUGUI[saveData.Length];
-        //fileContainer = new GameObject[saveData.Length];
-        //fileScript = new FileButton[saveData.Length];
-
-        //GetComponent<HubUIBridge>().AddFiles(saveData);
+        uiBridge.AddListItems(saveData);
 
         for (int i = 0; i < saveData.Length; i++)
         {

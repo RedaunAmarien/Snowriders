@@ -4045,94 +4045,139 @@ MonoBehaviour:
   rootOptions:
   - optionName: Kiosk
     optionDescription: 
+    currentChoice: 0
     camera: {fileID: 556020342}
     door: {fileID: 0}
+    events:
+      m_PersistentCalls:
+        m_Calls: []
     subOptions:
     - optionName: File Select
       optionDescription: 
+      currentChoice: 0
       camera: {fileID: 5426330023825910800}
       door: {fileID: 0}
+      events:
+        m_PersistentCalls:
+          m_Calls: []
       subOptions: []
-      currentChoice: 0
     - optionName: Options
       optionDescription: 
+      currentChoice: 0
       camera: {fileID: 5426330024702503459}
       door: {fileID: 0}
+      events:
+        m_PersistentCalls:
+          m_Calls: []
       subOptions: []
-      currentChoice: 0
     - optionName: Quit Game
       optionDescription: 
+      currentChoice: 0
       camera: {fileID: 556020342}
       door: {fileID: 0}
+      events:
+        m_PersistentCalls:
+          m_Calls: []
       subOptions: []
-      currentChoice: 0
-    currentChoice: 0
   - optionName: Race
     optionDescription: 
+    currentChoice: 0
     camera: {fileID: 1988853516}
     door: {fileID: 0}
+    events:
+      m_PersistentCalls:
+        m_Calls: []
     subOptions:
     - optionName: Story
       optionDescription: 
+      currentChoice: 0
       camera: {fileID: 5426330024510313438}
       door: {fileID: 0}
+      events:
+        m_PersistentCalls:
+          m_Calls: []
       subOptions: []
-      currentChoice: 0
     - optionName: Battle
       optionDescription: 
+      currentChoice: 0
       camera: {fileID: 464086545187897919}
       door: {fileID: 0}
+      events:
+        m_PersistentCalls:
+          m_Calls: []
       subOptions: []
-      currentChoice: 0
     - optionName: Online
       optionDescription: 
+      currentChoice: 0
       camera: {fileID: 5426330024737272659}
       door: {fileID: 0}
+      events:
+        m_PersistentCalls:
+          m_Calls: []
       subOptions: []
-      currentChoice: 0
     - optionName: Challenge
       optionDescription: 
+      currentChoice: 0
       camera: {fileID: 5426330023524561285}
       door: {fileID: 0}
+      events:
+        m_PersistentCalls:
+          m_Calls: []
       subOptions: []
-      currentChoice: 0
-    currentChoice: 0
   - optionName: Mall
     optionDescription: 
+    currentChoice: 0
     camera: {fileID: 1328142229}
     door: {fileID: 0}
+    events:
+      m_PersistentCalls:
+        m_Calls: []
     subOptions:
     - optionName: Board Shop
       optionDescription: 
+      currentChoice: 0
       camera: {fileID: 1716682205}
       door: {fileID: 0}
+      events:
+        m_PersistentCalls:
+          m_Calls: []
       subOptions:
       - optionName: Upgrade
         optionDescription: 
+        currentChoice: 0
         camera: {fileID: 0}
         door: {fileID: 0}
+        events:
+          m_PersistentCalls:
+            m_Calls: []
         subOptions: []
-        currentChoice: 0
       - optionName: Buy
         optionDescription: 
+        currentChoice: 0
         camera: {fileID: 0}
         door: {fileID: 0}
+        events:
+          m_PersistentCalls:
+            m_Calls: []
         subOptions: []
-        currentChoice: 0
-      currentChoice: 0
     - optionName: Salon
       optionDescription: 
+      currentChoice: 0
       camera: {fileID: 5426330025418869185}
       door: {fileID: 0}
+      events:
+        m_PersistentCalls:
+          m_Calls: []
       subOptions: []
-      currentChoice: 0
     - optionName: Gift Shop
       optionDescription: 
+      currentChoice: 0
       camera: {fileID: 5426330024698680646}
       door: {fileID: 0}
+      events:
+        m_PersistentCalls:
+          m_Calls: []
       subOptions: []
-      currentChoice: 0
-    currentChoice: 0
   currentOptions: []
   currentOptionIndex: 0
   progressBar: {fileID: 1552984412}

@@ -89,6 +89,11 @@ public class HubShop : MonoBehaviour
         }
 
     }
+    public void OnCancel()
+    {
+        GetComponent<HubTownControls>().Reactivate();
+        isActive = false;
+    }
 
     public void OnSubmit()
     {

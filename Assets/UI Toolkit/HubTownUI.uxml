@@ -1,9 +1,13 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/HubMenu.uss?fileID=7433441132597879392&amp;guid=14c41796214d4c24bbcc2bc5bb0420f9&amp;type=3#HubMenu" />
     <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); justify-content: flex-end;">
-        <ui:VisualElement name="Top" style="background-color: rgba(0, 0, 0, 0); min-height: 640px; flex-grow: 1;" />
+        <ui:VisualElement name="Top" style="min-height: 640px; flex-grow: 1;">
+            <ui:VisualElement name="FileSelect" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.33); transition-property: translate; transition-duration: 0.75s; transition-timing-function: ease-in-out; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; translate: 0 -800px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 0;">
+                <ui:ListView focusable="true" name="FileList" />
+            </ui:VisualElement>
+        </ui:VisualElement>
         <ui:VisualElement name="Bottom" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; flex-shrink: 0;">
-            <ui:VisualElement name="Stats" style="background-color: rgba(0, 0, 0, 0.33); width: 20%; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">
+            <ui:VisualElement name="Stats" style="background-color: rgba(0, 0, 0, 0.33); width: 20%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px;">
                 <ui:Label tabindex="-1" text="No File Loaded!" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; border-bottom-color: rgb(255, 255, 255); border-bottom-width: 2px; -unity-text-align: middle-center;" />
                 <ui:VisualElement name="Coins" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center;">
                     <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
@@ -40,11 +44,11 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="Info" style="background-color: rgba(0, 0, 0, 0.33); margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; min-width: 50%; max-width: 60%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; width: 60%;">
+            <ui:VisualElement name="Info" style="background-color: rgba(0, 0, 0, 0.33); min-width: 50%; max-width: 60%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; width: 60%; margin-left: 0; margin-right: 0; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; margin-top: 8px; margin-bottom: 8px;">
                 <ui:Label tabindex="-1" text="Location or Object Name" display-tooltip-when-elided="true" name="SubjectName" style="-unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; white-space: nowrap; -unity-text-align: middle-center; font-size: 55px; border-bottom-color: rgb(255, 255, 255); border-bottom-width: 2px;" />
                 <ui:Label tabindex="-1" text="The quick brown fox jumps over the lazy dog." display-tooltip-when-elided="true" name="SubjectDescription" style="margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; align-self: stretch; white-space: normal; -unity-text-align: upper-center; font-size: 50px;" />
             </ui:VisualElement>
-            <ui:VisualElement name="MiniMenu" style="background-color: rgba(0, 0, 0, 0.33); width: 20%; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px;" />
+            <ui:VisualElement name="MiniMenu" style="background-color: rgba(0, 0, 0, 0.33); width: 20%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

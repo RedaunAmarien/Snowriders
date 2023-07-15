@@ -172,9 +172,10 @@ public class HubTownControls : MonoBehaviour
         if (overridden)
             return;
 
+        currentOptions[currentOptionIndex].events.Invoke();
         ToggleCam(currentOptions[currentOptionIndex].camera, currentOptions[currentOptionIndex].door, false);
         optionCode += currentOptionIndex.ToString();
-        currentOptions[currentOptionIndex].currentChoice = currentOptionIndex;
+        //currentOptions[currentOptionIndex].currentChoice = currentOptionIndex;
         if (currentOptions[currentOptionIndex].subOptions.Count > 0)
         {
             currentOptions = currentOptions[currentOptionIndex].subOptions;
@@ -189,6 +190,8 @@ public class HubTownControls : MonoBehaviour
                 break;
             case "00": //File Select
                 gameObject.GetComponent<HubFileSelect>().Activate();
+                //currentOptions[currentOptionIndex].events.Invoke();
+                Debug.Log("Opening File Select");
                 overridden = true;
                 break;
             case "01": //Options
@@ -247,6 +250,7 @@ public class HubTownControls : MonoBehaviour
                 gameObject.GetComponent<HubShop>().Activate();
                 overridden = true;
                 break;
+
             case "21": //Salon
                 OnUnavailable();
                 break;
@@ -279,6 +283,7 @@ public class HubTownControls : MonoBehaviour
     public void Reactivate()
     {
         overridden = false;
+        OnCancel();
     }
 
     void OnUnavailable()
@@ -312,16 +317,4 @@ public class HubTownControls : MonoBehaviour
             StartCoroutine(LoadScene(destination));
         }
     }
-}
-
-[System.Serializable]
-public class HubTownOption
-{
-    public string optionName;
-    [Multiline]
-    public string optionDescription;
-    public CinemachineVirtualCamera camera;
-    public DoorOpener door;
-    public List<HubTownOption> subOptions;
-    public int currentChoice;
 }
