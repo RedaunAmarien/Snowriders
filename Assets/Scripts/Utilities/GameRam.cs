@@ -18,6 +18,7 @@ public static class GameRam
     //public static List<BoardData> allBoardData = new List<BoardData>(), ownedBoardData = new List<BoardData>();
     public static List<Board> allBoards = new(), ownedBoards = new();
     public static SaveData currentSaveFile;
+    public static int currentSaveSlot;
     public static string currentSaveDirectory;
     public static string nextSceneToLoad, courseToLoad;
     public static SceneType nextSceneType;

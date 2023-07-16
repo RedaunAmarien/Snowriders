@@ -2,8 +2,233 @@
     <Style src="project://database/Assets/UI%20Toolkit/HubMenu.uss?fileID=7433441132597879392&amp;guid=14c41796214d4c24bbcc2bc5bb0420f9&amp;type=3#HubMenu" />
     <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); justify-content: flex-end;">
         <ui:VisualElement name="Top" style="min-height: 640px; flex-grow: 1;">
-            <ui:VisualElement name="FileSelect" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.33); transition-property: translate; transition-duration: 0.75s; transition-timing-function: ease-in-out; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; translate: 0 -800px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 0;">
-                <ui:ListView focusable="true" name="FileList" />
+            <ui:VisualElement name="FileSelect" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.33); transition-property: translate; transition-duration: 0.75s; transition-timing-function: ease-in-out; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 0; translate: 0 -800px; justify-content: center;">
+                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center;">
+                    <ui:VisualElement name="File0" class="file-box">
+                        <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
+                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center;">
+                            <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
+                            <ui:Label tabindex="-1" text="000,000,000" display-tooltip-when-elided="true" name="CoinCount" class="medalLabel" />
+                        </ui:VisualElement>
+                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center; width: 320px;">
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; justify-content: center; align-self: center;">
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=1699839288339780594&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Gold&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="GoldMed" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-8474832591409494553&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Silver&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="SilvMed" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-4620241418024215519&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Bronze&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="BronMed" class="medalLabel" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; justify-content: center; align-self: center;">
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=8666489091475795074&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Gold&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="GoldTick" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-3164523743744658198&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Silver&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="SilvTick" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-5845418450148110829&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Bronze&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="BronTick" class="medalLabel" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="File1" class="file-box">
+                        <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
+                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center;">
+                            <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
+                            <ui:Label tabindex="-1" text="000,000,000" display-tooltip-when-elided="true" name="CoinCount" class="medalLabel" />
+                        </ui:VisualElement>
+                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center; width: 320px;">
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; justify-content: center; align-self: center;">
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=1699839288339780594&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Gold&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="GoldMed" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-8474832591409494553&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Silver&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="SilvMed" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-4620241418024215519&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Bronze&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="BronMed" class="medalLabel" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; justify-content: center; align-self: center;">
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=8666489091475795074&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Gold&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="GoldTick" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-3164523743744658198&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Silver&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="SilvTick" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-5845418450148110829&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Bronze&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="BronTick" class="medalLabel" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="File2" class="file-box">
+                        <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
+                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center;">
+                            <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
+                            <ui:Label tabindex="-1" text="000,000,000" display-tooltip-when-elided="true" name="CoinCount" class="medalLabel" />
+                        </ui:VisualElement>
+                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center; width: 320px;">
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; justify-content: center; align-self: center;">
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=1699839288339780594&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Gold&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="GoldMed" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-8474832591409494553&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Silver&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="SilvMed" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-4620241418024215519&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Bronze&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="BronMed" class="medalLabel" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; justify-content: center; align-self: center;">
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=8666489091475795074&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Gold&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="GoldTick" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-3164523743744658198&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Silver&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="SilvTick" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-5845418450148110829&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Bronze&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="BronTick" class="medalLabel" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center;">
+                    <ui:VisualElement name="File3" class="file-box">
+                        <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
+                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center;">
+                            <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
+                            <ui:Label tabindex="-1" text="000,000,000" display-tooltip-when-elided="true" name="CoinCount" class="medalLabel" />
+                        </ui:VisualElement>
+                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center; width: 320px;">
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; justify-content: center; align-self: center;">
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=1699839288339780594&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Gold&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="GoldMed" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-8474832591409494553&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Silver&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="SilvMed" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-4620241418024215519&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Bronze&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="BronMed" class="medalLabel" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; justify-content: center; align-self: center;">
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=8666489091475795074&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Gold&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="GoldTick" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-3164523743744658198&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Silver&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="SilvTick" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-5845418450148110829&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Bronze&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="BronTick" class="medalLabel" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="File4" class="file-box">
+                        <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
+                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center;">
+                            <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
+                            <ui:Label tabindex="-1" text="000,000,000" display-tooltip-when-elided="true" name="CoinCount" class="medalLabel" />
+                        </ui:VisualElement>
+                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center; width: 320px;">
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; justify-content: center; align-self: center;">
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=1699839288339780594&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Gold&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="GoldMed" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-8474832591409494553&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Silver&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="SilvMed" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-4620241418024215519&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Bronze&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="BronMed" class="medalLabel" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; justify-content: center; align-self: center;">
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=8666489091475795074&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Gold&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="GoldTick" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-3164523743744658198&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Silver&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="SilvTick" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-5845418450148110829&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Bronze&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="BronTick" class="medalLabel" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="File5" class="file-box">
+                        <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
+                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center;">
+                            <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
+                            <ui:Label tabindex="-1" text="000,000,000" display-tooltip-when-elided="true" name="CoinCount" class="medalLabel" />
+                        </ui:VisualElement>
+                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center; width: 320px;">
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; justify-content: center; align-self: center;">
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=1699839288339780594&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Gold&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="GoldMed" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-8474832591409494553&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Silver&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="SilvMed" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-4620241418024215519&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Bronze&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="BronMed" class="medalLabel" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; justify-content: center; align-self: center;">
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=8666489091475795074&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Gold&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="GoldTick" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-3164523743744658198&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Silver&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="SilvTick" class="medalLabel" />
+                                </ui:VisualElement>
+                                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-5845418450148110829&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Bronze&apos;);" />
+                                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="BronTick" class="medalLabel" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="Bottom" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; flex-shrink: 0;">

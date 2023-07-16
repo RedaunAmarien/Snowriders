@@ -24,15 +24,6 @@ public class HubTownControls : MonoBehaviour
     //[SerializeField] private int currentOptionTier;
     [SerializeField] private Slider progressBar;
 
-    //[SerializeField] private TextMeshProUGUI bronzeMedalDisplay;
-    //[SerializeField] private TextMeshProUGUI silverMedalDisplay;
-    //[SerializeField] private TextMeshProUGUI goldMedalDisplay;
-    //[SerializeField] private TextMeshProUGUI bronzeTicketDisplay;
-    //[SerializeField] private TextMeshProUGUI silverTicketDisplay;
-    //[SerializeField] private TextMeshProUGUI goldTicketDisplay;
-    //[SerializeField] private TextMeshProUGUI coinDisplay;
-    //[SerializeField] private TextMeshProUGUI selectionDescription;
-
     //[SerializeField] private Image fadePanel;
     [SerializeField] private float fadeDelay, startTime;
     [SerializeField] private AudioSource[] audioSources;

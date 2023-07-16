@@ -33,11 +33,6 @@ public class HubUIBridge : MonoBehaviour
         bronTick = uiDoc.rootVisualElement.Q<Label>("BronTick");
         infoName = uiDoc.rootVisualElement.Q<Label>("SubjectName");
         infoDescription = uiDoc.rootVisualElement.Q<Label>("SubjectDescription");
-
-        //createButton = uiDoc.rootVisualElement.Q<Button>("CreateButton");
-        //deleteButton = uiDoc.rootVisualElement.Q<Button>("DeleteButton");
-        //backButton = uiDoc.rootVisualElement.Q<Button>("ReturnButton");
-        //listItemTemplate = uiDoc.rootVisualElement.Q<VisualElement>("ListItemTemplate");
     }
 
     public enum WindowSet { FileSelect, Options, Boards, Clothes, Stats, Quit };
@@ -82,175 +77,102 @@ public class HubUIBridge : MonoBehaviour
         }
     }
 
-    public void AddListItems(SaveData[] data)
+    public void HighlightSave(int slot)
     {
-        fileList.makeItem = () =>
-        {
-            var newListEntry = listItemTemplate.Instantiate();
-            var newListEntryLogic = new FileListEntryController();
-            newListEntry.userData = newListEntryLogic;
-            newListEntryLogic.SetVisualElement(newListEntry);
-
-            return newListEntry;
-        };
-
-        fileList.bindItem = (item, index) =>
-        {
-            (item.userData as FileListEntryController).SetFileData(data[index]);
-        };
-
-        fileList.fixedItemHeight = 100;
-        fileList.itemsSource = data;
+        VisualElement slotElement = uiDoc.rootVisualElement.Q<VisualElement>("File" + slot);
+        slotElement.ToggleInClassList("highlighted");
     }
 
-    //private void Update()
-    //{
-    //    //createButton.clickable.clicked += () =>
-    //    //{
-    //    //    GetComponent<HubFileSelect>().NewFile();
-    //    //};
-    //}
+    public void UpdateSaveDisplay(SaveData[] data)
+    {
+        List<int> emptySlots = new List<int> { 0, 1, 2, 3, 4, 5 };
+        for (int i = 0; i < data.Length; i++)
+        {
+            if (data[i] != null)
+            {
+                VisualElement dataRoot = uiDoc.rootVisualElement.Q<VisualElement>("File" + data[i].saveSlot);
+                emptySlots.Remove(data[i].saveSlot);
+                dataRoot.Q<Label>("FileName").text = data[i].fileName;
+                dataRoot.Q<Label>("FileName").style.color = Color.white;
+                dataRoot.Q<Label>("CoinCount").text = data[i].coins.ToString("N0");
+                dataRoot.Q<Label>("GoldMed").text = data[i].courseGrade.Count(y => y == SaveData.CourseGrade.Gold).ToString();
+                dataRoot.Q<Label>("SilvMed").text = data[i].courseGrade.Count(y => y == SaveData.CourseGrade.Silver).ToString();
+                dataRoot.Q<Label>("BronMed").text = data[i].courseGrade.Count(y => y == SaveData.CourseGrade.Bronze).ToString();
+                dataRoot.Q<Label>("GoldTick").text = data[i].ticketGold.ToString();
+                dataRoot.Q<Label>("SilvTick").text = data[i].ticketSilver.ToString();
+                dataRoot.Q<Label>("BronTick").text = data[i].ticketBronze.ToString();
+            }
+        }
 
-    //// Update is called once per frame
-    //public void AddFiles(SaveData[] newData)
-    //{
-    //    //FileListController controller = new();
-    //    //controller.InitializeFileList(newData, uiDoc.rootVisualElement, listItemTemplate);
-    //}
+        for (int i = 0; i < emptySlots.Count; i++)
+        {
+            VisualElement dataRoot = uiDoc.rootVisualElement.Q<VisualElement>("File" + emptySlots[i]);
+            dataRoot.Q<Label>("FileName").text = "No Data";
+            dataRoot.Q<Label>("FileName").style.color = Color.gray;
+            dataRoot.Q<Label>("CoinCount").text = "0";
+            dataRoot.Q<Label>("GoldMed").text = "0";
+            dataRoot.Q<Label>("SilvMed").text = "0";
+            dataRoot.Q<Label>("BronMed").text = "0";
+            dataRoot.Q<Label>("GoldTick").text = "0";
+            dataRoot.Q<Label>("SilvTick").text = "0";
+            dataRoot.Q<Label>("BronTick").text = "0";
+
+        }
+        //fileList.makeItem = () =>
+        //{
+        //    var newListEntry = listItemTemplate.Instantiate();
+        //    var newListEntryLogic = new FileListEntryController();
+        //    newListEntry.userData = newListEntryLogic;
+        //    newListEntryLogic.SetVisualElement(newListEntry);
+
+        //    return newListEntry;
+        //};
+
+        //fileList.bindItem = (item, index) =>
+        //{
+        //    (item.userData as FileListEntryController).SetFileData(data[index]);
+        //};
+
+        //fileList.fixedItemHeight = 128;
+        //fileList.itemsSource = data;
+    }
 }
 
 public class FileListEntryController
 {
     Label nameLabel;
-
-    //This function retrieves a reference to the 
-    //character name label inside the UI element.
+    Label coinCount;
+    Label golds;
+    Label silvers;
+    Label bronzes;
+    Label goldTicks;
+    Label silverTicks;
+    Label bronzeTicks;
+    Button loadButton;
 
     public void SetVisualElement(VisualElement visualElement)
     {
         nameLabel = visualElement.Q<Label>("FileName");
+        coinCount = visualElement.Q<Label>("CoinCount");
+        golds = visualElement.Q<Label>("GoldMed");
+        silvers = visualElement.Q<Label>("SilvMed");
+        bronzes = visualElement.Q<Label>("BronMed");
+        goldTicks = visualElement.Q<Label>("GoldTick");
+        silverTicks = visualElement.Q<Label>("SilvTick");
+        bronzeTicks = visualElement.Q<Label>("BronTick");
+        loadButton = visualElement.Q<Button>("LoadButton");
     }
-
-    //This function receives the character whose name this list 
-    //element displays. Since the elements listed 
-    //in a `ListView` are pooled and reused, it's necessary to 
-    //have a `Set` function to change which character's data to display.
 
     public void SetFileData(SaveData saveData)
     {
         nameLabel.text = saveData.fileName;
+        coinCount.text = saveData.coins.ToString("N0");
+        golds.text = saveData.courseGrade.Count(y => y == SaveData.CourseGrade.Gold).ToString();
+        silvers.text = saveData.courseGrade.Count(y => y == SaveData.CourseGrade.Silver).ToString();
+        bronzes.text = saveData.courseGrade.Count(y => y == SaveData.CourseGrade.Bronze).ToString();
+        goldTicks.text = saveData.ticketGold.ToString();
+        silverTicks.text = saveData.ticketSilver.ToString();
+        bronzeTicks.text = saveData.ticketBronze.ToString();
+        //loadButton.RegisterCallback<ClickEvent>(gameObject.GetComponent<HubFileSelect>().Load(saveData.fileName);
     }
 }
-
-//public class FileListController
-//{
-//    // UXML template for list entries
-//    VisualTreeAsset listEntryTemplate;
-
-//    // UI element references
-//    ListView fileList;
-//    Label fileName;
-//    Label coinCount;
-//    Label goldMed;
-//    Label silvMed;
-//    Label bronMed;
-//    Label goldTick;
-//    Label silvTick;
-//    Label bronTick;
-//    //Label coinCount;
-
-//    List<SaveData> allFiles;
-
-//    public void InitializeFileList(SaveData[] data, VisualElement root, VisualTreeAsset template)
-//    {
-//        allFiles = new List<SaveData>();
-//        allFiles.AddRange(data);
-
-//        // Store a reference to the template for the list entries
-//        listEntryTemplate = template;
-
-//        // Store a reference to the character list element
-//        fileList = root.Q<ListView>("FileList");
-
-//        // Store references to the selected character info elements
-//        fileName = root.Q<Label>("FileName");
-//        coinCount = root.Q<Label>("CoinCount");
-//        goldMed = root.Q<Label>("GoldMed");
-//        silvMed = root.Q<Label>("SilvMed");
-//        bronMed = root.Q<Label>("BronMed");
-//        goldTick = root.Q<Label>("GoldTick");
-//        silvTick = root.Q<Label>("SilvTick");
-//        bronTick = root.Q<Label>("BronTick");
-
-//        FillFileList();
-
-//        // Register to get a callback when an item is selected
-//        fileList.onSelectionChange += OnFileSelected;
-//    }
-
-//    void FillFileList()
-//    {
-//        // Set up a make item function for a list entry
-//        fileList.makeItem = () =>
-//        {
-//            // Instantiate the UXML template for the entry
-//            var newListEntry = listEntryTemplate.Instantiate();
-
-//            // Instantiate a controller for the data
-//            var newListEntryLogic = new FileListEntryController();
-
-//            // Assign the controller script to the visual element
-//            newListEntry.userData = newListEntryLogic;
-
-//            // Initialize the controller script
-//            newListEntryLogic.SetVisualElement(newListEntry);
-
-//            // Return the root of the instantiated visual tree
-//            return newListEntry;
-//        };
-
-//        // Set up bind function for a specific list entry
-//        fileList.bindItem = (item, index) =>
-//        {
-//            (item.userData as FileListEntryController).SetFileData(allFiles[index]);
-//        };
-
-//        // Set a fixed item height
-//        fileList.fixedItemHeight = 45;
-
-//        // Set the actual item's source list/array
-//        fileList.itemsSource = allFiles;
-//    }
-
-//    void OnFileSelected(IEnumerable<object> selectedItems)
-//    {
-//        // Get the currently selected item directly from the ListView
-//        var selectedFile = fileList.selectedItem as SaveData;
-
-//        // Handle none-selection (Escape to deselect everything)
-//        if (selectedFile == null)
-//        {
-//            // Clear
-//            fileName.text = "";
-//            coinCount.text = "";
-//            goldMed.text = "";
-//            silvMed.text = "";
-//            bronMed.text = "";
-//            goldTick.text = "";
-//            silvTick.text = "";
-//            bronTick.text = "";
-
-//            return;
-//        }
-
-//        // Fill in character details
-//        fileName.text = selectedFile.fileName;
-//        coinCount.text = selectedFile.coins.ToString();
-//        goldMed.text = selectedFile.courseGrade.Count(y => y == SaveData.CourseGrade.Gold).ToString();
-//        silvMed.text = selectedFile.courseGrade.Count(y => y == SaveData.CourseGrade.Silver).ToString();
-//        bronMed.text = selectedFile.courseGrade.Count(y => y == SaveData.CourseGrade.Bronze).ToString();
-//        goldTick.text = selectedFile.ticketGold.ToString();
-//        silvTick.text = selectedFile.ticketSilver.ToString();
-//        bronTick.text = selectedFile.ticketBronze.ToString();
-//    }
-//}

@@ -1,37 +1,43 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/ListItem.uss?fileID=7433441132597879392&amp;guid=5f6a7b8852f489742b7a7cf2590c4e46&amp;type=3#ListItem" />
-    <ui:VisualElement style="flex-direction: row;">
-        <ui:VisualElement class="container" style="min-width: 100px; justify-content: space-around; align-self: stretch;">
-            <ui:Label tabindex="-1" text="File Name Here" display-tooltip-when-elided="true" name="FileName" style="margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; color: rgb(255, 255, 255); max-height: 50%; text-shadow: 1px 1px 1px rgb(0, 0, 0); -unity-font-style: normal;" />
-            <ui:Button text="Load File" display-tooltip-when-elided="true" name="LoadButton" style="margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; max-height: 50%;" />
+    <ui:VisualElement style="flex-direction: row; border-bottom-color: rgb(255, 255, 255); flex-shrink: 0; align-items: center; width: 768px; height: 128px; -unity-text-align: middle-center; align-self: center;">
+        <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-shrink: 0; width: 320px;">
+            <ui:Label tabindex="-1" text="File Name Here" display-tooltip-when-elided="true" name="FileName" style="margin-left: 4px; margin-right: 4px; margin-top: 4px; margin-bottom: 4px; -unity-text-align: middle-left; color: rgb(255, 255, 255); text-shadow: 1px 1px 1px rgb(0, 0, 0); -unity-font-style: normal; font-size: 40px; flex-grow: 0; padding-left: 4px; padding-right: 4px; padding-top: 4px; padding-bottom: 4px;" />
+            <ui:VisualElement class="container" style="width: 256px; height: 48px; flex-grow: 0;">
+                <ui:VisualElement name="VisualElement" class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
+                <ui:Label tabindex="-1" text="000,000,000" display-tooltip-when-elided="true" name="CoinCount" class="big-label" />
+            </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement class="container">
-            <ui:VisualElement name="VisualElement" class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
-            <ui:Label tabindex="-1" text="00000" display-tooltip-when-elided="true" name="CoinCount" class="big-label" />
+        <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; flex-shrink: 0; margin-left: 4px; margin-right: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 4px; padding-right: 4px; padding-top: 4px; padding-bottom: 4px; width: 320px;">
+            <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-grow: 1;">
+                <ui:VisualElement class="container" style="justify-content: space-between;">
+                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=1699839288339780594&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Gold&apos;);" />
+                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="GoldMed" class="big-label" />
+                </ui:VisualElement>
+                <ui:VisualElement class="container">
+                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-8474832591409494553&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Silver&apos;);" />
+                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="SilvMed" class="big-label" />
+                </ui:VisualElement>
+                <ui:VisualElement class="container">
+                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-4620241418024215519&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Bronze&apos;);" />
+                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="BronMed" class="big-label" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-shrink: 0; flex-grow: 1;">
+                <ui:VisualElement class="container">
+                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=8666489091475795074&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Gold&apos;);" />
+                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="GoldTick" class="big-label" />
+                </ui:VisualElement>
+                <ui:VisualElement class="container">
+                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-3164523743744658198&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Silver&apos;);" />
+                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="SilvTick" class="big-label" />
+                </ui:VisualElement>
+                <ui:VisualElement class="container">
+                    <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-5845418450148110829&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Bronze&apos;);" />
+                    <ui:Label tabindex="-1" text="00" display-tooltip-when-elided="true" name="BronTick" class="big-label" />
+                </ui:VisualElement>
+            </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement class="container">
-            <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=1699839288339780594&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Gold&apos;);" />
-            <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="GoldMed" class="big-label" />
-        </ui:VisualElement>
-        <ui:VisualElement class="container">
-            <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-8474832591409494553&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Silver&apos;);" />
-            <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="SilvMed" class="big-label" />
-        </ui:VisualElement>
-        <ui:VisualElement class="container">
-            <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=-4620241418024215519&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_Bronze&apos;);" />
-            <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="BronMed" class="big-label" />
-        </ui:VisualElement>
-        <ui:VisualElement class="container">
-            <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=8666489091475795074&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Gold&apos;);" />
-            <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="GoldTick" class="big-label" />
-        </ui:VisualElement>
-        <ui:VisualElement class="container">
-            <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-3164523743744658198&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Silver&apos;);" />
-            <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="SilvTick" class="big-label" />
-        </ui:VisualElement>
-        <ui:VisualElement class="container">
-            <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=-5845418450148110829&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Ticket_Bronze&apos;);" />
-            <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="BronTick" class="big-label" />
-        </ui:VisualElement>
+        <ui:Button text="Load File" display-tooltip-when-elided="true" name="LoadButton" style="font-size: 25px; -unity-font-definition: url(&apos;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans%20SDF%201.asset?fileID=11400000&amp;guid=fafd0aad09833434aa190a407109affa&amp;type=2#LiberationSans SDF 1&apos;); margin-left: 4px; margin-right: 4px; margin-top: 4px; margin-bottom: 4px; padding-left: 4px; padding-right: 4px; padding-top: 4px; padding-bottom: 4px;" />
     </ui:VisualElement>
 </ui:UXML>
