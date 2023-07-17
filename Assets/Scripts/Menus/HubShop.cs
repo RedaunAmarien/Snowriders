@@ -10,26 +10,28 @@ using System.Linq;
 public class HubShop : MonoBehaviour
 {
     [SerializeField] bool isActive;
-    [Tooltip("0 = Name, 1 = Speed, 2 = Turn, 3 = Jump, 4 = Flavor")]
-    public Text[] boardInfoText;
-    [Tooltip("0 = Coin, 1 = Bronze, 2 = Silver, 3 = Gold")]
-    public Text[] costs, funds;
+    //[Tooltip("0 = Name, 1 = Speed, 2 = Turn, 3 = Jump, 4 = Flavor")]
+    //public Text[] boardInfoText;
+    //[Tooltip("0 = Coin, 1 = Bronze, 2 = Silver, 3 = Gold")]
+    //public Text[] costs, funds;
     public int currentChoice;
     //public GameObject loadSet, warnSet, soldOutSign;
     public GameObject lazySusan;
     public Board[] specialBoards;
     public Board[] basicBoards;
-    public Slider progressBar;
+    //public Slider progressBar;
     bool stickMove;
     SaveData reloadData;
     //public Image fadePanel;
-    bool fadingIn, fadingOut;
-    public float fadeDelay, startTime;
+    //bool fadingIn, fadingOut;
+    //public float fadeDelay, startTime;
     HubUIBridge uiBridge;
+    bool activatedThisFrame;
 
     public void Activate()
     {
         isActive = true;
+        activatedThisFrame = true;
         uiBridge = GetComponent<HubUIBridge>();
         currentChoice = 4;
         basicBoards = Resources.LoadAll<Board>("Objects/Boards/Basic");
@@ -38,7 +40,7 @@ public class HubShop : MonoBehaviour
         specialBoards = specialBoards.OrderBy(x => x.shopIndex).ToArray();
 
         //fadePanel.gameObject.SetActive(true);
-        StartCoroutine(Fade(true));
+        //StartCoroutine(Fade(true));
     }
 
     void Update()
@@ -48,57 +50,80 @@ public class HubShop : MonoBehaviour
 
         //lazySusan.transform.SetPositionAndRotation(lazySusan.transform.position, Quaternion.Euler(0, currentChoice * 36f, 0));
 
-        string currentBoardDescription = string.Format("Sp: {0} Tn: {1} Jp: {2}\n{3}", specialBoards[currentChoice].speed, specialBoards[currentChoice].turn, specialBoards[currentChoice].jump, specialBoards[currentChoice].description);
+        string currentBoardDescription = string.Format("Speed: {0} Control: {1} Jump: {2}\n{3}", specialBoards[currentChoice].speed, specialBoards[currentChoice].turn, specialBoards[currentChoice].jump, specialBoards[currentChoice].description);
 
         uiBridge.infoName.text = specialBoards[currentChoice].name;
         uiBridge.infoDescription.text = currentBoardDescription;
 
-        if (GameRam.ownedBoards.Contains(specialBoards[currentChoice]))
+        if (GameRam.currentSaveFile.ownedBoardID.Contains(specialBoards[currentChoice].boardID))
         {
-            for (int i = 0; i < 4; i++)
-            {
-                boardInfoText[i].color = Color.gray;
-            }
-            //soldOutSign.SetActive(true);
+            uiBridge.infoName.style.color = Color.gray;
+            uiBridge.coinCount.text = string.Format(
+                "{0} <color=#aaaaaa>- {1}",
+                GameRam.currentSaveFile.coins.ToString("N0"),
+                specialBoards[currentChoice].boardCost.coins.ToString("N0"));
+            uiBridge.goldTick.text = string.Format(
+                "{0} <color=#aaaaaa>- {1}",
+                GameRam.currentSaveFile.ticketGold.ToString("N0"),
+                specialBoards[currentChoice].boardCost.goldTickets.ToString("N0"));
+            uiBridge.silvTick.text = string.Format(
+                "{0} <color=#aaaaaa>- {1}",
+                GameRam.currentSaveFile.ticketSilver.ToString("N0"),
+                specialBoards[currentChoice].boardCost.silverTickets.ToString("N0"));
+            uiBridge.bronTick.text = string.Format(
+                "{0} <color=#aaaaaa>- {1}",
+                GameRam.currentSaveFile.ticketBronze.ToString("N0"),
+                specialBoards[currentChoice].boardCost.bronzeTickets.ToString("N0"));
         }
         else
         {
-            costs[0].text = GameRam.allBoards[currentChoice].boardCost.coins.ToString("N0");
-            costs[1].text = GameRam.allBoards[currentChoice].boardCost.bronzeTickets.ToString();
-            costs[2].text = GameRam.allBoards[currentChoice].boardCost.silverTickets.ToString();
-            costs[3].text = GameRam.allBoards[currentChoice].boardCost.goldTickets.ToString();
-            for (int i = 0; i < 4; i++)
-            {
-                boardInfoText[i].color = Color.white;
-            }
-            //soldOutSign.SetActive(false);
+            uiBridge.infoName.style.color = Color.white;
+            uiBridge.coinCount.text = string.Format(
+                "{0} {2}- {1}",
+                GameRam.currentSaveFile.coins.ToString("N0"),
+                specialBoards[currentChoice].boardCost.coins.ToString("N0"),
+                specialBoards[currentChoice].boardCost.coins <= GameRam.currentSaveFile.coins ? "<color=green>" : "<color=red>");
+            uiBridge.goldTick.text = string.Format(
+                "{0} {2}- {1}",
+                GameRam.currentSaveFile.ticketGold,
+                specialBoards[currentChoice].boardCost.goldTickets,
+                specialBoards[currentChoice].boardCost.goldTickets <= GameRam.currentSaveFile.ticketGold ? "<color=green>" : "<color=red>");
+            uiBridge.silvTick.text = string.Format(
+                "{0} {2}- {1}",
+                GameRam.currentSaveFile.ticketSilver,
+                specialBoards[currentChoice].boardCost.silverTickets,
+                specialBoards[currentChoice].boardCost.silverTickets <= GameRam.currentSaveFile.ticketSilver ? "<color=green>" : "<color=red>");
+            uiBridge.bronTick.text = string.Format(
+                "{0} {2}- {1}",
+                GameRam.currentSaveFile.ticketBronze,
+                specialBoards[currentChoice].boardCost.bronzeTickets,
+                specialBoards[currentChoice].boardCost.bronzeTickets <= GameRam.currentSaveFile.ticketBronze ? "<color=green>" : "<color=red>");
         }
     }
 
-    void LateUpdate()
-    {
-        if (fadingIn)
-        {
-            float t = (Time.time - startTime) / fadeDelay;
-            //fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(1f, 0f, t));
-        }
-        else if (fadingOut)
-        {
-            float t = (Time.time - startTime) / fadeDelay;
-            //fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(0f, 1f, t));
-        }
-
-    }
     public void OnCancel()
     {
         GetComponent<HubTownControls>().Reactivate();
+        uiBridge.infoName.style.color = Color.white;
+        uiBridge.coinCount.text = GameRam.currentSaveFile.coins.ToString("N0");
+        uiBridge.goldTick.text = GameRam.currentSaveFile.ticketGold.ToString();
+        uiBridge.silvTick.text = GameRam.currentSaveFile.ticketSilver.ToString();
+        uiBridge.bronTick.text = GameRam.currentSaveFile.ticketBronze.ToString();
         isActive = false;
     }
 
     public void OnSubmit()
     {
-        if (!isActive) return;
-        ItemCost board = GameRam.allBoards[currentChoice].boardCost;
+        if (!isActive)
+            return;
+
+        if (activatedThisFrame)
+        {
+            activatedThisFrame = false;
+            return;
+        }
+
+        ItemCost board = specialBoards[currentChoice].boardCost;
         SaveData save = GameRam.currentSaveFile;
         if (board.coins > save.coins
             || board.bronzeTickets > save.ticketBronze
@@ -107,13 +132,13 @@ public class HubShop : MonoBehaviour
         {
             // Not Enough.
         }
-        else if (GameRam.ownedBoards.Contains(GameRam.allBoards[currentChoice]))
+        else if (GameRam.currentSaveFile.ownedBoardID.Contains(specialBoards[currentChoice].boardID))
         {
             // Already Owned.
         }
         else
         {
-            GameRam.currentSaveFile.ownedBoardID.Add(GameRam.allBoards[currentChoice].boardID);
+            GameRam.currentSaveFile.ownedBoardID.Add(specialBoards[currentChoice].boardID);
             GameRam.currentSaveFile.coins -= board.coins;
             GameRam.currentSaveFile.ticketBronze -= board.bronzeTickets;
             GameRam.currentSaveFile.ticketSilver -= board.silverTickets;
@@ -135,11 +160,6 @@ public class HubShop : MonoBehaviour
         }
     }
 
-    //public void OnCancel()
-    //{
-    //    StartCoroutine(Fade(false));
-    //}
-
     public void OnNavigate(InputValue val)
     {
         var v = val.Get<Vector2>();
@@ -147,16 +167,17 @@ public class HubShop : MonoBehaviour
         if (v.x > .5f && !stickMove)
         {
             currentChoice++;
-            if (currentChoice > GameRam.allBoards.Count - 1) currentChoice = 4;
+            if (currentChoice > specialBoards.Length - 1) currentChoice = 0;
             stickMove = true;
         }
         else if (v.x < -.5f && !stickMove)
         {
             currentChoice--;
-            if (currentChoice < 4) currentChoice = GameRam.allBoards.Count - 1;
+            if (currentChoice < 0) currentChoice = specialBoards.Length - 1;
             stickMove = true;
         }
-        else if (v.x > -.5f && v.x < .5f) stickMove = false;
+        else if (v.x > -.5f && v.x < .5f)
+            stickMove = false;
     }
 
     IEnumerator LoadScene(string sceneToLoad)
@@ -169,17 +190,17 @@ public class HubShop : MonoBehaviour
         }
     }
 
-    public IEnumerator Fade(bool i)
-    {
-        if (i) fadingIn = true;
-        else fadingOut = true;
-        startTime = Time.time;
-        yield return new WaitForSeconds(fadeDelay);
-        if (i) fadingIn = false;
-        else
-        {
-            fadingOut = false;
-            StartCoroutine(LoadScene("HubTown"));
-        }
-    }
+    //public IEnumerator Fade(bool i)
+    //{
+    //    if (i) fadingIn = true;
+    //    else fadingOut = true;
+    //    startTime = Time.time;
+    //    yield return new WaitForSeconds(fadeDelay);
+    //    if (i) fadingIn = false;
+    //    else
+    //    {
+    //        fadingOut = false;
+    //        StartCoroutine(LoadScene("HubTown"));
+    //    }
+    //}
 }

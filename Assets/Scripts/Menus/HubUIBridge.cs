@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 public class HubUIBridge : MonoBehaviour
 {
     public VisualElement fileSelectRoot;
+    public VisualElement loadedFileRoot;
     public UIDocument uiDoc;
     public Button createButton;
     public Button deleteButton;
@@ -17,22 +18,27 @@ public class HubUIBridge : MonoBehaviour
     public Label fileName, coinCount, goldMed, silvMed, bronMed, goldTick, silvTick, bronTick;
     public Label infoName;
     public Label infoDescription;
+    TextField newNameField;
+    int newFileSlot;
 
-    void Start()
+    void Awake()
     {
         //File References
         fileSelectRoot = uiDoc.rootVisualElement.Q<VisualElement>("FileSelect");
+        loadedFileRoot = uiDoc.rootVisualElement.Q<VisualElement>("Stats");
         fileList = uiDoc.rootVisualElement.Q<ListView>("FileList");
-        fileName = uiDoc.rootVisualElement.Q<Label>("FileName");
-        coinCount = uiDoc.rootVisualElement.Q<Label>("CoinCount");
-        goldMed = uiDoc.rootVisualElement.Q<Label>("GoldMed");
-        silvMed = uiDoc.rootVisualElement.Q<Label>("SilvMed");
-        bronMed = uiDoc.rootVisualElement.Q<Label>("BronMed");
-        goldTick = uiDoc.rootVisualElement.Q<Label>("GoldTick");
-        silvTick = uiDoc.rootVisualElement.Q<Label>("SilvTick");
-        bronTick = uiDoc.rootVisualElement.Q<Label>("BronTick");
         infoName = uiDoc.rootVisualElement.Q<Label>("SubjectName");
         infoDescription = uiDoc.rootVisualElement.Q<Label>("SubjectDescription");
+
+        //Current File Stats
+        fileName = loadedFileRoot.Q<Label>("FileName");
+        coinCount = loadedFileRoot.Q<Label>("CoinCount");
+        goldMed = loadedFileRoot.Q<Label>("GoldMed");
+        silvMed = loadedFileRoot.Q<Label>("SilvMed");
+        bronMed = loadedFileRoot.Q<Label>("BronMed");
+        goldTick = loadedFileRoot.Q<Label>("GoldTick");
+        silvTick = loadedFileRoot.Q<Label>("SilvTick");
+        bronTick = loadedFileRoot.Q<Label>("BronTick");
     }
 
     public enum WindowSet { FileSelect, Options, Boards, Clothes, Stats, Quit };
@@ -116,63 +122,55 @@ public class HubUIBridge : MonoBehaviour
             dataRoot.Q<Label>("GoldTick").text = "0";
             dataRoot.Q<Label>("SilvTick").text = "0";
             dataRoot.Q<Label>("BronTick").text = "0";
-
         }
-        //fileList.makeItem = () =>
-        //{
-        //    var newListEntry = listItemTemplate.Instantiate();
-        //    var newListEntryLogic = new FileListEntryController();
-        //    newListEntry.userData = newListEntryLogic;
-        //    newListEntryLogic.SetVisualElement(newListEntry);
-
-        //    return newListEntry;
-        //};
-
-        //fileList.bindItem = (item, index) =>
-        //{
-        //    (item.userData as FileListEntryController).SetFileData(data[index]);
-        //};
-
-        //fileList.fixedItemHeight = 128;
-        //fileList.itemsSource = data;
-    }
-}
-
-public class FileListEntryController
-{
-    Label nameLabel;
-    Label coinCount;
-    Label golds;
-    Label silvers;
-    Label bronzes;
-    Label goldTicks;
-    Label silverTicks;
-    Label bronzeTicks;
-    Button loadButton;
-
-    public void SetVisualElement(VisualElement visualElement)
-    {
-        nameLabel = visualElement.Q<Label>("FileName");
-        coinCount = visualElement.Q<Label>("CoinCount");
-        golds = visualElement.Q<Label>("GoldMed");
-        silvers = visualElement.Q<Label>("SilvMed");
-        bronzes = visualElement.Q<Label>("BronMed");
-        goldTicks = visualElement.Q<Label>("GoldTick");
-        silverTicks = visualElement.Q<Label>("SilvTick");
-        bronzeTicks = visualElement.Q<Label>("BronTick");
-        loadButton = visualElement.Q<Button>("LoadButton");
     }
 
-    public void SetFileData(SaveData saveData)
+    public void UpdateFileDisplay()
     {
-        nameLabel.text = saveData.fileName;
-        coinCount.text = saveData.coins.ToString("N0");
-        golds.text = saveData.courseGrade.Count(y => y == SaveData.CourseGrade.Gold).ToString();
-        silvers.text = saveData.courseGrade.Count(y => y == SaveData.CourseGrade.Silver).ToString();
-        bronzes.text = saveData.courseGrade.Count(y => y == SaveData.CourseGrade.Bronze).ToString();
-        goldTicks.text = saveData.ticketGold.ToString();
-        silverTicks.text = saveData.ticketSilver.ToString();
-        bronzeTicks.text = saveData.ticketBronze.ToString();
-        //loadButton.RegisterCallback<ClickEvent>(gameObject.GetComponent<HubFileSelect>().Load(saveData.fileName);
+        //Fill in UI elements from save data.
+        int bronzeMedals = 0;
+        int silverMedals = 0;
+        int goldMedals = 0;
+        for (int c = 0; c < GameRam.currentSaveFile.courseGrade.Length; c++)
+        {
+            if (GameRam.currentSaveFile.courseGrade[c] == SaveData.CourseGrade.Bronze) bronzeMedals++;
+            if (GameRam.currentSaveFile.courseGrade[c] == SaveData.CourseGrade.Silver) silverMedals++;
+            if (GameRam.currentSaveFile.courseGrade[c] == SaveData.CourseGrade.Gold) goldMedals++;
+        }
+        fileName.text = GameRam.currentSaveFile.fileName;
+        bronMed.text = bronzeMedals.ToString();
+        silvMed.text = silverMedals.ToString();
+        goldMed.text = goldMedals.ToString();
+        bronTick.text = GameRam.currentSaveFile.ticketBronze.ToString();
+        silvTick.text = GameRam.currentSaveFile.ticketSilver.ToString();
+        goldTick.text = GameRam.currentSaveFile.ticketGold.ToString();
+        coinCount.text = GameRam.currentSaveFile.coins.ToString("N0");
+    }
+
+    public void CreateNewFile(int slot)
+    {
+        newFileSlot = slot;
+        VisualElement dataRoot = uiDoc.rootVisualElement.Q<VisualElement>("File" + slot);
+        dataRoot.Q<Label>("FileName").text = "";
+        dataRoot.Q<Label>("FileName").ToggleInClassList("hidden");
+        newNameField = dataRoot.Q<TextField>("NewName");
+        newNameField.Focus();
+        dataRoot.Q<VisualElement>("NamingRoot").ToggleInClassList("hidden");
+        dataRoot.Q<Button>("SubmitName").clickable.clicked += OnButtonClicked;
+    }
+
+    void OnButtonClicked()
+    {
+        if (newNameField.value == "")
+        {
+            Debug.Log("Name cannot be blank.");
+            return;
+        }
+        VisualElement dataRoot = uiDoc.rootVisualElement.Q<VisualElement>("File" + newFileSlot);
+        dataRoot.Q<Label>("FileName").text = newNameField.value;
+        dataRoot.Q<Label>("FileName").ToggleInClassList("hidden");
+        newNameField = dataRoot.Q<TextField>("NewName");
+        dataRoot.Q<VisualElement>("NamingRoot").ToggleInClassList("hidden");
+        GetComponent<HubFileSelect>().NameNewSave(newNameField.text);
     }
 }

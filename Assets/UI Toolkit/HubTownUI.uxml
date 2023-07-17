@@ -5,7 +5,11 @@
             <ui:VisualElement name="FileSelect" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.33); transition-property: translate; transition-duration: 0.75s; transition-timing-function: ease-in-out; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 0; translate: 0 -800px; justify-content: center;">
                 <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center;">
                     <ui:VisualElement name="File0" class="file-box">
-                        <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
+                        <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="-unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center; font-size: 40px; transition-duration: 0.5s; transition-timing-function: ease-in-out;" />
+                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1; transition-duration: 0.5s; transition-timing-function: ease-in-out;">
+                            <ui:TextField picking-mode="Ignore" value="File Name..." max-length="20" name="NewName" style="font-size: 25px; transition-duration: 0.5s; transition-timing-function: ease-in-out;" />
+                            <ui:Button text="Create File" display-tooltip-when-elided="true" name="SubmitName" />
+                        </ui:VisualElement>
                         <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center;">
                             <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
                             <ui:Label tabindex="-1" text="000,000,000" display-tooltip-when-elided="true" name="CoinCount" class="medalLabel" />
@@ -43,6 +47,10 @@
                     </ui:VisualElement>
                     <ui:VisualElement name="File1" class="file-box">
                         <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
+                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1; transition-duration: 0.5s; transition-timing-function: ease-in-out;">
+                            <ui:TextField picking-mode="Ignore" value="File Name..." max-length="20" name="NewName" style="font-size: 25px; transition-duration: 0.5s; transition-timing-function: ease-in-out;" />
+                            <ui:Button text="Create File" display-tooltip-when-elided="true" name="SubmitName" />
+                        </ui:VisualElement>
                         <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center;">
                             <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
                             <ui:Label tabindex="-1" text="000,000,000" display-tooltip-when-elided="true" name="CoinCount" class="medalLabel" />
@@ -80,6 +88,10 @@
                     </ui:VisualElement>
                     <ui:VisualElement name="File2" class="file-box">
                         <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
+                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1; transition-duration: 0.5s; transition-timing-function: ease-in-out;">
+                            <ui:TextField picking-mode="Ignore" value="File Name..." max-length="20" name="NewName" style="font-size: 25px; transition-duration: 0.5s; transition-timing-function: ease-in-out;" />
+                            <ui:Button text="Create File" display-tooltip-when-elided="true" name="SubmitName" />
+                        </ui:VisualElement>
                         <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center;">
                             <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
                             <ui:Label tabindex="-1" text="000,000,000" display-tooltip-when-elided="true" name="CoinCount" class="medalLabel" />
@@ -119,6 +131,10 @@
                 <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center;">
                     <ui:VisualElement name="File3" class="file-box">
                         <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
+                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1; transition-duration: 0.5s; transition-timing-function: ease-in-out;">
+                            <ui:TextField picking-mode="Ignore" value="File Name..." max-length="20" name="NewName" style="font-size: 25px; transition-duration: 0.5s; transition-timing-function: ease-in-out;" />
+                            <ui:Button text="Create File" display-tooltip-when-elided="true" name="SubmitName" />
+                        </ui:VisualElement>
                         <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center;">
                             <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
                             <ui:Label tabindex="-1" text="000,000,000" display-tooltip-when-elided="true" name="CoinCount" class="medalLabel" />
@@ -156,6 +172,10 @@
                     </ui:VisualElement>
                     <ui:VisualElement name="File4" class="file-box">
                         <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
+                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1; transition-duration: 0.5s; transition-timing-function: ease-in-out;">
+                            <ui:TextField picking-mode="Ignore" value="File Name..." max-length="20" name="NewName" style="font-size: 25px; transition-duration: 0.5s; transition-timing-function: ease-in-out;" />
+                            <ui:Button text="Create File" display-tooltip-when-elided="true" name="SubmitName" />
+                        </ui:VisualElement>
                         <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center;">
                             <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
                             <ui:Label tabindex="-1" text="000,000,000" display-tooltip-when-elided="true" name="CoinCount" class="medalLabel" />
@@ -193,6 +213,10 @@
                     </ui:VisualElement>
                     <ui:VisualElement name="File5" class="file-box">
                         <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
+                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1; transition-duration: 0.5s; transition-timing-function: ease-in-out;">
+                            <ui:TextField picking-mode="Ignore" value="File Name..." max-length="20" name="NewName" style="font-size: 25px; transition-duration: 0.5s; transition-timing-function: ease-in-out;" />
+                            <ui:Button text="Create File" display-tooltip-when-elided="true" name="SubmitName" />
+                        </ui:VisualElement>
                         <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center; justify-content: center; align-self: center;">
                             <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
                             <ui:Label tabindex="-1" text="000,000,000" display-tooltip-when-elided="true" name="CoinCount" class="medalLabel" />
@@ -233,7 +257,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="Bottom" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; flex-shrink: 0;">
             <ui:VisualElement name="Stats" style="background-color: rgba(0, 0, 0, 0.33); width: 20%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px;">
-                <ui:Label tabindex="-1" text="No File Loaded!" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; border-bottom-color: rgb(255, 255, 255); border-bottom-width: 2px; -unity-text-align: middle-center;" />
+                <ui:Label tabindex="-1" text="No File Loaded" display-tooltip-when-elided="true" name="FileName" style="font-size: 34px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; border-bottom-color: rgb(255, 255, 255); border-bottom-width: 2px; -unity-text-align: middle-center;" />
                 <ui:VisualElement name="Coins" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: center;">
                     <ui:VisualElement class="sprite" style="background-image: url(&apos;project://database/Assets/Sprites/Tickets.png?fileID=6590781481942402270&amp;guid=14ee7f97c88bdd8478111416267bf66c&amp;type=3#Coin&apos;);" />
                     <ui:Label tabindex="-1" text="0" display-tooltip-when-elided="true" name="CoinCount" class="medalLabel" />

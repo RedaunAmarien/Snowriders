@@ -34,48 +34,34 @@ public class HubTownControls : MonoBehaviour
 
     void Start()
     {
-        //fadePanel.gameObject.SetActive(true);
-        //StartCoroutine(Fade(true, null));
-        //GameObject.Find("StartCam").GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority = 0;
-
-        currentOptions = rootOptions;
-        currentOptionIndex = 0;
-        if (GameRam.currentSaveFile == null)
-        {
-            optionCode = "0";
-            currentOptions = rootOptions[0].subOptions;
-            OnSubmit();
-            return;
-        }
-        //currentOptionIndex = GameRam.lastHubSelection;
-        //rootOptions[currentOptionIndex].camera.Priority = 1;
-        //if (rootOptions[currentOptionIndex].door != null) rootOptions[currentOptionIndex].door.ActivateDoor();
-
-
         //Start audios in sync
         foreach (AudioSource audio in audioSources)
         {
             audio.Play();
+            //Debug.LogFormat("Playing audio clip {0}", audio.clip.name);
         }
 
-        //Fill in UI elements from save data.
-        int bronzeMedals = 0;
-        int silverMedals = 0;
-        int goldMedals = 0;
-        for (int i = 0; i < GameRam.currentSaveFile.courseGrade.Length; i++)
+        currentOptions = rootOptions;
+        currentOptionIndex = 0;
+
+        if (GameRam.currentSaveFile == null)
         {
-            if (GameRam.currentSaveFile.courseGrade[i] == SaveData.CourseGrade.Bronze) bronzeMedals++;
-            if (GameRam.currentSaveFile.courseGrade[i] == SaveData.CourseGrade.Silver) silverMedals++;
-            if (GameRam.currentSaveFile.courseGrade[i] == SaveData.CourseGrade.Gold) goldMedals++;
+            StartCoroutine(WaitOneFrame());
+            return;
         }
-        uiBridge.fileName.text = GameRam.currentSaveFile.fileName;
-        uiBridge.bronMed.text = bronzeMedals.ToString();
-        uiBridge.silvMed.text = silverMedals.ToString();
-        uiBridge.goldMed.text = goldMedals.ToString();
-        uiBridge.bronTick.text = GameRam.currentSaveFile.ticketBronze.ToString();
-        uiBridge.silvTick.text = GameRam.currentSaveFile.ticketSilver.ToString();
-        uiBridge.goldTick.text = GameRam.currentSaveFile.ticketGold.ToString();
-        uiBridge.coinCount.text = GameRam.currentSaveFile.coins.ToString("N0");
+
+        //currentOptionIndex = GameRam.lastHubSelection;
+        //rootOptions[currentOptionIndex].camera.Priority = 1;
+        //if (rootOptions[currentOptionIndex].door != null) rootOptions[currentOptionIndex].door.ActivateDoor();
+    }
+
+    IEnumerator WaitOneFrame()
+    {
+        yield return new WaitForEndOfFrame();
+        optionCode = "0";
+        currentOptions = rootOptions[0].subOptions;
+        OnSubmit();
+        OnSubmit();
     }
 
     void Update()
@@ -145,7 +131,6 @@ public class HubTownControls : MonoBehaviour
 
         ToggleCam(currentOptions[currentOptionIndex].camera, currentOptions[currentOptionIndex].door, false);
         optionCode = optionCode.Substring(0, optionCode.Length - 1);
-        //currentOptionTier--;
         currentOptions = rootOptions;
         for (int i = 0; i < optionCode.Length; i++)
         {

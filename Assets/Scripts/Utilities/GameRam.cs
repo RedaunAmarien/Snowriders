@@ -10,7 +10,7 @@ public static class GameRam
 {
     public static GameMode gameMode;
     public static int playerCount, maxPlayerCount, lapCount;
-    public static float masterVol, sfxVol, musicVol;
+    public static float masterVolume, sfxVol, musicVol;
     public static bool itemsOn, coinsOn;
     public static int[] controlp, charForP, boardForP;
     //public static List<CharacterData> charDataCustom = new List<CharacterData>(), charDataPermanent = new List<CharacterData>(), allCharData = new List<CharacterData>();

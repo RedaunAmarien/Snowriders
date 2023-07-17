@@ -9,40 +9,33 @@ using UnityEngine.InputSystem;
 using TMPro;
 using System.Linq;
 using UnityEditor.Animations;
+using UnityEngine.UIElements;
 
 public class HubFileSelect : MonoBehaviour
 {
     [SerializeField] bool isActive;
-    //public GameObject mainSet, loadSet, newFileSet, chooseSet, firstTimeSet, firstLoad, fileSelectDefault;
-    public TMP_InputField saveBox, deleteBox;
-    // public Text[] fileName, fileCoins, bTickCount, sTickCount, gTickCount, nonCount, bronzeMedalDisplay, silverMedalDisplay, goldMedalDisplay;
-    // public Image[] file0Medal, file1Medal, file2Medal, file0Icon, file1Icon, file2Icon;
-    public Button[] fileButton;
-    public FileButton[] fileScript;
-    public TextMeshProUGUI[] fileName;
-    public GameObject[] fileContainer;
-    // public Sprite[] medalSource;
-    public RectTransform scrollContent;
-    public Scrollbar scrollbar;
-    public GameObject filePrefab;
-    bool firstTime;
-    public Image fadePanel;
-    public bool fadingIn, fadingOut;
-    public float fadeDelay, startTime;
-    string[] names, charFileCust, charFilePerm, boardFile;
-    public SaveData[] saveData;
-    public SaveData newSaveData;
-    public string saveFileVersion;
+    [SerializeField] int selectedFile;
+    [SerializeField] int newFileNum;
+    [SerializeField] private SaveData[] saveData;
+    private SaveData newSaveData;
+    [SerializeField] string saveFileVersion;
     string savesFolder;
-    int newFileNum;
-    HubUIBridge uiBridge;
     bool navHasReset;
-    int selectedFile;
+    bool activatedThisFrame;
+    bool navLocked;
+    HubUIBridge uiBridge;
+
+    private void Start()
+    {
+        uiBridge = GetComponent<HubUIBridge>();
+        UpdateFileList();
+    }
 
     public void Activate()
     {
+        Debug.Log("Save list activated.");
         isActive = true;
-        uiBridge = GetComponent<HubUIBridge>();
+        activatedThisFrame = true;
         uiBridge.RevealWindow(HubUIBridge.WindowSet.FileSelect);
 
         // Find Save Files.
@@ -50,36 +43,13 @@ public class HubFileSelect : MonoBehaviour
         if (!Directory.Exists(savesFolder))
         {
             Directory.CreateDirectory(savesFolder);
-            firstTime = true;
+            //firstTime = true;
         }
         UpdateFileList();
         selectedFile = 0;
         uiBridge.HighlightSave(0);
         navHasReset = true;
     }
-
-    private void Update()
-    {
-        if (!isActive)
-            return;
-
-
-    }
-
-    //void Assign(int con)
-    //{
-    //    GameRam.controlp[0] = con;
-    //    GameRam.playerCount = 1;
-    //    //firstLoad.SetActive(false);
-    //    if (firstTime)
-    //    {
-    //        //firstTimeSet.SetActive(true);
-    //    }
-    //    else
-    //    {
-    //        //mainSet.SetActive(true);
-    //    }
-    //}
 
     public void OnCancel()
     {
@@ -88,39 +58,78 @@ public class HubFileSelect : MonoBehaviour
         isActive = false;
     }
 
+    public void OnSubmit()
+    {
+        if (!isActive || navLocked)
+            return;
+
+        if(activatedThisFrame)
+        {
+            activatedThisFrame = false;
+            return;
+        }
+
+        bool isNew = true;
+        for (int i = 0; i < saveData.Length; i++)
+        {
+            if (saveData[i].saveSlot == selectedFile)
+            {
+                Load(selectedFile);
+                isNew = false;
+                OnCancel();
+                break;
+            }
+        }
+
+        if (isNew)
+        {
+            NewFile();
+        }
+    }
+
     public void OnNavigate(InputValue val)
     {
-        if (!isActive)
+        if (!isActive || navLocked)
             return;
 
         Vector2 v = val.Get<Vector2>();
-        if (v == Vector2.zero)
+        if (v.magnitude < 0.5f)
         {
             navHasReset = true;
             return;
         }
 
-        uiBridge.HighlightSave(selectedFile);
+        if (!navHasReset)
+            return;
 
-        if (navHasReset && v.x > 0.5f)
+        uiBridge.HighlightSave(selectedFile);
+        if ( v.x > 0.5f)
         {
             selectedFile += 1;
-            if (selectedFile >= 6)
+            if (selectedFile == 3)
             {
                 selectedFile = 0;
             }
-            navHasReset = false;
-        }
-        if (navHasReset && v.x < -0.5f)
-        {
-            selectedFile -= 1;
-            if (selectedFile <= -1)
+            if (selectedFile >= 6)
             {
-                selectedFile = 5;
+                selectedFile = 3;
             }
             navHasReset = false;
         }
-        if (navHasReset && v.y > 0.5f)
+        if (v.x < -0.5f)
+        {
+            selectedFile -= 1;
+            if (selectedFile == 2)
+            {
+                selectedFile = 5;
+            }    
+            if (selectedFile <= -1)
+            {
+                selectedFile = 2;
+            }
+            navHasReset = false;
+        }
+        if (v.y > 0.5f)
         {
             selectedFile += 3;
             if (selectedFile >= 6)
@@ -129,7 +138,7 @@ public class HubFileSelect : MonoBehaviour
             }
             navHasReset = false;
         }
-        if (navHasReset && v.y < -0.5f)
+        if (v.y < -0.5f)
         {
             selectedFile -= 3;
             if (selectedFile <= -1)
@@ -142,17 +151,13 @@ public class HubFileSelect : MonoBehaviour
         GameRam.currentSaveSlot = selectedFile;
     }
 
-    public void OnVolumeChange(Slider slider)
-    {
-        GameRam.masterVol = slider.value;
-    }
+    //public void OnVolumeChange(Slider slider)
+    //{
+    //    GameRam.masterVolume = slider.value;
+    //}
 
     void UpdateFileList()
     {
-        //for (int i = 0; i < fileContainer.Length; i++)
-        //{
-        //    Destroy(fileContainer[i]);
-        //}
         string[] saveFiles = Directory.GetFiles(savesFolder, "*.srd");
         saveData = new SaveData[saveFiles.Length];
         Debug.LogFormat("Found {0} save files.", saveFiles.Length);
@@ -165,82 +170,70 @@ public class HubFileSelect : MonoBehaviour
                 Debug.LogErrorFormat("File {0} not read.", i);
             }
         }
-        //saveData = saveData.OrderByDescending(x => x.saveSlot).ToArray();
-
         uiBridge.UpdateSaveDisplay(saveData);
     }
 
     public void NewFile()
     {
-        //newFileSet.SetActive(true);
-        //chooseSet.SetActive(false);
+        uiBridge.CreateNewFile(selectedFile);
+        Debug.LogFormat("Creating new save file in slot {0}.", selectedFile);
+        GameRam.currentSaveFile = newSaveData;
+        navLocked = true;
     }
 
-    public void NameNewSave()
+    public void NameNewSave(string name)
     {
-        if (saveBox.text == "")
-        {
-            // Do nothing.
-        }
-        else
-        {
-            newSaveData.fileName = saveBox.text;
-            newSaveData.version = saveFileVersion;
-            newSaveData.saveSlot = selectedFile;
-            newSaveData.ownedBoardID.Add(0);
-            newSaveData.ownedBoardID.Add(3);
-            newSaveData.ownedBoardID.Add(6);
-            newSaveData.ownedBoardID.Add(9);
-            newSaveData.ticketBronze = 1;
-            newSaveData.courseGrade = new SaveData.CourseGrade[12];
-            newSaveData.lastSaved = System.DateTime.Now;
-            FileManager.SaveFile(newSaveData.fileName, newSaveData, Path.Combine(Application.persistentDataPath, "Saves"));
-            Debug.LogFormat("Created new save file \"{0}\".", newSaveData.fileName);
-            UpdateFileList();
-        }
+        Debug.LogFormat("Creating new save file \"{0}\".", name);
+        navLocked = false;
+        newSaveData = new(selectedFile, name, saveFileVersion);
+        FileManager.SaveFile(newSaveData.fileName, newSaveData, Path.Combine(Application.persistentDataPath, "Saves"));
+        Debug.LogFormat("Successfully created new save file \"{0}\".", newSaveData.fileName);
+        UpdateFileList();
+        Load(selectedFile);
+        OnCancel();
     }
 
-    public void Load(int fileIndex)
+    public void Load(int slot)
     {
-        if (saveData[fileIndex] != null)
+        SaveData dataToLoad = new();
+        foreach (SaveData data in saveData)
         {
-            GameRam.currentSaveFile = saveData[fileIndex];
-            GameRam.currentSaveDirectory = Path.Combine(savesFolder, saveData[fileIndex].fileName + ".srd");
-            // GameRam.currentSaveFile.saveSlot = fileIndex;
-            Debug.LogFormat("File \"{0}\" loaded. Last saved on {1}.", GameRam.currentSaveFile.fileName, GameRam.currentSaveFile.lastSaved);
-            if (GameRam.currentSaveFile.ownedBoardID == null) GameRam.currentSaveFile.ownedBoardID = new List<int>();
-            foreach (int pin in GameRam.currentSaveFile.ownedBoardID)
+            if (data.saveSlot == slot)
+                dataToLoad = data;
+        }
+        GameRam.currentSaveFile = dataToLoad;
+        GameRam.currentSaveDirectory = Path.Combine(savesFolder, dataToLoad.fileName + ".srd");
+        // GameRam.currentSaveFile.saveSlot = slot;
+        Debug.LogFormat("File \"{0}\" loaded. Last saved on {1}.", GameRam.currentSaveFile.fileName, GameRam.currentSaveFile.lastSaved);
+        if (GameRam.currentSaveFile.ownedBoardID == null) GameRam.currentSaveFile.ownedBoardID = new List<int>();
+        foreach (int pin in GameRam.currentSaveFile.ownedBoardID)
+        {
+            foreach (Board board in GameRam.allBoards)
             {
-                foreach (Board board in GameRam.allBoards)
+                if (board.boardID == pin)
                 {
-                    if (board.boardID == pin)
-                    {
-                        GameRam.ownedBoards.Add(board);
-                        // Debug.Log("Board " + board.name + " owned.");
-                    }
+                    GameRam.ownedBoards.Add(board);
+                    // Debug.Log("Board " + board.name + " owned.");
                 }
             }
-            GameRam.ownedBoards = GameRam.ownedBoards.OrderBy(x => x.shopIndex).ToList();
-            GameRam.currentSaveDirectory = FileManager.SaveFile(GameRam.currentSaveFile.fileName, GameRam.currentSaveFile, savesFolder);
-            Debug.LogFormat("Save directory set to {0}", GameRam.currentSaveDirectory);
-            //StartCoroutine(Fade(false));
         }
-        else
-        {
-            //newFileSet.SetActive(true);
-            //chooseSet.SetActive(false);
-            newFileNum = fileIndex;
-        }
+        GameRam.ownedBoards = GameRam.ownedBoards.OrderBy(x => x.shopIndex).ToList();
+        GameRam.currentSaveDirectory = FileManager.SaveFile(GameRam.currentSaveFile.fileName, GameRam.currentSaveFile, savesFolder);
+        Debug.LogFormat("Save directory set to {0}", GameRam.currentSaveDirectory);
+        uiBridge.UpdateFileDisplay();
+        uiBridge.HighlightSave(slot);
     }
 
-    public void DeleteFile()
-    {
-        string path = Application.persistentDataPath + "/Saves/" + deleteBox.text + ".srd";
-        bool test = FileManager.DeleteFile(path);
-        if (test) Debug.LogWarningFormat("Successfully deleted file {0}", path);
-        else Debug.LogErrorFormat("Failed to delete file at {0}", path);
-        UpdateFileList();
-    }
+    //public void DeleteFile()
+    //{
+    //    string path = Application.persistentDataPath + "/Saves/" + deleteBox.text + ".srd";
+    //    bool succeeded = FileManager.DeleteFile(path);
+    //    if (succeeded)
+    //        Debug.LogWarningFormat("Successfully deleted file {0}", path);
+    //    else
+    //        Debug.LogErrorFormat("Failed to delete file at {0}", path);
+    //    UpdateFileList();
+    //}
 
     IEnumerator LoadScene(string sceneToLoad)
     {

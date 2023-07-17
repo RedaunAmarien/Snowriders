@@ -60,3 +60,12 @@
     border-top-color: rgb(255, 255, 255);
     border-bottom-color: rgb(255, 255, 255);
 }
+
+.hidden {
+    transition-duration: 0.5s, 0.5s;
+    transition-timing-function: ease-in-out, ease-in-out;
+    display: none;
+    transition-property: display, scale;
+    scale: 1 0;
+    transition-delay: 0s, 0.5s;
+}

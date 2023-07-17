@@ -172,7 +172,7 @@ public class FileSelect : MonoBehaviour {
 
 	public void OnVolumeChange(Slider slider)
 	{
-		GameRam.masterVol = slider.value;
+		GameRam.masterVolume = slider.value;
 	}
 
 	public void NameNewSave() {

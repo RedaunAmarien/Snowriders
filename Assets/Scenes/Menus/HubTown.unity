@@ -1295,7 +1295,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 711f2ac40e8e9ac4fa563b27a9d22531, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -4045,7 +4045,6 @@ MonoBehaviour:
   rootOptions:
   - optionName: Kiosk
     optionDescription: 
-    currentChoice: 0
     camera: {fileID: 556020342}
     door: {fileID: 0}
     events:
@@ -4054,7 +4053,6 @@ MonoBehaviour:
     subOptions:
     - optionName: File Select
       optionDescription: 
-      currentChoice: 0
       camera: {fileID: 5426330023825910800}
       door: {fileID: 0}
       events:
@@ -4063,7 +4061,6 @@ MonoBehaviour:
       subOptions: []
     - optionName: Options
       optionDescription: 
-      currentChoice: 0
       camera: {fileID: 5426330024702503459}
       door: {fileID: 0}
       events:
@@ -4072,7 +4069,6 @@ MonoBehaviour:
       subOptions: []
     - optionName: Quit Game
       optionDescription: 
-      currentChoice: 0
       camera: {fileID: 556020342}
       door: {fileID: 0}
       events:
@@ -4081,7 +4077,6 @@ MonoBehaviour:
       subOptions: []
   - optionName: Race
     optionDescription: 
-    currentChoice: 0
     camera: {fileID: 1988853516}
     door: {fileID: 0}
     events:
@@ -4090,7 +4085,6 @@ MonoBehaviour:
     subOptions:
     - optionName: Story
       optionDescription: 
-      currentChoice: 0
       camera: {fileID: 5426330024510313438}
       door: {fileID: 0}
       events:
@@ -4099,7 +4093,6 @@ MonoBehaviour:
       subOptions: []
     - optionName: Battle
       optionDescription: 
-      currentChoice: 0
       camera: {fileID: 464086545187897919}
       door: {fileID: 0}
       events:
@@ -4108,7 +4101,6 @@ MonoBehaviour:
       subOptions: []
     - optionName: Online
       optionDescription: 
-      currentChoice: 0
       camera: {fileID: 5426330024737272659}
       door: {fileID: 0}
       events:
@@ -4117,7 +4109,6 @@ MonoBehaviour:
       subOptions: []
     - optionName: Challenge
       optionDescription: 
-      currentChoice: 0
       camera: {fileID: 5426330023524561285}
       door: {fileID: 0}
       events:
@@ -4126,7 +4117,6 @@ MonoBehaviour:
       subOptions: []
   - optionName: Mall
     optionDescription: 
-    currentChoice: 0
     camera: {fileID: 1328142229}
     door: {fileID: 0}
     events:
@@ -4135,7 +4125,6 @@ MonoBehaviour:
     subOptions:
     - optionName: Board Shop
       optionDescription: 
-      currentChoice: 0
       camera: {fileID: 1716682205}
       door: {fileID: 0}
       events:
@@ -4144,7 +4133,6 @@ MonoBehaviour:
       subOptions:
       - optionName: Upgrade
         optionDescription: 
-        currentChoice: 0
         camera: {fileID: 0}
         door: {fileID: 0}
         events:
@@ -4153,7 +4141,6 @@ MonoBehaviour:
         subOptions: []
       - optionName: Buy
         optionDescription: 
-        currentChoice: 0
         camera: {fileID: 0}
         door: {fileID: 0}
         events:
@@ -4162,7 +4149,6 @@ MonoBehaviour:
         subOptions: []
     - optionName: Salon
       optionDescription: 
-      currentChoice: 0
       camera: {fileID: 5426330025418869185}
       door: {fileID: 0}
       events:
@@ -4171,7 +4157,6 @@ MonoBehaviour:
       subOptions: []
     - optionName: Gift Shop
       optionDescription: 
-      currentChoice: 0
       camera: {fileID: 5426330024698680646}
       door: {fileID: 0}
       events:
@@ -4191,6 +4176,7 @@ MonoBehaviour:
   - {fileID: 8304587732543429882}
   - {fileID: 8304587732992950040}
   - {fileID: 8304587732539089823}
+  - {fileID: 749772562}
   uiBridge: {fileID: 1010885145}
 --- !u!114 &1010885141
 MonoBehaviour:
@@ -4252,35 +4238,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  saveBox: {fileID: 0}
-  deleteBox: {fileID: 0}
-  fileButton: []
-  fileScript: []
-  fileName: []
-  fileContainer: []
-  scrollContent: {fileID: 0}
-  scrollbar: {fileID: 0}
-  filePrefab: {fileID: 0}
-  fadePanel: {fileID: 0}
-  fadingIn: 0
-  fadingOut: 0
-  fadeDelay: 0
-  startTime: 0
-  saveData: []
-  newSaveData:
-    fileName: 
-    version: 
-    saveSlot: 0
-    coins: 0
-    completedChallenge: 
-    ticketBronze: 0
-    ticketSilver: 0
-    ticketGold: 0
-    courseGrade: 
-    ownedBoardID: 
-    ownedItemID: 
-    storyStarted: 0
-  saveFileVersion: 
+  selectedFile: 0
+  newFileNum: 0
+  saveFileVersion: 2
 --- !u!114 &1010885145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12500,7 +12460,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: d6dc71b1581deb646850e7dbbcd0334e, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.75
+  m_Volume: 0.65
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -14900,7 +14860,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 99e9841786a6ea7468341170b33f8826, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.75
+  m_Volume: 0.65
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -14996,7 +14956,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c699d393a4407c644b5512191d328830, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.75
+  m_Volume: 0.65
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -15188,7 +15148,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c6f2dbfa0e2724b469e57d0ef10d98f2, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.75
+  m_Volume: 0.65
   m_Pitch: 1
   Loop: 1
   Mute: 0
