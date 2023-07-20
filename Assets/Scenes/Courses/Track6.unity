@@ -2852,6 +2852,12 @@ PrefabInstance:
       objectReference: {fileID: 541887702}
     - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
         type: 3}
+      propertyPath: courseInfo
+      value: 
+      objectReference: {fileID: 11400000, guid: df21b787a92e61e418c7f6dde7f40bf5,
+        type: 2}
+    - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
+        type: 3}
       propertyPath: courseName
       value: Steep Cliff
       objectReference: {fileID: 0}

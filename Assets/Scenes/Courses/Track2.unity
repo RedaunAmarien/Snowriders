@@ -3591,6 +3591,12 @@ PrefabInstance:
       objectReference: {fileID: 1170281355}
     - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
         type: 3}
+      propertyPath: courseInfo
+      value: 
+      objectReference: {fileID: 11400000, guid: 09f11cae74b3f3c49ad9cb44c45bc37a,
+        type: 2}
+    - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
+        type: 3}
       propertyPath: courseName
       value: City Block
       objectReference: {fileID: 0}

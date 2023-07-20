@@ -7524,6 +7524,12 @@ PrefabInstance:
       objectReference: {fileID: 502659762}
     - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
         type: 3}
+      propertyPath: courseInfo
+      value: 
+      objectReference: {fileID: 11400000, guid: d0bd9cc265111f848b6cd7e4c46e9545,
+        type: 2}
+    - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
+        type: 3}
       propertyPath: courseName
       value: Crystal Lake
       objectReference: {fileID: 0}

@@ -1732,6 +1732,12 @@ PrefabInstance:
       objectReference: {fileID: 2070519469}
     - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
         type: 3}
+      propertyPath: courseInfo
+      value: 
+      objectReference: {fileID: 11400000, guid: 91c734451dc209147b677da429ba3b1e,
+        type: 2}
+    - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
+        type: 3}
       propertyPath: courseName
       value: Speed Slope
       objectReference: {fileID: 0}
@@ -1769,7 +1775,7 @@ PrefabInstance:
     - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
         type: 3}
       propertyPath: prize.Array.data[0]
-      value: 10000
+      value: 12000
       objectReference: {fileID: 0}
     - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
         type: 3}
@@ -1784,7 +1790,7 @@ PrefabInstance:
     - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
         type: 3}
       propertyPath: prize.Array.data[3]
-      value: 750
+      value: 1500
       objectReference: {fileID: 0}
     - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
         type: 3}

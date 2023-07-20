@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b557dd034a45c34fa36b82f950ae5dc, type: 3}
-  m_Name: Super-Star Board
+  m_Name: 03 Control L1
   m_EditorClassIdentifier: 
-  name: Super-Star Board
-  description: The best board in the world.
-  boardID: 13
-  shopIndex: 17
-  level: 4
-  speed: 5
-  turn: 5
-  jump: 5
+  name: Control Lv. 1
+  description: A board for turning sharp.
+  boardID: 9
+  shopIndex: 3
+  level: 0
+  speed: 0
+  turn: 2
+  jump: 0
   boardCost:
-    coins: 50000
+    coins: 0
     bronzeTickets: 0
     silverTickets: 0
-    goldTickets: 1
+    goldTickets: 0
   specialAbility: 

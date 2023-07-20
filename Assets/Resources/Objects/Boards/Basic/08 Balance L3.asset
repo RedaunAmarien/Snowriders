@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b557dd034a45c34fa36b82f950ae5dc, type: 3}
-  m_Name: Speed L1
+  m_Name: 08 Balance L3
   m_EditorClassIdentifier: 
-  name: Speed Lv. 1
-  description: A board for going fast.
-  boardID: 3
-  shopIndex: 1
-  level: 0
-  speed: 2
-  turn: 0
-  jump: 0
+  name: Balance Lv. 3
+  description: The best-balanced board.
+  boardID: 2
+  shopIndex: 8
+  level: 2
+  speed: 3
+  turn: 3
+  jump: 3
   boardCost:
-    coins: 0
+    coins: 15000
     bronzeTickets: 0
     silverTickets: 0
     goldTickets: 0

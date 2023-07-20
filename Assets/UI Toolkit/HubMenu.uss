@@ -2,6 +2,7 @@
     color: rgb(255, 255, 255);
     -unity-font-definition: url('project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans%20SDF%201.asset?fileID=11400000&guid=fafd0aad09833434aa190a407109affa&type=2#LiberationSans SDF 1');
     text-shadow: 1px 1px 1px rgb(0, 0, 0);
+    font-size: 45px;
 }
 
 .sprite {
@@ -59,13 +60,53 @@
     border-right-color: rgb(255, 255, 255);
     border-top-color: rgb(255, 255, 255);
     border-bottom-color: rgb(255, 255, 255);
+    background-color: rgb(80, 90, 101);
 }
 
 .hidden {
-    transition-duration: 0.5s, 0.5s;
-    transition-timing-function: ease-in-out, ease-in-out;
-    display: none;
-    transition-property: display, scale;
     scale: 1 0;
-    transition-delay: 0s, 0.5s;
+}
+
+.topMenu {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.playerBox {
+    width: 25%;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#Star {
+    background-image: url('project://database/Assets/Sprites/Medals.png?fileID=1699839288339780594&guid=05adc2954d37a7e49930cc5416d2e13d&type=3#Medal_Gold');
+    -unity-background-scale-mode: scale-to-fit;
+    width: 32px;
+    flex-shrink: 0;
+    height: 32px;
+}
+
+VisualElement {
+    transition-property: scale;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-in-out;
+}
+
+#NamingRoot {
+    position: absolute;
+    top: 20px;
 }

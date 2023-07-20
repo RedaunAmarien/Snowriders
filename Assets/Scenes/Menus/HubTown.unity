@@ -3969,7 +3969,7 @@ GameObject:
   - component: {fileID: 1010885143}
   - component: {fileID: 1010885142}
   - component: {fileID: 1010885145}
-  - component: {fileID: 1010885136}
+  - component: {fileID: 1010885148}
   - component: {fileID: 1010885147}
   - component: {fileID: 1010885146}
   m_Layer: 0
@@ -3994,37 +3994,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1010885136
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1010885132}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: b04716a6024edc949876431eb6117025,
-    type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: UI
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!114 &1010885137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4191,16 +4160,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  boardInfoText: []
-  costs: []
-  funds: []
   currentChoice: 0
   lazySusan: {fileID: 0}
   specialBoards: []
   basicBoards: []
-  progressBar: {fileID: 0}
-  fadeDelay: 0
-  startTime: 0
 --- !u!114 &1010885142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4213,6 +4176,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31b49f00413afcd4fb8b7b5fa105c2ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActive: 0
+  gameMode: 0
+  playerOptionA: 00000000000000000000000000000000
+  playerOptionB: 00000000000000000000000000000000
+  playerState: 00000000000000000000000000000000
 --- !u!114 &1010885143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4240,6 +4208,7 @@ MonoBehaviour:
   isActive: 0
   selectedFile: 0
   newFileNum: 0
+  saveData: []
   saveFileVersion: 2
 --- !u!114 &1010885145
 MonoBehaviour:
@@ -4255,6 +4224,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiDoc: {fileID: 1966477814}
   listItemTemplate: {fileID: 9197481963319205126, guid: 3fa8812a582cefb4cb4e1f8e060bf0d5,
+    type: 3}
+  blackSprite: {fileID: 7426614198137331535, guid: 05adc2954d37a7e49930cc5416d2e13d,
+    type: 3}
+  bronzeSprite: {fileID: -4620241418024215519, guid: 05adc2954d37a7e49930cc5416d2e13d,
+    type: 3}
+  silverSprite: {fileID: -8474832591409494553, guid: 05adc2954d37a7e49930cc5416d2e13d,
+    type: 3}
+  goldSprite: {fileID: 1699839288339780594, guid: 05adc2954d37a7e49930cc5416d2e13d,
     type: 3}
 --- !u!114 &1010885146
 MonoBehaviour:
@@ -4272,7 +4249,7 @@ MonoBehaviour:
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
-  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018,
+  m_ActionsAsset: {fileID: -944628639613478452, guid: b04716a6024edc949876431eb6117025,
     type: 3}
   m_PointAction: {fileID: 1054132383583890850, guid: ca9f5fa95ffab41fb9a615ab714db018,
     type: 3}
@@ -4312,6 +4289,91 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
+--- !u!114 &1010885148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010885132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 621567455fd1c4ceb811cc8a00b6a1a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NotificationBehavior: 0
+  m_MaxPlayerCount: 4
+  m_AllowJoining: 1
+  m_JoinBehavior: 1
+  m_PlayerJoinedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1010885142}
+        m_TargetAssemblyTypeName: HubRacePrep, Assembly-CSharp
+        m_MethodName: OnPlayerJoined
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  m_PlayerLeftEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1010885142}
+        m_TargetAssemblyTypeName: HubRacePrep, Assembly-CSharp
+        m_MethodName: OnplayerLeft
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  m_JoinAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Join
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 8b773fd1-9f62-4c80-841e-4579a74565ff
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 59f6462e-0b6a-415a-9fb6-3beaea4eebdc
+        m_Path: <Gamepad>/start
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Join
+        m_Flags: 0
+      - m_Name: 
+        m_Id: 5df01885-c2a7-43ae-9206-6254caf5b029
+        m_Path: <Keyboard>/enter
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Join
+        m_Flags: 0
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  m_PlayerPrefab: {fileID: 7171650018672749682, guid: 09c71f6c8c8fcc747a09e59644598e98,
+    type: 3}
+  m_SplitScreen: 0
+  m_MaintainAspectRatioInSplitScreen: 0
+  m_FixedNumberOfSplitScreens: -1
+  m_SplitScreenRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
 --- !u!1 &1081180113
 GameObject:
   m_ObjectHideFlags: 3

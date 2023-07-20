@@ -3,13 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
-using System.IO;
-using UnityEngine.InputSystem;
-using TMPro;
-using UnityEngine.Events;
 using Cinemachine;
-using UnityEngine.Serialization;
-using System.Linq;
 
 public class HubTownControls : MonoBehaviour
 {
@@ -60,8 +54,8 @@ public class HubTownControls : MonoBehaviour
         yield return new WaitForEndOfFrame();
         optionCode = "0";
         currentOptions = rootOptions[0].subOptions;
-        OnSubmit();
-        OnSubmit();
+        OnSubmitCustom(0);
+        OnSubmitCustom(0);
     }
 
     void Update()
@@ -88,13 +82,13 @@ public class HubTownControls : MonoBehaviour
         }
     }
 
-    void OnNavigate(InputValue val)
+    void OnNavigateCustom(HubMultiplayerInput.Paras input)
     {
-        if (overridden)
+        if (overridden || input.index != 0)
             return;
 
         ToggleCam(currentOptions[currentOptionIndex].camera, currentOptions[currentOptionIndex].door, false);
-        float v = val.Get<Vector2>().x;
+        float v = input.val.Get<Vector2>().x;
         if (v < .5f && v > -.5f)
         {
             navHasReset = true;
@@ -121,12 +115,9 @@ public class HubTownControls : MonoBehaviour
         GameRam.lastHubSelection = currentOptionIndex;
     }
 
-    void OnCancel()
+    void OnCancelCustom(int index)
     {
-        if (overridden)
-            return;
-
-        if (optionCode == "")
+        if (overridden || index != 0 || optionCode == "")
             return;
 
         ToggleCam(currentOptions[currentOptionIndex].camera, currentOptions[currentOptionIndex].door, false);
@@ -143,9 +134,9 @@ public class HubTownControls : MonoBehaviour
         ToggleCam(currentOptions[currentOptionIndex].camera, currentOptions[currentOptionIndex].door, true);
     }
 
-    void OnSubmit()
+    void OnSubmitCustom(int index)
     {
-        if (overridden)
+        if (overridden || index != 0)
             return;
 
         currentOptions[currentOptionIndex].events.Invoke();
@@ -167,7 +158,7 @@ public class HubTownControls : MonoBehaviour
             case "00": //File Select
                 gameObject.GetComponent<HubFileSelect>().Activate();
                 //currentOptions[currentOptionIndex].events.Invoke();
-                Debug.Log("Opening File Select");
+                //Debug.Log("Opening File Select");
                 overridden = true;
                 break;
             case "01": //Options
@@ -206,13 +197,22 @@ public class HubTownControls : MonoBehaviour
                 //}
                 break;
             case "10": //Story Mode
+                GameRam.maxPlayerCount = 1;
+                GetComponent<HubRacePrep>().Activate(GameMode.Story);
+                overridden = true;
                 break;
             case "11": //Battle Mode
+                GameRam.maxPlayerCount = 4;
+                GetComponent<HubRacePrep>().Activate(GameMode.Battle);
+                overridden = true;
                 break;
             case "12": //Online Battle
                 OnUnavailable();
                 break;
             case "13": //Challenge Mode
+                GameRam.maxPlayerCount = 1;
+                GetComponent<HubRacePrep>().Activate(GameMode.Challenge);
+                overridden = true;
                 break;
 
             case "2": //Mall
@@ -236,7 +236,7 @@ public class HubTownControls : MonoBehaviour
             default: //Anything Not Specified
                 Debug.LogWarning("Not a valid option.");
                 //currentOptionTier++;
-                OnCancel();
+                OnCancelCustom(0);
                 break;
         }
     }
@@ -259,13 +259,13 @@ public class HubTownControls : MonoBehaviour
     public void Reactivate()
     {
         overridden = false;
-        OnCancel();
+        OnCancelCustom(0);
     }
 
     void OnUnavailable()
     {
         Debug.LogWarning("Unavailable");
-        OnCancel();
+        OnCancelCustom(0);
 
     }
 

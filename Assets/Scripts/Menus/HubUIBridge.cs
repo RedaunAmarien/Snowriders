@@ -7,17 +7,23 @@ using UnityEngine.UIElements;
 
 public class HubUIBridge : MonoBehaviour
 {
-    public VisualElement fileSelectRoot;
-    public VisualElement loadedFileRoot;
-    public UIDocument uiDoc;
-    public Button createButton;
-    public Button deleteButton;
-    public Button backButton;
-    public ListView fileList;
-    public VisualTreeAsset listItemTemplate;
+    VisualElement fileSelectRoot;
+    VisualElement racePrepRoot;
+    VisualElement courseSelectRoot;
+    VisualElement loadedFileRoot;
+    [SerializeField] UIDocument uiDoc;
+    Button createButton;
+    Button deleteButton;
+    Button backButton;
+    ListView fileList;
+    VisualTreeAsset listItemTemplate;
     public Label fileName, coinCount, goldMed, silvMed, bronMed, goldTick, silvTick, bronTick;
     public Label infoName;
     public Label infoDescription;
+    [SerializeField] Sprite blackSprite;
+    [SerializeField] Sprite bronzeSprite;
+    [SerializeField] Sprite silverSprite;
+    [SerializeField] Sprite goldSprite;
     TextField newNameField;
     int newFileSlot;
 
@@ -25,6 +31,8 @@ public class HubUIBridge : MonoBehaviour
     {
         //File References
         fileSelectRoot = uiDoc.rootVisualElement.Q<VisualElement>("FileSelect");
+        racePrepRoot = uiDoc.rootVisualElement.Q<VisualElement>("RacePrep");
+        courseSelectRoot = uiDoc.rootVisualElement.Q<VisualElement>("CourseSelect");
         loadedFileRoot = uiDoc.rootVisualElement.Q<VisualElement>("Stats");
         fileList = uiDoc.rootVisualElement.Q<ListView>("FileList");
         infoName = uiDoc.rootVisualElement.Q<Label>("SubjectName");
@@ -41,24 +49,20 @@ public class HubUIBridge : MonoBehaviour
         bronTick = loadedFileRoot.Q<Label>("BronTick");
     }
 
-    public enum WindowSet { FileSelect, Options, Boards, Clothes, Stats, Quit };
+    public enum WindowSet { FileSelect, RacePrep, CourseSelect };
 
     public void RevealWindow(WindowSet set)
     {
         switch (set)
         {
             case WindowSet.FileSelect:
-                fileSelectRoot.style.translate = new StyleTranslate(new Translate(0, 0, 0));
+                fileSelectRoot.RemoveFromClassList("hidden");
                 break;
-            case WindowSet.Options:
+            case WindowSet.RacePrep:
+                racePrepRoot.RemoveFromClassList("hidden");
                 break;
-            case WindowSet.Boards:
-                break;
-            case WindowSet.Clothes:
-                break;
-            case WindowSet.Stats:
-                break;
-            case WindowSet.Quit:
+            case WindowSet.CourseSelect:
+                courseSelectRoot.RemoveFromClassList("hidden");
                 break;
         }
     }
@@ -68,17 +72,13 @@ public class HubUIBridge : MonoBehaviour
         switch (set)
         {
             case WindowSet.FileSelect:
-                fileSelectRoot.style.translate = new StyleTranslate(new Translate(0, -800, 0));
+                fileSelectRoot.AddToClassList("hidden");
                 break;
-            case WindowSet.Options:
+            case WindowSet.RacePrep:
+                racePrepRoot.AddToClassList("hidden");
                 break;
-            case WindowSet.Boards:
-                break;
-            case WindowSet.Clothes:
-                break;
-            case WindowSet.Stats:
-                break;
-            case WindowSet.Quit:
+            case WindowSet.CourseSelect:
+                courseSelectRoot.AddToClassList("hidden");
                 break;
         }
     }
@@ -172,5 +172,183 @@ public class HubUIBridge : MonoBehaviour
         newNameField = dataRoot.Q<TextField>("NewName");
         dataRoot.Q<VisualElement>("NamingRoot").ToggleInClassList("hidden");
         GetComponent<HubFileSelect>().NameNewSave(newNameField.text);
+    }
+
+    public void UpdatePlayer(int index)
+    {
+        VisualElement root = uiDoc.rootVisualElement.Q<VisualElement>("P" + index);
+        root.RemoveFromClassList("hidden");
+        VisualElement portrait = root.Q<VisualElement>("Portrait");
+        Label charName = root.Q<Label>("CharName");
+
+        VisualElement sRoot = root.Q<VisualElement>("SpeedStars");
+        VisualElement cRoot = root.Q<VisualElement>("ControlStars");
+        VisualElement jRoot = root.Q<VisualElement>("JumpStars");
+        List<VisualElement> sStars = sRoot.Query(name: "Star").ToList();
+        List<VisualElement> cStars = cRoot.Query(name: "Star").ToList();
+        List<VisualElement> jStars = jRoot.Query(name: "Star").ToList();
+
+        portrait.style.backgroundImage = new StyleBackground(GameRam.allCharacters[GameRam.charForP[index]].charSprite);
+        charName.text = GameRam.allCharacters[GameRam.charForP[index]].name;
+
+        if (GameRam.allCharacters[GameRam.charForP[index]].speed > 7)
+            sStars.ForEach(x => x.style.backgroundImage = new StyleBackground(goldSprite));
+        else if (GameRam.allCharacters[GameRam.charForP[index]].speed > 4)
+            sStars.ForEach(x => x.style.backgroundImage = new StyleBackground(silverSprite));
+        else if (GameRam.allCharacters[GameRam.charForP[index]].speed > 1)
+            sStars.ForEach(x => x.style.backgroundImage = new StyleBackground(bronzeSprite));
+        else
+            sStars.ForEach(x => x.style.backgroundImage = new StyleBackground(blackSprite));
+
+        if (GameRam.allCharacters[GameRam.charForP[index]].turn > 7)
+            cStars.ForEach(x => x.style.backgroundImage = new StyleBackground(goldSprite));
+        else if (GameRam.allCharacters[GameRam.charForP[index]].turn > 4)
+            cStars.ForEach(x => x.style.backgroundImage = new StyleBackground(silverSprite));
+        else if (GameRam.allCharacters[GameRam.charForP[index]].turn > 1)
+            cStars.ForEach(x => x.style.backgroundImage = new StyleBackground(bronzeSprite));
+        else
+            cStars.ForEach(x => x.style.backgroundImage = new StyleBackground(blackSprite));
+
+        if (GameRam.allCharacters[GameRam.charForP[index]].jump > 7)
+            jStars.ForEach(x => x.style.backgroundImage = new StyleBackground(goldSprite));
+        else if (GameRam.allCharacters[GameRam.charForP[index]].jump > 4)
+            jStars.ForEach(x => x.style.backgroundImage = new StyleBackground(silverSprite));
+        else if (GameRam.allCharacters[GameRam.charForP[index]].jump > 1)
+            jStars.ForEach(x => x.style.backgroundImage = new StyleBackground(bronzeSprite));
+        else
+            jStars.ForEach(x => x.style.backgroundImage = new StyleBackground(blackSprite));
+
+
+        for (int i = 0; i < 10; i++)
+        {
+            if (GameRam.allCharacters[GameRam.charForP[index]].speed <= i)
+                sStars[i].AddToClassList("hidden");
+            else
+                sStars[i].RemoveFromClassList("hidden");
+
+            if (GameRam.allCharacters[GameRam.charForP[index]].turn <= i)
+                cStars[i].AddToClassList("hidden");
+            else
+                cStars[i].RemoveFromClassList("hidden");
+
+            if (GameRam.allCharacters[GameRam.charForP[index]].jump <= i)
+                jStars[i].AddToClassList("hidden");
+            else
+                jStars[i].RemoveFromClassList("hidden");
+        }
+    }
+
+    public void DeactivatePlayer(int index)
+    {
+        VisualElement root = uiDoc.rootVisualElement.Q<VisualElement>("P" + index);
+        root.AddToClassList("hidden");
+    }
+
+    public void UpdateBoard(int index)
+    {
+        VisualElement root = uiDoc.rootVisualElement.Q<VisualElement>("P" + index);
+        Label boardName = root.Q<Label>("BoardName");
+        boardName.RemoveFromClassList("hidden");
+
+        VisualElement sRoot = root.Q<VisualElement>("SpeedStars");
+        VisualElement cRoot = root.Q<VisualElement>("ControlStars");
+        VisualElement jRoot = root.Q<VisualElement>("JumpStars");
+        List<VisualElement> sStars = sRoot.Query(name: "Star").ToList();
+        List<VisualElement> cStars = cRoot.Query(name: "Star").ToList();
+        List<VisualElement> jStars = jRoot.Query(name: "Star").ToList();
+
+        boardName.text = GameRam.ownedBoards[GameRam.boardForP[index]].name;
+
+        if (GameRam.allCharacters[GameRam.charForP[index]].speed + GameRam.ownedBoards[GameRam.boardForP[index]].speed > 7)
+            sStars.ForEach(x => x.style.backgroundImage = new StyleBackground(goldSprite));
+        else if (GameRam.allCharacters[GameRam.charForP[index]].speed + GameRam.ownedBoards[GameRam.boardForP[index]].speed > 4)
+            sStars.ForEach(x => x.style.backgroundImage = new StyleBackground(silverSprite));
+        else if (GameRam.allCharacters[GameRam.charForP[index]].speed + GameRam.ownedBoards[GameRam.boardForP[index]].speed > 1)
+            sStars.ForEach(x => x.style.backgroundImage = new StyleBackground(bronzeSprite));
+        else
+            sStars.ForEach(x => x.style.backgroundImage = new StyleBackground(blackSprite));
+
+        if (GameRam.allCharacters[GameRam.charForP[index]].turn + GameRam.ownedBoards[GameRam.boardForP[index]].turn > 7)
+            cStars.ForEach(x => x.style.backgroundImage = new StyleBackground(goldSprite));
+        else if (GameRam.allCharacters[GameRam.charForP[index]].turn + GameRam.ownedBoards[GameRam.boardForP[index]].turn > 4)
+            cStars.ForEach(x => x.style.backgroundImage = new StyleBackground(silverSprite));
+        else if (GameRam.allCharacters[GameRam.charForP[index]].turn + GameRam.ownedBoards[GameRam.boardForP[index]].turn > 1)
+            cStars.ForEach(x => x.style.backgroundImage = new StyleBackground(bronzeSprite));
+        else
+            cStars.ForEach(x => x.style.backgroundImage = new StyleBackground(blackSprite));
+
+        if (GameRam.allCharacters[GameRam.charForP[index]].jump + GameRam.ownedBoards[GameRam.boardForP[index]].jump > 7)
+            jStars.ForEach(x => x.style.backgroundImage = new StyleBackground(goldSprite));
+        else if (GameRam.allCharacters[GameRam.charForP[index]].jump + GameRam.ownedBoards[GameRam.boardForP[index]].jump > 4)
+            jStars.ForEach(x => x.style.backgroundImage = new StyleBackground(silverSprite));
+        else if (GameRam.allCharacters[GameRam.charForP[index]].jump + GameRam.ownedBoards[GameRam.boardForP[index]].jump > 1)
+            jStars.ForEach(x => x.style.backgroundImage = new StyleBackground(bronzeSprite));
+        else
+            jStars.ForEach(x => x.style.backgroundImage = new StyleBackground(blackSprite));
+
+
+        for (int i = 0; i < 10; i++)
+        {
+            if (GameRam.allCharacters[GameRam.charForP[index]].speed + GameRam.ownedBoards[GameRam.boardForP[index]].speed <= i)
+                sStars[i].AddToClassList("hidden");
+            else
+                sStars[i].RemoveFromClassList("hidden");
+
+            if (GameRam.allCharacters[GameRam.charForP[index]].turn + GameRam.ownedBoards[GameRam.boardForP[index]].turn <= i)
+                cStars[i].AddToClassList("hidden");
+            else
+                cStars[i].RemoveFromClassList("hidden");
+
+            if (GameRam.allCharacters[GameRam.charForP[index]].jump + GameRam.ownedBoards[GameRam.boardForP[index]].jump <= i)
+                jStars[i].AddToClassList("hidden");
+            else
+                jStars[i].RemoveFromClassList("hidden");
+        }
+    }
+    public void DeactivateBoard(int index)
+    {
+        VisualElement root = uiDoc.rootVisualElement.Q<VisualElement>("P" + index);
+        Label boardName = root.Q<Label>("BoardName");
+        boardName.AddToClassList("hidden");
+    }
+
+    public void UpdateCourseSelect(Course course)
+    {
+        Label courseName = courseSelectRoot.Q<Label>("CourseName");
+        VisualElement grade = courseSelectRoot.Q<VisualElement>("CourseGrade");
+        VisualElement preview = courseSelectRoot.Q<VisualElement>("CoursePreview");
+        Label lapCount = courseSelectRoot.Q<Label>("LapCount");
+        Label courseLength = courseSelectRoot.Q<Label>("Length");
+        Label prize1 = courseSelectRoot.Q<Label>("Prize1");
+        Label prize2 = courseSelectRoot.Q<Label>("Prize2");
+        Label prize3 = courseSelectRoot.Q<Label>("Prize3");
+        Label prize4 = courseSelectRoot.Q<Label>("Prize4");
+
+        courseName.text = course.courseName;
+        switch (GameRam.currentSaveFile.courseGrade[course.courseIndex])
+        {
+            case SaveData.CourseGrade.None:
+                grade.style.backgroundImage = null;
+                break;
+            case SaveData.CourseGrade.Black:
+                grade.style.backgroundImage = new StyleBackground(blackSprite);
+                break;
+            case SaveData.CourseGrade.Bronze:
+                grade.style.backgroundImage = new StyleBackground(bronzeSprite);
+                break;
+            case SaveData.CourseGrade.Silver:
+                grade.style.backgroundImage = new StyleBackground(silverSprite);
+                break;
+            case SaveData.CourseGrade.Gold:
+                grade.style.backgroundImage = new StyleBackground(goldSprite);
+                break;
+        }
+        preview.style.backgroundImage = course.preview;
+        lapCount.text = string.Format("{0} laps", course.defaultLapCount.ToString("N0"));
+        courseLength.text = string.Format("{0}m", course.courseLength.ToString("N0"));
+        prize1.text = string.Format("1st: {0}", course.prizeMoney[0].ToString("N0"));
+        prize2.text = string.Format("2nd: {0}", course.prizeMoney[1].ToString("N0"));
+        prize3.text = string.Format("3rd: {0}", course.prizeMoney[2].ToString("N0"));
+        prize4.text = string.Format("4th: {0}", course.prizeMoney[3].ToString("N0"));
     }
 }

@@ -1,30 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
-using System.IO;
 using System.Linq;
 
 public class HubShop : MonoBehaviour
 {
     [SerializeField] bool isActive;
-    //[Tooltip("0 = Name, 1 = Speed, 2 = Turn, 3 = Jump, 4 = Flavor")]
-    //public Text[] boardInfoText;
-    //[Tooltip("0 = Coin, 1 = Bronze, 2 = Silver, 3 = Gold")]
-    //public Text[] costs, funds;
     public int currentChoice;
-    //public GameObject loadSet, warnSet, soldOutSign;
     public GameObject lazySusan;
     public Board[] specialBoards;
     public Board[] basicBoards;
-    //public Slider progressBar;
     bool stickMove;
     SaveData reloadData;
-    //public Image fadePanel;
-    //bool fadingIn, fadingOut;
-    //public float fadeDelay, startTime;
     HubUIBridge uiBridge;
     bool activatedThisFrame;
 
@@ -101,8 +86,11 @@ public class HubShop : MonoBehaviour
         }
     }
 
-    public void OnCancel()
+    public void OnCancelCustom(int index)
     {
+        if (!isActive || index != 0)
+            return;
+
         GetComponent<HubTownControls>().Reactivate();
         uiBridge.infoName.style.color = Color.white;
         uiBridge.coinCount.text = GameRam.currentSaveFile.coins.ToString("N0");
@@ -112,9 +100,9 @@ public class HubShop : MonoBehaviour
         isActive = false;
     }
 
-    public void OnSubmit()
+    public void OnSubmitCustom(int index)
     {
-        if (!isActive)
+        if (!isActive || index != 0)
             return;
 
         if (activatedThisFrame)
@@ -160,9 +148,12 @@ public class HubShop : MonoBehaviour
         }
     }
 
-    public void OnNavigate(InputValue val)
+    public void OnNavigateCustom(HubMultiplayerInput.Paras input)
     {
-        var v = val.Get<Vector2>();
+        if (!isActive || input.index != 0)
+            return;
+
+        var v = input.val.Get<Vector2>();
 
         if (v.x > .5f && !stickMove)
         {
@@ -179,28 +170,4 @@ public class HubShop : MonoBehaviour
         else if (v.x > -.5f && v.x < .5f)
             stickMove = false;
     }
-
-    IEnumerator LoadScene(string sceneToLoad)
-    {
-        GameRam.nextSceneToLoad = sceneToLoad;
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("LoadingScreen");
-        while (!asyncLoad.isDone)
-        {
-            yield return null;
-        }
-    }
-
-    //public IEnumerator Fade(bool i)
-    //{
-    //    if (i) fadingIn = true;
-    //    else fadingOut = true;
-    //    startTime = Time.time;
-    //    yield return new WaitForSeconds(fadeDelay);
-    //    if (i) fadingIn = false;
-    //    else
-    //    {
-    //        fadingOut = false;
-    //        StartCoroutine(LoadScene("HubTown"));
-    //    }
-    //}
 }

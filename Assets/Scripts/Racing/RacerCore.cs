@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -9,6 +10,8 @@ public class RacerCore : MonoBehaviour
     public int playerNum;
 
     [Header("Character Settings")]
+    public Character character;
+    public Board board;
     public string charName;
     public string boardName;
     public float speed, traction, turnSpeed;
@@ -87,11 +90,11 @@ public class RacerCore : MonoBehaviour
         // Become character.
         if (trackManager.demoMode)
         {
-            headSprite.sprite = headSpriteSrc[trackManager.demoChars[playerNum].charSpriteIndex];
+            headSprite.sprite = character.charSprite;
         }
         else if (GameRam.charForP[playerNum] < GameRam.defaultCharacters.Count)
         {
-            headSprite.sprite = headSpriteSrc[GameRam.charForP[playerNum]];
+            headSprite.sprite = character.charSprite;
         }
         else
         {
@@ -109,6 +112,25 @@ public class RacerCore : MonoBehaviour
 
         initialized = true;
         replayCamOn = true;
+    }
+
+    public void Initialize(bool demoMode = false)
+    {
+        //Speed: Max 18, Min 15.
+        speed = demoMode ? 15f : Mathf.LerpUnclamped(15, 18, (character.speed + board.speed) / 10f);
+
+        //Traction: Max .04, Min .015.
+        traction = demoMode ? .015f : Mathf.LerpUnclamped(0.015f, 0.04f, (character.turn + board.turn) / 10f);
+
+        //Jump: Max 250, Min 175.
+        jumpForce.y = demoMode ? 175f : Mathf.LerpUnclamped(175, 250, (character.jump + board.jump) / 10f);
+
+        //Display stats
+        charName = character.name;
+        boardName = demoMode ? "Demo Board" : board.name;
+        totalLaps = GameRam.lapCount;
+
+        AssignSpecialBoards();
     }
 
     public void AssignSpecialBoards()

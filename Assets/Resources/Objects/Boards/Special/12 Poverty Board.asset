@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b557dd034a45c34fa36b82f950ae5dc, type: 3}
-  m_Name: Block of Soap
+  m_Name: 12 Poverty Board
   m_EditorClassIdentifier: 
-  name: Block of Soap
-  description: Clean the mountainside. Good luck steering!
-  boardID: 17
-  shopIndex: 14
-  level: 1
-  speed: 3
-  turn: -10
-  jump: 3
+  name: Poverty Board
+  description: Novely board. Lose 100 coins per minute.
+  boardID: 15
+  shopIndex: 12
+  level: 0
+  speed: 1
+  turn: 1
+  jump: 1
   boardCost:
-    coins: 5000
-    bronzeTickets: 1
+    coins: 10
+    bronzeTickets: 0
     silverTickets: 0
     goldTickets: 0
-  specialAbility: 
+  specialAbility: Spends money as you play.

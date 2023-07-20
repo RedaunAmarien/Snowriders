@@ -1171,6 +1171,12 @@ PrefabInstance:
       objectReference: {fileID: 1341819963}
     - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
         type: 3}
+      propertyPath: courseInfo
+      value: 
+      objectReference: {fileID: 11400000, guid: a5d7f7deca9f12c4785183bcf10794f8,
+        type: 2}
+    - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
+        type: 3}
       propertyPath: courseName
       value: Training
       objectReference: {fileID: 0}

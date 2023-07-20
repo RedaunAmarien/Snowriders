@@ -2,14 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using System.IO;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
-using TMPro;
 using System.Linq;
-using UnityEditor.Animations;
-using UnityEngine.UIElements;
 
 public class HubFileSelect : MonoBehaviour
 {
@@ -33,7 +27,7 @@ public class HubFileSelect : MonoBehaviour
 
     public void Activate()
     {
-        Debug.Log("Save list activated.");
+        //Debug.Log("Save list activated.");
         isActive = true;
         activatedThisFrame = true;
         uiBridge.RevealWindow(HubUIBridge.WindowSet.FileSelect);
@@ -51,16 +45,19 @@ public class HubFileSelect : MonoBehaviour
         navHasReset = true;
     }
 
-    public void OnCancel()
+    public void OnCancelCustom(int index)
     {
+        if (!isActive || index != 0)
+            return;
+
         GetComponent<HubTownControls>().Reactivate();
         uiBridge.HideWindow(HubUIBridge.WindowSet.FileSelect);
         isActive = false;
     }
 
-    public void OnSubmit()
+    public void OnSubmitCustom(int index)
     {
-        if (!isActive || navLocked)
+        if (!isActive || navLocked || index != 0)
             return;
 
         if(activatedThisFrame)
@@ -76,7 +73,7 @@ public class HubFileSelect : MonoBehaviour
             {
                 Load(selectedFile);
                 isNew = false;
-                OnCancel();
+                OnCancelCustom(0);
                 break;
             }
         }
@@ -87,13 +84,14 @@ public class HubFileSelect : MonoBehaviour
         }
     }
 
-    public void OnNavigate(InputValue val)
+    public void OnNavigateCustom(HubMultiplayerInput.Paras input)
     {
-        if (!isActive || navLocked)
+        if (!isActive || navLocked || input.index != 0)
             return;
 
-        Vector2 v = val.Get<Vector2>();
-        if (v.magnitude < 0.5f)
+        Vector2 v = input.val.Get<Vector2>();
+
+        if (v.sqrMagnitude < 0.25f)
         {
             navHasReset = true;
             return;
@@ -103,7 +101,7 @@ public class HubFileSelect : MonoBehaviour
             return;
 
         uiBridge.HighlightSave(selectedFile);
-        if ( v.x > 0.5f)
+        if (v.x > 0.5f)
         {
             selectedFile += 1;
             if (selectedFile == 3)
@@ -160,7 +158,7 @@ public class HubFileSelect : MonoBehaviour
     {
         string[] saveFiles = Directory.GetFiles(savesFolder, "*.srd");
         saveData = new SaveData[saveFiles.Length];
-        Debug.LogFormat("Found {0} save files.", saveFiles.Length);
+        //Debug.LogFormat("Found {0} save files.", saveFiles.Length);
 
         for (int i = 0; i < saveFiles.Length; i++)
         {
@@ -190,7 +188,7 @@ public class HubFileSelect : MonoBehaviour
         Debug.LogFormat("Successfully created new save file \"{0}\".", newSaveData.fileName);
         UpdateFileList();
         Load(selectedFile);
-        OnCancel();
+        OnCancelCustom(0);
     }
 
     public void Load(int slot)
@@ -203,9 +201,10 @@ public class HubFileSelect : MonoBehaviour
         }
         GameRam.currentSaveFile = dataToLoad;
         GameRam.currentSaveDirectory = Path.Combine(savesFolder, dataToLoad.fileName + ".srd");
-        // GameRam.currentSaveFile.saveSlot = slot;
         Debug.LogFormat("File \"{0}\" loaded. Last saved on {1}.", GameRam.currentSaveFile.fileName, GameRam.currentSaveFile.lastSaved);
+
         if (GameRam.currentSaveFile.ownedBoardID == null) GameRam.currentSaveFile.ownedBoardID = new List<int>();
+        GameRam.ownedBoards.Clear();
         foreach (int pin in GameRam.currentSaveFile.ownedBoardID)
         {
             foreach (Board board in GameRam.allBoards)

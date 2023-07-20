@@ -2,11 +2,218 @@
     <Style src="project://database/Assets/UI%20Toolkit/HubMenu.uss?fileID=7433441132597879392&amp;guid=14c41796214d4c24bbcc2bc5bb0420f9&amp;type=3#HubMenu" />
     <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); justify-content: flex-end;">
         <ui:VisualElement name="Top" style="min-height: 640px; flex-grow: 1;">
-            <ui:VisualElement name="FileSelect" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.33); transition-property: translate; transition-duration: 0.75s; transition-timing-function: ease-in-out; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 0; translate: 0 -800px; justify-content: center;">
+            <ui:VisualElement name="CourseSelect" class="topMenu hidden" style="background-color: rgba(0, 0, 0, 0.33); margin-left: 8px; margin-right: 8px; margin-top: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; transition-delay: 0s, 0.5s; flex-direction: row;">
+                <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); width: 25%; height: 100%; align-items: center; justify-content: center;">
+                    <ui:Label tabindex="-1" text="Course Name" display-tooltip-when-elided="true" name="CourseName" />
+                    <ui:VisualElement name="CourseGrade" style="background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Sprites/Medals.png?fileID=7426614198137331535&amp;guid=05adc2954d37a7e49930cc5416d2e13d&amp;type=3#Medal_None&apos;); -unity-background-scale-mode: scale-to-fit; width: 64px; height: 64px; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px;" />
+                    <ui:Label tabindex="-1" text="0000m" display-tooltip-when-elided="true" name="Length" />
+                    <ui:Label tabindex="-1" text="3 Laps" display-tooltip-when-elided="true" name="LapCount" />
+                    <ui:Label tabindex="-1" text="1st Prize: 99999" display-tooltip-when-elided="true" name="Prize1" />
+                    <ui:Label tabindex="-1" text="2nd Prize: 99999" display-tooltip-when-elided="true" name="Prize2" />
+                    <ui:Label tabindex="-1" text="3rd Prize: 99999" display-tooltip-when-elided="true" name="Prize3" />
+                    <ui:Label tabindex="-1" text="4th Prize: 99999" display-tooltip-when-elided="true" name="Prize4" />
+                </ui:VisualElement>
+                <ui:VisualElement name="CoursePreview" style="background-image: url(&apos;project://database/Assets/Materials/Textures/testtrackTEX.png?fileID=2800000&amp;guid=76a9b168af27ce646b464cbae09c16f2&amp;type=3#testtrackTEX&apos;); width: 75%; height: 100%; -unity-background-scale-mode: scale-to-fit; align-self: flex-start; align-items: flex-start;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="RacePrep" class="topMenu hidden" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.33); margin-left: 8px; margin-right: 8px; margin-top: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; flex-direction: row; justify-content: center; transition-delay: 0s, 0.5s;">
+                <ui:VisualElement name="P0" class="playerBox" style="justify-content: center; align-items: center; align-self: stretch;">
+                    <ui:VisualElement style="background-image: url(&apos;project://database/Assets/Sprites/HeadSprite.png?fileID=21300000&amp;guid=603e5d696b1ac944d804f4adb8caa401&amp;type=3#HeadSprite_0&apos;); -unity-background-scale-mode: scale-to-fit; width: 256px; height: 256px;">
+                        <ui:VisualElement name="Portrait" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Sprites/CharacterPortraits1.png?fileID=-4409327933661749935&amp;guid=562b0f12a84600f4e9354958ab4218d6&amp;type=3#CharacterPortraits1_15&apos;); -unity-background-scale-mode: scale-to-fit; border-top-left-radius: 128px; border-bottom-left-radius: 128px; border-top-right-radius: 128px; border-bottom-right-radius: 128px;" />
+                    </ui:VisualElement>
+                    <ui:Label tabindex="-1" text="No One" display-tooltip-when-elided="true" name="CharName" />
+                    <ui:VisualElement style="height: 256px; width: 340px; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; background-color: rgb(0, 0, 0); border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; justify-content: center; align-items: flex-start;">
+                        <ui:Label tabindex="-1" text="Speed" display-tooltip-when-elided="true" style="font-size: 25px;" />
+                        <ui:VisualElement name="SpeedStars" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: flex-start;">
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        </ui:VisualElement>
+                        <ui:Label tabindex="-1" text="Control" display-tooltip-when-elided="true" style="font-size: 25px;" />
+                        <ui:VisualElement name="ControlStars" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: flex-start;">
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        </ui:VisualElement>
+                        <ui:Label tabindex="-1" text="Jump" display-tooltip-when-elided="true" style="font-size: 25px;" />
+                        <ui:VisualElement name="JumpStars" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: flex-start;">
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:Label tabindex="-1" text="Balance Lv. 0" display-tooltip-when-elided="true" name="BoardName" />
+                </ui:VisualElement>
+                <ui:VisualElement name="P1" class="playerBox" style="justify-content: center; align-items: center; align-self: stretch;">
+                    <ui:VisualElement style="background-image: url(&apos;project://database/Assets/Sprites/HeadSprite.png?fileID=21300002&amp;guid=603e5d696b1ac944d804f4adb8caa401&amp;type=3#HeadSprite_1&apos;); -unity-background-scale-mode: scale-to-fit; width: 256px; height: 256px;">
+                        <ui:VisualElement name="Portrait" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Sprites/CharacterPortraits1.png?fileID=-4409327933661749935&amp;guid=562b0f12a84600f4e9354958ab4218d6&amp;type=3#CharacterPortraits1_15&apos;); -unity-background-scale-mode: scale-to-fit; border-top-left-radius: 128px; border-bottom-left-radius: 128px; border-top-right-radius: 128px; border-bottom-right-radius: 128px;" />
+                    </ui:VisualElement>
+                    <ui:Label tabindex="-1" text="No One" display-tooltip-when-elided="true" name="CharName" />
+                    <ui:VisualElement style="height: 256px; width: 340px; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; background-color: rgb(0, 0, 0); border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; justify-content: center; align-items: flex-start;">
+                        <ui:Label tabindex="-1" text="Speed" display-tooltip-when-elided="true" style="font-size: 25px;" />
+                        <ui:VisualElement name="SpeedStars" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: flex-start;">
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        </ui:VisualElement>
+                        <ui:Label tabindex="-1" text="Control" display-tooltip-when-elided="true" style="font-size: 25px;" />
+                        <ui:VisualElement name="ControlStars" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: flex-start;">
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        </ui:VisualElement>
+                        <ui:Label tabindex="-1" text="Jump" display-tooltip-when-elided="true" style="font-size: 25px;" />
+                        <ui:VisualElement name="JumpStars" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: flex-start;">
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:Label tabindex="-1" text="Balance Lv. 0" display-tooltip-when-elided="true" name="BoardName" />
+                </ui:VisualElement>
+                <ui:VisualElement name="P2" class="playerBox" style="justify-content: center; align-items: center; align-self: stretch;">
+                    <ui:VisualElement style="background-image: url(&apos;project://database/Assets/Sprites/HeadSprite.png?fileID=21300004&amp;guid=603e5d696b1ac944d804f4adb8caa401&amp;type=3#HeadSprite_2&apos;); -unity-background-scale-mode: scale-to-fit; width: 256px; height: 256px;">
+                        <ui:VisualElement name="Portrait" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Sprites/CharacterPortraits1.png?fileID=-4409327933661749935&amp;guid=562b0f12a84600f4e9354958ab4218d6&amp;type=3#CharacterPortraits1_15&apos;); -unity-background-scale-mode: scale-to-fit; border-top-left-radius: 128px; border-bottom-left-radius: 128px; border-top-right-radius: 128px; border-bottom-right-radius: 128px;" />
+                    </ui:VisualElement>
+                    <ui:Label tabindex="-1" text="No One" display-tooltip-when-elided="true" name="CharName" />
+                    <ui:VisualElement style="height: 256px; width: 340px; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; background-color: rgb(0, 0, 0); border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; justify-content: center; align-items: flex-start;">
+                        <ui:Label tabindex="-1" text="Speed" display-tooltip-when-elided="true" style="font-size: 25px;" />
+                        <ui:VisualElement name="SpeedStars" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: flex-start;">
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        </ui:VisualElement>
+                        <ui:Label tabindex="-1" text="Control" display-tooltip-when-elided="true" style="font-size: 25px;" />
+                        <ui:VisualElement name="ControlStars" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: flex-start;">
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        </ui:VisualElement>
+                        <ui:Label tabindex="-1" text="Jump" display-tooltip-when-elided="true" style="font-size: 25px;" />
+                        <ui:VisualElement name="JumpStars" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: flex-start;">
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:Label tabindex="-1" text="Balance Lv. 0" display-tooltip-when-elided="true" name="BoardName" />
+                </ui:VisualElement>
+                <ui:VisualElement name="P3" class="playerBox" style="justify-content: center; align-items: center; align-self: stretch;">
+                    <ui:VisualElement style="background-image: url(&apos;project://database/Assets/Sprites/HeadSprite.png?fileID=21300006&amp;guid=603e5d696b1ac944d804f4adb8caa401&amp;type=3#HeadSprite_3&apos;); -unity-background-scale-mode: scale-to-fit; width: 256px; height: 256px;">
+                        <ui:VisualElement name="Portrait" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Sprites/CharacterPortraits1.png?fileID=-4409327933661749935&amp;guid=562b0f12a84600f4e9354958ab4218d6&amp;type=3#CharacterPortraits1_15&apos;); -unity-background-scale-mode: scale-to-fit; border-top-left-radius: 128px; border-bottom-left-radius: 128px; border-top-right-radius: 128px; border-bottom-right-radius: 128px;" />
+                    </ui:VisualElement>
+                    <ui:Label tabindex="-1" text="No One" display-tooltip-when-elided="true" name="CharName" />
+                    <ui:VisualElement style="height: 256px; width: 340px; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; background-color: rgb(0, 0, 0); border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; justify-content: center; align-items: flex-start;">
+                        <ui:Label tabindex="-1" text="Speed" display-tooltip-when-elided="true" style="font-size: 25px;" />
+                        <ui:VisualElement name="SpeedStars" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: flex-start;">
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        </ui:VisualElement>
+                        <ui:Label tabindex="-1" text="Control" display-tooltip-when-elided="true" style="font-size: 25px;" />
+                        <ui:VisualElement name="ControlStars" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: flex-start;">
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        </ui:VisualElement>
+                        <ui:Label tabindex="-1" text="Jump" display-tooltip-when-elided="true" style="font-size: 25px;" />
+                        <ui:VisualElement name="JumpStars" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; align-self: flex-start;">
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                            <ui:VisualElement name="Star" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:Label tabindex="-1" text="Balance Lv. 0" display-tooltip-when-elided="true" name="BoardName" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="FileSelect" class="topMenu hidden" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.33); transition-property: display, scale; transition-duration: 0.5s, 0.5s; transition-timing-function: ease-in-out; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 0; justify-content: center; transition-delay: 0s, 0.5s;">
                 <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center;">
-                    <ui:VisualElement name="File0" class="file-box">
+                    <ui:VisualElement name="File0" class="file-box highlighted">
                         <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="-unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center; font-size: 40px; transition-duration: 0.5s; transition-timing-function: ease-in-out;" />
-                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1; transition-duration: 0.5s; transition-timing-function: ease-in-out;">
+                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1;">
                             <ui:TextField picking-mode="Ignore" value="File Name..." max-length="20" name="NewName" style="font-size: 25px; transition-duration: 0.5s; transition-timing-function: ease-in-out;" />
                             <ui:Button text="Create File" display-tooltip-when-elided="true" name="SubmitName" />
                         </ui:VisualElement>
@@ -47,7 +254,7 @@
                     </ui:VisualElement>
                     <ui:VisualElement name="File1" class="file-box">
                         <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
-                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1; transition-duration: 0.5s; transition-timing-function: ease-in-out;">
+                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1;">
                             <ui:TextField picking-mode="Ignore" value="File Name..." max-length="20" name="NewName" style="font-size: 25px; transition-duration: 0.5s; transition-timing-function: ease-in-out;" />
                             <ui:Button text="Create File" display-tooltip-when-elided="true" name="SubmitName" />
                         </ui:VisualElement>
@@ -88,7 +295,7 @@
                     </ui:VisualElement>
                     <ui:VisualElement name="File2" class="file-box">
                         <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
-                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1; transition-duration: 0.5s; transition-timing-function: ease-in-out;">
+                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1;">
                             <ui:TextField picking-mode="Ignore" value="File Name..." max-length="20" name="NewName" style="font-size: 25px; transition-duration: 0.5s; transition-timing-function: ease-in-out;" />
                             <ui:Button text="Create File" display-tooltip-when-elided="true" name="SubmitName" />
                         </ui:VisualElement>
@@ -131,7 +338,7 @@
                 <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); flex-direction: row; justify-content: center;">
                     <ui:VisualElement name="File3" class="file-box">
                         <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
-                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1; transition-duration: 0.5s; transition-timing-function: ease-in-out;">
+                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1;">
                             <ui:TextField picking-mode="Ignore" value="File Name..." max-length="20" name="NewName" style="font-size: 25px; transition-duration: 0.5s; transition-timing-function: ease-in-out;" />
                             <ui:Button text="Create File" display-tooltip-when-elided="true" name="SubmitName" />
                         </ui:VisualElement>
@@ -172,7 +379,7 @@
                     </ui:VisualElement>
                     <ui:VisualElement name="File4" class="file-box">
                         <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
-                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1; transition-duration: 0.5s; transition-timing-function: ease-in-out;">
+                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1;">
                             <ui:TextField picking-mode="Ignore" value="File Name..." max-length="20" name="NewName" style="font-size: 25px; transition-duration: 0.5s; transition-timing-function: ease-in-out;" />
                             <ui:Button text="Create File" display-tooltip-when-elided="true" name="SubmitName" />
                         </ui:VisualElement>
@@ -213,7 +420,7 @@
                     </ui:VisualElement>
                     <ui:VisualElement name="File5" class="file-box">
                         <ui:Label tabindex="-1" text="New File" display-tooltip-when-elided="true" name="FileName" style="font-size: 40px; -unity-font-style: normal; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; -unity-text-align: middle-center; align-items: center; justify-content: center; align-self: center;" />
-                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1; transition-duration: 0.5s; transition-timing-function: ease-in-out;">
+                        <ui:VisualElement name="NamingRoot" class="hidden" style="flex-direction: row; flex-shrink: 1; flex-grow: 1;">
                             <ui:TextField picking-mode="Ignore" value="File Name..." max-length="20" name="NewName" style="font-size: 25px; transition-duration: 0.5s; transition-timing-function: ease-in-out;" />
                             <ui:Button text="Create File" display-tooltip-when-elided="true" name="SubmitName" />
                         </ui:VisualElement>

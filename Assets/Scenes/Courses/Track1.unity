@@ -11212,6 +11212,12 @@ PrefabInstance:
       objectReference: {fileID: 793563393}
     - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
         type: 3}
+      propertyPath: courseInfo
+      value: 
+      objectReference: {fileID: 11400000, guid: 2a7f39476c64348469dd165998c60967,
+        type: 2}
+    - target: {fileID: 8848521485449329030, guid: 38d4352ead8bb2b4c8af41b2b311701e,
+        type: 3}
       propertyPath: courseName
       value: Rivve Mountain
       objectReference: {fileID: 0}

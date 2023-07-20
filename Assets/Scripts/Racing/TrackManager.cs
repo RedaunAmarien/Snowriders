@@ -277,24 +277,10 @@ public class TrackManager : MonoBehaviour
 
         for (int i = 0; i < GameRam.playerCount; i++)
         {
-
             //Initialize character stats from data.
-
-            //Speed: Max 18, Min 15.
-            racerCore[i].speed = demoMode ? 15f : 14f + (2f / 3f) + (GameRam.allCharacters[GameRam.charForP[i]].speed + GameRam.ownedBoards[GameRam.boardForP[i]].speed) / 3f;
-
-            //Traction: Max .04, Min .015.
-            racerCore[i].traction = demoMode ? .015f : (11f / 900f) + (GameRam.allCharacters[GameRam.charForP[i]].turn + GameRam.ownedBoards[GameRam.boardForP[i]].turn) / 360f;
-
-            //Jump: Max 250, Min 175.
-            racerCore[i].jumpForce.y = demoMode ? 175f : 166f + (2f / 3f) + (GameRam.allCharacters[GameRam.charForP[i]].jump + GameRam.ownedBoards[GameRam.boardForP[i]].jump) * (8f + (1f / 3f));
-
-            //Display stats
-            racerCore[i].charName = GameRam.allCharacters[GameRam.charForP[i]].name;
-            racerCore[i].boardName = demoMode ? "Demo Board" : GameRam.ownedBoards[GameRam.boardForP[i]].name;
-            racerCore[i].totalLaps = GameRam.lapCount;
-
-            racerCore[i].AssignSpecialBoards();
+            racerCore[i].character = GameRam.allCharacters[GameRam.charForP[i]];
+            racerCore[i].board = GameRam.ownedBoards[GameRam.boardForP[i]];
+            racerCore[i].Initialize(demoMode);
         }
 
         for (int i = GameRam.playerCount; i < 4; i++)

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6c93af9567443f4fa007ba92ab07eb6, type: 3}
+  m_Name: 6
+  m_EditorClassIdentifier: 
+  courseName: Steep Cliff
+  courseSceneName: Track6
+  courseCutsceneName: Track6cut
+  courseIndex: 5
+  defaultLapCount: 3
+  defaultCpu:
+  - {fileID: 11400000, guid: 481d7a099e9f09f4e8f9b319aa55bcb9, type: 2}
+  - {fileID: 11400000, guid: 69532b60c268730448e67c97842de0a9, type: 2}
+  - {fileID: 11400000, guid: 68188cfa1daf9c545bb41a54affc8e52, type: 2}
+  - {fileID: 11400000, guid: e156ac59ad11ba044bb379fde9fca1b5, type: 2}
+  defaultCpuBoard:
+  - {fileID: 11400000, guid: 2d65d6b8063cf0a44bee3919db524117, type: 2}
+  - {fileID: 11400000, guid: dff2c0f82d29a3741a68470972f8e0ea, type: 2}
+  - {fileID: 11400000, guid: 3135586e4b78b11488456293127e63db, type: 2}
+  - {fileID: 11400000, guid: ae81b17dfff0a6a47be0e8d3a962a8dd, type: 2}
+  prizeMoney: 88130000c4090000e204000071020000

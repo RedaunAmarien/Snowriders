@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6c93af9567443f4fa007ba92ab07eb6, type: 3}
+  m_Name: 4
+  m_EditorClassIdentifier: 
+  courseName: Speed Slope
+  courseSceneName: Track4
+  courseCutsceneName: Track4cut
+  courseIndex: 3
+  defaultLapCount: 10
+  defaultCpu:
+  - {fileID: 11400000, guid: e71d156a354e0364d853d4ef6211ddb9, type: 2}
+  - {fileID: 11400000, guid: 69532b60c268730448e67c97842de0a9, type: 2}
+  - {fileID: 11400000, guid: e156ac59ad11ba044bb379fde9fca1b5, type: 2}
+  - {fileID: 11400000, guid: be0dd09675e96fb419aae61bd4acaff2, type: 2}
+  defaultCpuBoard:
+  - {fileID: 11400000, guid: 95d0037385e4e344b91409cafc4b35d0, type: 2}
+  - {fileID: 11400000, guid: ae81b17dfff0a6a47be0e8d3a962a8dd, type: 2}
+  - {fileID: 11400000, guid: b809899557260ee4bb1e5658a78c8477, type: 2}
+  - {fileID: 11400000, guid: 3e9235bb422eeaf4e9ab7624dde7edaa, type: 2}
+  prizeMoney: e02e000070170000b80b0000dc050000
