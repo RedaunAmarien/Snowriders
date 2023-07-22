@@ -15,8 +15,9 @@ MonoBehaviour:
   courseName: Rivve Mountain
   courseSceneName: Track1
   courseCutsceneName: Track1cut
-  courseIndex: 0
+  courseIndex: 1
   defaultLapCount: 3
+  courseLength: 0
   defaultCpu:
   - {fileID: 11400000, guid: be0dd09675e96fb419aae61bd4acaff2, type: 2}
   - {fileID: 11400000, guid: 69532b60c268730448e67c97842de0a9, type: 2}
@@ -28,3 +29,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dff2c0f82d29a3741a68470972f8e0ea, type: 2}
   - {fileID: 11400000, guid: 3135586e4b78b11488456293127e63db, type: 2}
   prizeMoney: 88130000c4090000e204000071020000
+  minimap: {fileID: 0}
+  preview: {fileID: 0}
+  hiddenInStoryMode: 0
+  hiddenInBattleMode: 0

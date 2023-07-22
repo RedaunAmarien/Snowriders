@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b557dd034a45c34fa36b82f950ae5dc, type: 3}
   m_Name: 13 Wealth Board
   m_EditorClassIdentifier: 
-  name: Wealth Board
-  description: Novely board. Earn 1000 coins per minute.
+  boardName: Wealth Board
+  description: Novelty board. Earn 1000 coins per minute.
   boardID: 16
   shopIndex: 13
   level: 5

@@ -15,8 +15,9 @@ MonoBehaviour:
   courseName: Spiral Mountain
   courseSceneName: Track3
   courseCutsceneName: Track3cut
-  courseIndex: 2
+  courseIndex: 3
   defaultLapCount: 5
+  courseLength: 0
   defaultCpu:
   - {fileID: 11400000, guid: 481d7a099e9f09f4e8f9b319aa55bcb9, type: 2}
   - {fileID: 11400000, guid: be0dd09675e96fb419aae61bd4acaff2, type: 2}
@@ -28,3 +29,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3e9235bb422eeaf4e9ab7624dde7edaa, type: 2}
   - {fileID: 11400000, guid: b809899557260ee4bb1e5658a78c8477, type: 2}
   prizeMoney: 1027000088130000c4090000e2040000
+  minimap: {fileID: 0}
+  preview: {fileID: 0}
+  hiddenInStoryMode: 0
+  hiddenInBattleMode: 0

@@ -88,7 +88,7 @@ public class AIControls : MonoBehaviour
             {
                 GameObject lostWaypoint = nextWaypoint;
                 nextWaypoint = other.gameObject;
-                Debug.LogWarningFormat("{0} got distracted by waypoint {1} while looking for waypoint {2} at location {3}.", racerCore.charName, prevWaypoint, lostWaypoint, transform.position);
+                Debug.LogWarningFormat("{0} got distracted by waypoint {1} while looking for waypoint {2} at location {3}.", racerCore.character.characterName, prevWaypoint, lostWaypoint, transform.position);
                 SwitchWaypoint();
             }
             // Act on Waypoint flags
@@ -138,7 +138,7 @@ public class AIControls : MonoBehaviour
         else nextWaypoint = aiWaypoint.nextInChain;
         if (aiWaypoint.joining)
         {
-            Debug.LogFormat("{0} is rejoining main path at waypoint {1} from waypoint {2}", racerCore.charName, prevWaypoint.name, nextWaypoint.name);
+            Debug.LogFormat("{0} is rejoining main path at waypoint {1} from waypoint {2}", racerCore.character.characterName, prevWaypoint.name, nextWaypoint.name);
         }
 
         float dist = Random.Range(0, nextWaypoint.GetComponent<AIWaypoint>().targetableRadius);

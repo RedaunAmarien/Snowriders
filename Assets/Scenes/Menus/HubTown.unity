@@ -4135,8 +4135,7 @@ MonoBehaviour:
   currentOptions: []
   currentOptionIndex: 0
   progressBar: {fileID: 1552984412}
-  fadeDelay: 1
-  startTime: 0
+  fadeDelay: 0.5
   audioSources:
   - {fileID: 8304587732618175751}
   - {fileID: 4467892585121854694}
@@ -4180,6 +4179,7 @@ MonoBehaviour:
   gameMode: 0
   playerOptionA: 00000000000000000000000000000000
   playerOptionB: 00000000000000000000000000000000
+  courseOption: 0
   playerState: 00000000000000000000000000000000
 --- !u!114 &1010885143
 MonoBehaviour:
@@ -4223,8 +4223,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiDoc: {fileID: 1966477814}
-  listItemTemplate: {fileID: 9197481963319205126, guid: 3fa8812a582cefb4cb4e1f8e060bf0d5,
-    type: 3}
   blackSprite: {fileID: 7426614198137331535, guid: 05adc2954d37a7e49930cc5416d2e13d,
     type: 3}
   bronzeSprite: {fileID: -4620241418024215519, guid: 05adc2954d37a7e49930cc5416d2e13d,
@@ -4233,6 +4231,10 @@ MonoBehaviour:
     type: 3}
   goldSprite: {fileID: 1699839288339780594, guid: 05adc2954d37a7e49930cc5416d2e13d,
     type: 3}
+  blackTicket: {fileID: 0}
+  bronzeTicket: {fileID: 0}
+  silverTicket: {fileID: 0}
+  goldTicket: {fileID: 0}
 --- !u!114 &1010885146
 MonoBehaviour:
   m_ObjectHideFlags: 0

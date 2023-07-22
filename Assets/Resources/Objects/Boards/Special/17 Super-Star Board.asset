@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b557dd034a45c34fa36b82f950ae5dc, type: 3}
   m_Name: 17 Super-Star Board
   m_EditorClassIdentifier: 
-  name: Super-Star Board
+  boardName: Super-Star Board
   description: The best board in the world.
   boardID: 13
   shopIndex: 17

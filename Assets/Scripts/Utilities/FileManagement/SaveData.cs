@@ -4,24 +4,7 @@ using System;
 [Serializable]
 public class SaveData
 {
-    private static SaveData _current;
-    public static SaveData Current
-    {
-        get
-        {
-            _current ??= new SaveData();
-            return _current;
-        }
-        set
-        {
-            if (value != null)
-            {
-                _current = value;
-            }
-        }
-    }
-
-    public enum CourseGrade { None, Black, Bronze, Silver, Gold };
+    public enum CourseGrade { None, Glass, Bronze, Silver, Gold };
     public string fileName, version;
     public int saveSlot;
     public int coins;
@@ -29,6 +12,7 @@ public class SaveData
     public int ticketBronze, ticketSilver, ticketGold;
     public CourseGrade[] courseGrade;
     public List<int> ownedBoardID, ownedItemID;
+    public List<bool> unlockedBoard;
     public bool storyStarted;
     public DateTime lastSaved;
 
@@ -38,6 +22,7 @@ public class SaveData
         version = string.Empty;
         saveSlot = -1;
         ownedBoardID = new();
+        unlockedBoard = new();
         ownedItemID = new();
         completedChallenge = new();
         courseGrade = new CourseGrade[12];
@@ -48,13 +33,16 @@ public class SaveData
         fileName = name;
         version = dataVersion;
         saveSlot = slot;
-        ownedBoardID = new();
         ownedItemID = new();
         completedChallenge = new();
-        ownedBoardID.Add(0);
-        ownedBoardID.Add(3);
-        ownedBoardID.Add(6);
-        ownedBoardID.Add(9);
+        ownedBoardID = new()
+        {
+            0,
+            3,
+            6,
+            9
+        };
+        unlockedBoard = new();
         ticketBronze = 1;
         courseGrade = new CourseGrade[12];
         lastSaved = System.DateTime.Now;

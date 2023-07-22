@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b6c93af9567443f4fa007ba92ab07eb6, type: 3}
-  m_Name: -1
+  m_Name: 0
   m_EditorClassIdentifier: 
   courseName: Training
   courseSceneName: Track0
   courseCutsceneName: Track0cut
-  courseIndex: -1
+  courseIndex: 0
   defaultLapCount: 3
+  courseLength: 0
   defaultCpu:
   - {fileID: 11400000, guid: be0dd09675e96fb419aae61bd4acaff2, type: 2}
   - {fileID: 11400000, guid: 481d7a099e9f09f4e8f9b319aa55bcb9, type: 2}
@@ -30,3 +31,5 @@ MonoBehaviour:
   prizeMoney: 88130000b80b0000e803000000000000
   minimap: {fileID: 21300000, guid: 19e9be0f287ce774ab863a81fa799539, type: 3}
   preview: {fileID: 0}
+  hiddenInStoryMode: 1
+  hiddenInBattleMode: 1

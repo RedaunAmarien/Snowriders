@@ -7,32 +7,27 @@ using Cinemachine;
 
 public class HubTownControls : MonoBehaviour
 {
-    [SerializeField] private string currentMenuSet;
     [SerializeField] private string optionCode;
     [SerializeField] private float moveTime;
-    [SerializeField] private GameObject cam;
-    [SerializeField] private GameObject loadSet;
     [SerializeField] private List<HubTownOption> rootOptions;
     [SerializeField] private List<HubTownOption> currentOptions;
     [SerializeField] private int currentOptionIndex;
-    //[SerializeField] private int currentOptionTier;
-    [SerializeField] private Slider progressBar;
 
-    //[SerializeField] private Image fadePanel;
-    [SerializeField] private float fadeDelay, startTime;
+    [SerializeField] private float fadeDelay;
     [SerializeField] private AudioSource[] audioSources;
     [SerializeField] HubUIBridge uiBridge;
-    private bool fadingIn, fadingOut;
     private bool navHasReset = true;
     bool overridden;
 
     void Start()
     {
+        GameRam.inputUser = new UnityEngine.InputSystem.Users.InputUser[4];
+        GameRam.inputDevice = new UnityEngine.InputSystem.InputDevice[4];
         //Start audios in sync
         foreach (AudioSource audio in audioSources)
         {
             audio.Play();
-            //Debug.LogFormat("Playing audio clip {0}", audio.clip.name);
+            //Debug.LogFormat("Playing audio clip {0}", audio.clip.characterName);
         }
 
         currentOptions = rootOptions;
@@ -43,10 +38,6 @@ public class HubTownControls : MonoBehaviour
             StartCoroutine(WaitOneFrame());
             return;
         }
-
-        //currentOptionIndex = GameRam.lastHubSelection;
-        //rootOptions[currentOptionIndex].camera.Priority = 1;
-        //if (rootOptions[currentOptionIndex].door != null) rootOptions[currentOptionIndex].door.ActivateDoor();
     }
 
     IEnumerator WaitOneFrame()
@@ -67,22 +58,7 @@ public class HubTownControls : MonoBehaviour
         uiBridge.infoName.text = currentOptions[currentOptionIndex].optionName;
     }
 
-    void LateUpdate()
-    {
-        //cam.transform.LookAt(transform.position);
-        if (fadingIn)
-        {
-            float t = (Time.time - startTime) / fadeDelay;
-            //fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(1f, 0f, t));
-        }
-        else if (fadingOut)
-        {
-            float t = (Time.time - startTime) / fadeDelay;
-            //fadePanel.color = new Color(0, 0, 0, Mathf.SmoothStep(0f, 1f, t));
-        }
-    }
-
-    void OnNavigateCustom(HubMultiplayerInput.Paras input)
+    void OnNavigateCustom(HubMultiplayerInput.Parameters input)
     {
         if (overridden || input.index != 0)
             return;
@@ -169,32 +145,6 @@ public class HubTownControls : MonoBehaviour
                 break;
 
             case "1": //Race Hub
-                //switch (currentOptions[currentOptionIndex].optionName)
-                //{
-                //    case "Story Mode":
-                //        GameRam.gameMode = GameMode.Story;
-                //        GameRam.maxPlayerCount = 1;
-                //        StartCoroutine(Fade(false, "RacePrepMenu"));
-                //        break;
-
-                //    case "Local Multiplayer":
-                //        GameRam.gameMode = GameMode.Battle;
-                //        GameRam.maxPlayerCount = 4;
-                //        StartCoroutine(Fade(false, "RacePrepMenu"));
-                //        break;
-
-                //    case "Online Multiplayer":
-                //        GameRam.gameMode = GameMode.Online;
-                //        GameRam.maxPlayerCount = 2;
-                //        OnUnavailable();
-                //        break;
-
-                //    case "Challenges":
-                //        GameRam.gameMode = GameMode.Challenge;
-                //        GameRam.maxPlayerCount = 1;
-                //        StartCoroutine(Fade(false, "RacePrepMenu"));
-                //        break;
-                //}
                 break;
             case "10": //Story Mode
                 GameRam.maxPlayerCount = 1;
@@ -280,17 +230,10 @@ public class HubTownControls : MonoBehaviour
         }
     }
 
-    public IEnumerator Fade(bool i, string destination)
+    public IEnumerator FadeAndLoad(string destination)
     {
-        if (i) fadingIn = true;
-        else fadingOut = true;
-        startTime = Time.time;
+        uiBridge.FadeOut();
         yield return new WaitForSeconds(fadeDelay);
-        if (i) fadingIn = false;
-        else
-        {
-            fadingOut = false;
-            StartCoroutine(LoadScene(destination));
-        }
+        StartCoroutine(LoadScene(destination));
     }
 }

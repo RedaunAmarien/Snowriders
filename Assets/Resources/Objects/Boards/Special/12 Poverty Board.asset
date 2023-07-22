@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b557dd034a45c34fa36b82f950ae5dc, type: 3}
   m_Name: 12 Poverty Board
   m_EditorClassIdentifier: 
-  name: Poverty Board
-  description: Novely board. Lose 100 coins per minute.
+  boardName: Poverty Board
+  description: Novelty board. Lose 100 coins per minute.
   boardID: 15
   shopIndex: 12
   level: 0

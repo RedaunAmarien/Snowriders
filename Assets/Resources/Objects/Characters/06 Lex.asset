@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee24f8c4e8a0a25428cdf59076279896, type: 3}
   m_Name: 06 Lex
   m_EditorClassIdentifier: 
-  name: Lex
+  characterName: Lex
+  characterIndex: 6
   creator: "Amari\xE9n Games"
   updateTimeStamp: 
-  charSpriteIndex: 0
   speed: 2
   turn: 2
   jump: 5

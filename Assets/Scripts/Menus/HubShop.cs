@@ -25,7 +25,7 @@ public class HubShop : MonoBehaviour
         specialBoards = specialBoards.OrderBy(x => x.shopIndex).ToArray();
 
         //fadePanel.gameObject.SetActive(true);
-        //StartCoroutine(Fade(true));
+        //StartCoroutine(FadeAndLoad(true));
     }
 
     void Update()
@@ -37,7 +37,7 @@ public class HubShop : MonoBehaviour
 
         string currentBoardDescription = string.Format("Speed: {0} Control: {1} Jump: {2}\n{3}", specialBoards[currentChoice].speed, specialBoards[currentChoice].turn, specialBoards[currentChoice].jump, specialBoards[currentChoice].description);
 
-        uiBridge.infoName.text = specialBoards[currentChoice].name;
+        uiBridge.infoName.text = specialBoards[currentChoice].boardName;
         uiBridge.infoDescription.text = currentBoardDescription;
 
         if (GameRam.currentSaveFile.ownedBoardID.Contains(specialBoards[currentChoice].boardID))
@@ -148,7 +148,7 @@ public class HubShop : MonoBehaviour
         }
     }
 
-    public void OnNavigateCustom(HubMultiplayerInput.Paras input)
+    public void OnNavigateCustom(HubMultiplayerInput.Parameters input)
     {
         if (!isActive || input.index != 0)
             return;

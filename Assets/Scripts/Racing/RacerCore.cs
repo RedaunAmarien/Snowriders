@@ -12,8 +12,8 @@ public class RacerCore : MonoBehaviour
     [Header("Character Settings")]
     public Character character;
     public Board board;
-    public string charName;
-    public string boardName;
+    //public string charName;
+    //public string boardName;
     public float speed, traction, turnSpeed;
     public Vector3 jumpForce;
 
@@ -61,7 +61,6 @@ public class RacerCore : MonoBehaviour
 
     void Start()
     {
-
         // Initialize Objects and Stats
         trackManager = GameObject.Find("TrackManager").GetComponent<TrackManager>();
         courseSettings = GameObject.Find("CourseSettings").GetComponent<CourseSettings>();
@@ -126,8 +125,8 @@ public class RacerCore : MonoBehaviour
         jumpForce.y = demoMode ? 175f : Mathf.LerpUnclamped(175, 250, (character.jump + board.jump) / 10f);
 
         //Display stats
-        charName = character.name;
-        boardName = demoMode ? "Demo Board" : board.name;
+        //charName = character.characterName;
+        //boardName = demoMode ? "Demo Board" : board.name;
         totalLaps = GameRam.lapCount;
 
         AssignSpecialBoards();
@@ -135,12 +134,12 @@ public class RacerCore : MonoBehaviour
 
     public void AssignSpecialBoards()
     {
-        if (boardName == "Pound of Feather")
+        if (board.boardName == "Pound of Feather")
         {
             jumpForce.y = 300;
             jumpForce.z = 20;
         }
-        if (boardName == "Block of Soap")
+        if (board.boardName == "Block of Soap")
         {
             traction = 0;
         }
@@ -211,7 +210,7 @@ public class RacerCore : MonoBehaviour
                 else
                 {
                     // Apply feather board
-                    if (boardName == "Pound of Feather")
+                    if (board.boardName == "Pound of Feather")
                     {
                         rigid.AddRelativeForce(-Physics.gravity / 2f);
                     }
@@ -523,8 +522,8 @@ public class RacerCore : MonoBehaviour
         if (playerUI != null) playerUI.timerOn = true;
         if (playerRaceControls != null) playerRaceControls.lockControls = false;
         spotLock = false;
-        if (boardName == "Poverty Board") StartCoroutine(Poverty());
-        if (boardName == "Wealth Board") StartCoroutine(Wealth());
+        if (board.boardName == "Poverty Board") StartCoroutine(Poverty());
+        if (board.boardName == "Wealth Board") StartCoroutine(Wealth());
     }
 
     // Physics Functions.

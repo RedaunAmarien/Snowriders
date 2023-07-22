@@ -20,4 +20,6 @@ public class Course : ScriptableObject
     public int[] prizeMoney = new int[4];
     public Sprite minimap;
     public Texture2D preview;
+    public bool hiddenInStoryMode;
+    public bool hiddenInBattleMode;
 }

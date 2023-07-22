@@ -39,7 +39,7 @@ public class TrackManager : MonoBehaviour
     //List<Checkpoint> checkpoints;
     bool doneStarting;
 
-    [Header("Fade Panel")]
+    [Header("FadeAndLoad Panel")]
     public GameObject readySetSet;
     public Image fadePanel;
     bool fadingIn, fadingOut;
@@ -48,7 +48,7 @@ public class TrackManager : MonoBehaviour
 
     [Header("Demo Mode Overriders")]
     public bool demoMode = false;
-    public string demoCourse;
+    public Course demoCourse;
     public int demoPlayerCount;
     public Character[] demoChars;
     public Board[] demoBoards;
@@ -61,30 +61,31 @@ public class TrackManager : MonoBehaviour
         {
             Debug.LogWarning("No save file found. Activating Demo Mode. Game progress will not be saved.");
             demoMode = true;
-            GameRam.courseToLoad = demoCourse;
+            GameRam.courseToLoad = demoCourse.courseSceneName;
             GameRam.playerCount = demoPlayerCount;
-            GameRam.allBoards.AddRange(demoBoards);
+            GameRam.ownedBoards.AddRange(Resources.LoadAll<Board>("Objects/Boards/Basic"));
+            GameRam.ownedBoards.AddRange(Resources.LoadAll<Board>("Objects/Boards/Special"));
+            GameRam.allBoards = GameRam.ownedBoards;
+            GameRam.allCharacters.AddRange(Resources.LoadAll<Character>("Objects/Characters"));
             GameRam.charForP = new int[4];
             GameRam.boardForP = new int[4];
-            GameRam.inpDev = new InputDevice[4];
-            GameRam.controlp = new int[4];
+            //GameRam.inputDevice = new InputDevice[4];
+            //GameRam.controlp = new int[4];
             GameRam.itemsOn = true;
             GameRam.coinsOn = true;
+            GameRam.playerCount = demoPlayerCount;
             for (int i = 0; i < 4; i++)
             {
-                GameRam.allCharacters.Add(demoChars[i]);
-                GameRam.charForP[i] = i;
-                GameRam.boardForP[i] = i;
-                GameRam.controlp[i] = i;
+                GameRam.charForP[i] = demoChars[i].characterIndex;
+                GameRam.boardForP[i] = demoBoards[i].boardID;
+                //GameRam.controlp[i] = i;
             }
             for (int i = 0; i < demoPlayerCount; i++)
             {
-                GameRam.inpDev[i] = InputSystem.GetDevice(demoLayout);
+                GameRam.inputDevice[i] = InputSystem.GetDevice(demoLayout);
             }
         }
         if (GameRam.courseToLoad != null) SceneManager.LoadScene(GameRam.courseToLoad, LoadSceneMode.Additive);
-        // Debug.Log("Loading scene " + GameRam.courseToLoad);
-        Debug.LogFormat("Demo Mode?: {0}", demoMode.ToString());
     }
 
     public void Initialize()
@@ -104,7 +105,7 @@ public class TrackManager : MonoBehaviour
         //Create and initialize players
         for (int i = 0; i < 4; i++)
         {
-            player[i] = GameObject.Instantiate(playerPrefab, courseSettings.playerSpawn[i].position, courseSettings.playerSpawn[i].rotation);
+            player[i] = Instantiate(playerPrefab, courseSettings.playerSpawn[i].position, courseSettings.playerSpawn[i].rotation);
             racerCore[i] = player[i].GetComponent<RacerCore>();
             racerCore[i].playerNum = i;
             racerCore[i].firstCheckpoint = courseSettings.startCheckpoint;
@@ -211,9 +212,9 @@ public class TrackManager : MonoBehaviour
             }
             if (GameRam.itemsOn == false)
             {
-                Debug.Log("Finding red collectItem boxes");
+                //Debug.Log("Finding red collectItem boxes");
                 items = GameObject.FindGameObjectsWithTag("RedBox");
-                Debug.Log("Listing red collectItem boxes");
+                //Debug.Log("Listing red collectItem boxes");
                 for (int i = 0; i < items.Length; i++)
                 {
                     items[i].SetActive(false);
@@ -241,14 +242,14 @@ public class TrackManager : MonoBehaviour
         {
             pCharacterList.Add(GameRam.charForP[i]);
             // Debug.Log("Adding input for player " + i);
-            var playerInput = PlayerInput.Instantiate(playerControlPrefab, -1, null, -1, GameRam.inpDev[i]);
+            var playerInput = PlayerInput.Instantiate(playerControlPrefab, pairWithDevice: GameRam.inputDevice[i]);
             player[i].transform.SetParent(playerInput.transform);
             playerInput.ActivateInput();
             //playerInput.camera = cameras[i].GetComponent<Camera>();
-            // Debug.Log("Player " + i + "'s inputs complete.\n" + playerInput.user.index + ", " + GameRam.inpDev[i]);
+            // Debug.Log("Player " + i + "'s inputs complete.\n" + playerInput.user.index + ", " + GameRam.inputDevice[i]);
 
             //playerUI[i].playerNum = i;
-            playerRaceControls[i].controllerIndex = GameRam.controlp[i];
+            playerRaceControls[i].controllerIndex = i;
             aiControls[i].isNotAI = true;
         }
         for (int i = GameRam.playerCount; i < player.Length; i++)
@@ -298,8 +299,8 @@ public class TrackManager : MonoBehaviour
             racerCore[i].jumpForce.y = 166f + (2f / 3f) + (GameRam.allCharacters[GameRam.charForP[i]].jump + GameRam.allBoards[GameRam.boardForP[i]].jump) * (8f + (1f / 3f));
 
             //Display stats
-            racerCore[i].charName = GameRam.allCharacters[GameRam.charForP[i]].name;
-            racerCore[i].boardName = GameRam.allBoards[GameRam.boardForP[i]].name;
+            racerCore[i].character = GameRam.allCharacters[GameRam.charForP[i]];
+            racerCore[i].board = GameRam.allBoards[GameRam.boardForP[i]];
             racerCore[i].totalLaps = GameRam.lapCount;
 
             racerCore[i].AssignSpecialBoards();
@@ -308,8 +309,8 @@ public class TrackManager : MonoBehaviour
         //Setup Challenges
         if (GameRam.gameMode == GameMode.Challenge)
         {
-            Debug.Log(GameRam.currentChallenge.ToString());
-            if (GameRam.currentChallenge.maximumTime == true)
+            Debug.LogFormat("Attempting challenge \"{0}\"", GameRam.currentChallenge.challengeName);
+            if (GameRam.currentChallenge.timeRule == true)
             {
                 remainingTime = GameRam.currentChallenge.timeLimit;
             }
@@ -418,7 +419,7 @@ public class TrackManager : MonoBehaviour
 
     public IEnumerator Countdown(/*bool _canBoost = true*/)
     {
-        //Fade In
+        //FadeAndLoad In
         readySetSet.GetComponent<Animator>().SetBool("Going", false);
         StartCoroutine(Fade(true));
         yield return new WaitForSeconds(fadeDelay);
@@ -446,7 +447,7 @@ public class TrackManager : MonoBehaviour
         int coinTotal = 0;
         for (int i = 0; i < 4; i++)
         {
-            if (i != userIndex && racerCore[i].boardName != "Wealth Board")
+            if (i != userIndex && racerCore[i].board.boardName != "Wealth Board")
             {
                 if (totalFinished == 0)
                 {
@@ -503,7 +504,7 @@ public class TrackManager : MonoBehaviour
         int coinTotal = 0;
         for (int i = 0; i < 4; i++)
         {
-            if (i != userIndex && !racerCore[i].finished && racerCore[i].boardName != "Wealth Board")
+            if (i != userIndex && !racerCore[i].finished && racerCore[i].board.boardName != "Wealth Board")
             {
                 coinTotal += racerCore[i].coins / 2;
                 racerCore[i].coins = racerCore[i].coins / 2;
@@ -591,7 +592,7 @@ public class TrackManager : MonoBehaviour
                 savePlace = SaveData.CourseGrade.Bronze;
                 break;
             case 4:
-                savePlace = SaveData.CourseGrade.Black;
+                savePlace = SaveData.CourseGrade.Glass;
                 break;
             default:
                 Debug.LogErrorFormat("Player's rank of {0}(st/nd/rd/th) is outside of range 1st - 4th.", placement);
@@ -600,7 +601,7 @@ public class TrackManager : MonoBehaviour
         if (GameRam.gameMode < GameMode.Challenge)
         {
             rankBarRoots["Root" + (placement - 1)].SetActive(true);
-            rankBar["Name" + (placement - 1)].text = racerCore[userIndex].charName;
+            rankBar["Name" + (placement - 1)].text = racerCore[userIndex].character.characterName;
             rankBar["Time" + (placement - 1)].text = printTimer;
             racerCore[userIndex].coins += courseSettings.prize[placement - 1];
             rankBar["Reward" + (placement - 1)].text = racerCore[userIndex].coins.ToString("N0");
@@ -609,7 +610,7 @@ public class TrackManager : MonoBehaviour
         else
         {
             rankBarRoots["Root0"].SetActive(true);
-            rankBar["Name0"].text = racerCore[0].charName;
+            rankBar["Name0"].text = racerCore[0].character.characterName;
             rankBar["Time0"].text = printTimer;
             rankBar["Reward0"].text = racerCore[0].coins.ToString("N0");
             for (int i = 1; i < 4; i++)
@@ -680,52 +681,52 @@ public class TrackManager : MonoBehaviour
         else if (GameRam.gameMode == GameMode.Challenge)
         {
             GameRam.currentSaveFile.coins += racerCore[0].coins;
-            ChallengeConditions conditions = GameRam.currentChallenge;
+            Challenge challenge = GameRam.currentChallenge;
             bool succeeded = true;
             string failReason = string.Empty;
-            conditions.timeLimit = new System.TimeSpan(0, 0, conditions.timeLimitInSeconds);
+            challenge.timeLimit = new System.TimeSpan(0, 0, challenge.timeLimitInSeconds);
 
             //Test Challenge Conditions
-            if (racerCore[0].coins < conditions.requiredCoinCoint)
+            if (racerCore[0].coins < challenge.requiredCoinCount)
             {
                 succeeded = false;
-                failReason = string.Format("you did not finish with more than {0} coins", conditions.requiredCoinCoint);
+                failReason = string.Format("you did not finish with more than {0} coins", challenge.requiredCoinCount);
             }
-            if (GameRam.ownedBoards[GameRam.boardForP[0]].boardID != conditions.requiredBoardID)
+            if (GameRam.ownedBoards[GameRam.boardForP[0]] != challenge.requiredBoard)
             {
                 succeeded = false;
                 string boardName = string.Empty;
                 foreach (Board board in GameRam.allBoards)
                 {
-                    if (board.boardID == conditions.requiredBoardID)
+                    if (board == challenge.requiredBoard)
                         boardName = board.name;
                 }
                 failReason = string.Format("you did not use the board {0}", boardName);
             }
-            if (totalTime > conditions.timeLimit)
+            if (totalTime > challenge.timeLimit)
             {
                 succeeded = false;
-                failReason = string.Format("you did not finish within {0:d2}:{1:d2}.{2:d2}", conditions.timeLimit.Minutes, conditions.timeLimit.Seconds, conditions.timeLimit.Milliseconds / 10);
+                failReason = string.Format("you did not finish within {0:d2}:{1:d2}.{2:d2}", challenge.timeLimit.Minutes, challenge.timeLimit.Seconds, challenge.timeLimit.Milliseconds / 10);
             }
 
             //Save Results
             if (!succeeded)
             {
-                Debug.LogFormat("Challenge {0} failed because {1}. Please try again.", conditions.challengeName, failReason);
+                Debug.LogFormat("Challenge {0} failed because {1}. Please try again.", challenge.challengeName, failReason);
             }
             else
             {
                 GameRam.currentSaveFile.completedChallenge ??= new List<int>();
-                GameRam.currentSaveFile.completedChallenge.Add(conditions.challengeIndex);
-                switch (conditions.challengeLevel)
+                GameRam.currentSaveFile.completedChallenge.Add(challenge.challengeIndex);
+                switch (challenge.challengeLevel)
                 {
-                    case ChallengeConditions.TicketLevel.Gold:
+                    case Challenge.TicketLevel.Gold:
                         GameRam.currentSaveFile.ticketGold++;
                         break;
-                    case ChallengeConditions.TicketLevel.Silver:
+                    case Challenge.TicketLevel.Silver:
                         GameRam.currentSaveFile.ticketSilver++;
                         break;
-                    case ChallengeConditions.TicketLevel.Bronze:
+                    case Challenge.TicketLevel.Bronze:
                         GameRam.currentSaveFile.ticketBronze++;
                         break;
                 }

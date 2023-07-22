@@ -1,26 +1,27 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
+using UnityEngine.SceneManagement;
 
 public class HubRacePrep : MonoBehaviour
 {
     [SerializeField] bool isActive;
     bool activatedThisFrame;
     bool navHasReset;
-    [SerializeField] GameMode gameMode;
     HubUIBridge uiBridge;
     public int[] playerOptionA = new int[4];
     public int[] playerOptionB = new int[4];
     public int courseOption;
-    public enum PlayerState { Inactive, ChoosingChar, ChoosingBoard, Ready };
+    public enum PlayerState { Inactive, ChoosingChar, ChoosingBoard, Ready, ChoosingCourse };
     public PlayerState[] playerState = new PlayerState[4];
-    Course[] courseList;
-    bool nowChoosingCourse;
+    List<Course> allCourses;
+    List<Course> openCourses = new();
+    List<Challenge> challengeList;
 
     public void Activate(GameMode mode)
     {
-        nowChoosingCourse = false;
-        gameMode = mode;
         isActive = true;
         navHasReset = true;
         activatedThisFrame = true;
@@ -47,14 +48,27 @@ public class HubRacePrep : MonoBehaviour
         }
         GameRam.ownedBoards = GameRam.ownedBoards.OrderBy(x => x.shopIndex).ToList();
 
-        courseList = Resources.LoadAll<Course>("Objects/Courses").ToArray();
+        allCourses = Resources.LoadAll<Course>("Objects/Courses").ToList();
+        allCourses = allCourses.OrderBy(x => x.courseIndex).ToList();
+        foreach (Course course in allCourses)
+        {
+            openCourses.Add(course);
+
+            if ((course.hiddenInBattleMode && GameRam.gameMode == GameMode.Battle) || (course.hiddenInStoryMode && GameRam.gameMode == GameMode.Story))
+                openCourses.Remove(course);
+        }
+
+        challengeList = Resources.LoadAll<Challenge>("Objects/Challenges").ToList();
         GameRam.charForP = new int[4];
         GameRam.boardForP = new int[4];
+        //GameRam.inputUser = new InputUser[4];
+        //GameRam.inputDevice = new InputDevice[4];
+        GameRam.playerCount = 0;
     }
 
     void OnSubmitCustom(int playerIndex)
     {
-        if (!isActive)
+        if (!isActive || (GameRam.gameMode != GameMode.Battle && playerIndex != 0))
             return;
         if (activatedThisFrame)
         {
@@ -62,27 +76,29 @@ public class HubRacePrep : MonoBehaviour
             return;
         }
 
-        if (playerState[playerIndex] == PlayerState.Inactive)
+        switch (playerState[playerIndex])
         {
-            uiBridge.UpdatePlayer(playerIndex);
-            GameRam.playerCount++;
-            playerState[playerIndex] = PlayerState.ChoosingChar;
-        }
-
-        else if (playerState[playerIndex] == PlayerState.ChoosingChar)
-        {
-            uiBridge.UpdateBoard(playerIndex);
-            playerState[playerIndex] = PlayerState.ChoosingBoard;
-        }
-
-        else if (playerState[playerIndex] == PlayerState.ChoosingBoard)
-        {
-            playerState[playerIndex] = PlayerState.Ready;
-        }
-
-        else if (playerState[playerIndex] == PlayerState.Ready)
-        {
-            TestReady();
+            case PlayerState.Inactive:
+                uiBridge.UpdatePlayer(playerIndex);
+                GameRam.playerCount++;
+                playerState[playerIndex] = PlayerState.ChoosingChar;
+                break;
+            case PlayerState.ChoosingChar:
+                uiBridge.UpdateBoard(playerIndex);
+                playerState[playerIndex] = PlayerState.ChoosingBoard;
+                break;
+            case PlayerState.ChoosingBoard:
+                playerState[playerIndex] = PlayerState.Ready;
+                break;
+            case PlayerState.Ready:
+                ReadyCheck();
+                break;
+            case PlayerState.ChoosingCourse:
+                if (playerIndex == 0)
+                {
+                    LoadCourse();
+                }
+                break;
         }
     }
 
@@ -91,35 +107,37 @@ public class HubRacePrep : MonoBehaviour
         if (!isActive)
             return;
 
-        if (playerIndex == 0 && playerState[0] == PlayerState.ChoosingChar)
+        switch (playerState[playerIndex])
         {
-            GetComponent<HubTownControls>().Reactivate();
-            uiBridge.HideWindow(HubUIBridge.WindowSet.RacePrep);
-            isActive = false;
+            case PlayerState.ChoosingChar:
+                if (playerIndex == 0)
+                {
+                    GetComponent<HubTownControls>().Reactivate();
+                    uiBridge.HideWindow(HubUIBridge.WindowSet.RacePrep);
+                    isActive = false;
+                }
+                else
+                {
+                    playerState[playerIndex] = PlayerState.Inactive;
+                    GameRam.playerCount--;
+                    uiBridge.DeactivatePlayer(playerIndex);
+                }
+                break;
+            case PlayerState.ChoosingBoard:
+                playerState[playerIndex] = PlayerState.ChoosingChar;
+                uiBridge.DeactivateBoard(playerIndex);
+                uiBridge.UpdatePlayer(playerIndex);
+                break;
+            case PlayerState.Ready:
+                playerState[playerIndex] = PlayerState.ChoosingBoard;
+                break;
+            case PlayerState.ChoosingCourse:
+                playerState[playerIndex] = PlayerState.ChoosingBoard;
+                break;
         }
-
-        if (playerState[playerIndex] == PlayerState.ChoosingChar && playerIndex != 0)
-        {
-            playerState[playerIndex] = PlayerState.Inactive;
-            GameRam.playerCount--;
-            uiBridge.DeactivatePlayer(playerIndex);
-        }
-
-        else if (playerState[playerIndex] == PlayerState.ChoosingBoard)
-        {
-            playerState[playerIndex] = PlayerState.ChoosingChar;
-            uiBridge.DeactivateBoard(playerIndex);
-            uiBridge.UpdatePlayer(playerIndex);
-        }
-
-        else if (playerState[playerIndex] == PlayerState.Ready)
-        {
-            playerState[playerIndex] = PlayerState.ChoosingBoard;
-        }
-
     }
 
-    void OnNavigateCustom(HubMultiplayerInput.Paras input)
+    void OnNavigateCustom(HubMultiplayerInput.Parameters input)
     {
         if (!isActive)
             return;
@@ -134,10 +152,9 @@ public class HubRacePrep : MonoBehaviour
         if (!navHasReset)
             return;
 
-        if (!nowChoosingCourse)
+        switch (playerState[input.index])
         {
-            if (playerState[input.index] == PlayerState.ChoosingChar)
-            {
+            case PlayerState.ChoosingChar:
                 if (v > 0.5f)
                 {
                     playerOptionA[input.index] += 1;
@@ -147,7 +164,7 @@ public class HubRacePrep : MonoBehaviour
                     }
                     navHasReset = false;
                 }
-                if (v < -0.5f)
+                else if (v < -0.5f)
                 {
                     playerOptionA[input.index] -= 1;
                     if (playerOptionA[input.index] <= -1)
@@ -157,11 +174,9 @@ public class HubRacePrep : MonoBehaviour
                     navHasReset = false;
                 }
                 GameRam.charForP[input.index] = playerOptionA[input.index];
-
                 uiBridge.UpdatePlayer(input.index);
-            }
-            else if (playerState[input.index] == PlayerState.ChoosingBoard)
-            {
+                break;
+            case PlayerState.ChoosingBoard:
                 if (v > 0.5f)
                 {
                     playerOptionB[input.index] += 1;
@@ -171,7 +186,7 @@ public class HubRacePrep : MonoBehaviour
                     }
                     navHasReset = false;
                 }
-                if (v < -0.5f)
+                else if (v < -0.5f)
                 {
                     playerOptionB[input.index] -= 1;
                     if (playerOptionB[input.index] <= -1)
@@ -181,37 +196,61 @@ public class HubRacePrep : MonoBehaviour
                     navHasReset = false;
                 }
                 GameRam.boardForP[input.index] = playerOptionB[input.index];
-
                 uiBridge.UpdateBoard(input.index);
-            }
-        }
-        else
-        {
-            if (v > 0.5f)
-            {
-                courseOption += 1;
-                if (courseOption >= courseList.Length)
+                break;
+            case PlayerState.ChoosingCourse:
+                if (GameRam.gameMode == GameMode.Challenge)
                 {
-                    courseOption = 0;
+                    if (v > 0.5f)
+                    {
+                        courseOption += 1;
+                        if (courseOption >= challengeList.Count)
+                        {
+                            courseOption = 0;
+                        }
+                        navHasReset = false;
+                    }
+                    else if (v < -0.5f)
+                    {
+                        courseOption -= 1;
+                        if (courseOption <= -1)
+                        {
+                            courseOption = challengeList.Count - 1;
+                        }
+                        navHasReset = false;
+                    }
+                    //GameRam.currentChallenge = challengeList[courseOption];
+                    //GameRam.courseToLoad = challengeList[courseOption].challengeCourse.courseSceneName;
+                    uiBridge.UpdateChallengeSelect(challengeList[courseOption]);
                 }
-                navHasReset = false;
-            }
-            if (v < -0.5f)
-            {
-                courseOption -= 1;
-                if (courseOption <= -1)
+                else
                 {
-                    courseOption = courseList.Length - 1;
+                    if (v > 0.5f)
+                    {
+                        courseOption += 1;
+                        if (courseOption >= openCourses.Count)
+                        {
+                            courseOption = 0;
+                        }
+                        navHasReset = false;
+                    }
+                    else if (v < -0.5f)
+                    {
+                        courseOption -= 1;
+                        if (courseOption <= -1)
+                        {
+                            courseOption = openCourses.Count - 1;
+                        }
+                        navHasReset = false;
+                    }
+                    //GameRam.courseToLoad = openCourses[courseOption].courseSceneName;
+                    uiBridge.UpdateCourseSelect(openCourses[courseOption]);
                 }
-                navHasReset = false;
-            }
-            //GameRam.courseToLoad = courseList[courseOption].courseSceneName;
-
-            uiBridge.UpdateCourseSelect(courseList[courseOption]);
+                break;
         }
     }
 
-    void TestReady()
+    void ReadyCheck()
     {
         int notReady = 0;
         for (int i = 0; i < 4; i++)
@@ -219,16 +258,40 @@ public class HubRacePrep : MonoBehaviour
             if (playerState[i] == PlayerState.ChoosingBoard || playerState[i] == PlayerState.ChoosingChar)
                 notReady++;
         }
+
         if (notReady > 0)
         {
             Debug.Log(notReady + " players not ready.");
         }
         else
         {
-            nowChoosingCourse = true;
+            if (GameRam.gameMode == GameMode.Challenge)
+                uiBridge.UpdateChallengeSelect(challengeList[courseOption]);
+            else
+                uiBridge.UpdateCourseSelect(openCourses[courseOption]);
+
+            playerState[0] = PlayerState.ChoosingCourse;
             uiBridge.HideWindow(HubUIBridge.WindowSet.RacePrep);
             uiBridge.RevealWindow(HubUIBridge.WindowSet.CourseSelect);
-            uiBridge.UpdateCourseSelect(courseList[playerOptionA[0]]);
+        }
+    }
+
+    void LoadCourse()
+    {
+        if (GameRam.gameMode == GameMode.Challenge)
+        {
+            GameRam.currentChallenge = challengeList[courseOption];
+            GameRam.courseToLoad = challengeList[courseOption].challengeCourse.courseSceneName;
+            StartCoroutine(GetComponent<HubTownControls>().FadeAndLoad("TrackContainer"));
+        }
+        else if (GameRam.gameMode == GameMode.Story)
+        {
+            StartCoroutine(GetComponent<HubTownControls>().FadeAndLoad(openCourses[courseOption].courseCutsceneName));
+        }
+        else
+        {
+            GameRam.courseToLoad = openCourses[courseOption].courseSceneName;
+            StartCoroutine(GetComponent<HubTownControls>().FadeAndLoad("TrackContainer"));
         }
     }
 }

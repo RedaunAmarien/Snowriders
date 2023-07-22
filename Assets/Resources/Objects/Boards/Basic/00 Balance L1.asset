@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b557dd034a45c34fa36b82f950ae5dc, type: 3}
   m_Name: 00 Balance L1
   m_EditorClassIdentifier: 
-  name: Balance Lv. 1
+  boardName: Balance Lv. 1
   description: A well-balanced board.
   boardID: 0
   shopIndex: 0

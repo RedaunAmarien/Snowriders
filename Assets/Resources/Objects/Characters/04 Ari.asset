@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee24f8c4e8a0a25428cdf59076279896, type: 3}
   m_Name: 04 Ari
   m_EditorClassIdentifier: 
-  name: Ariston
+  characterName: Ariston
+  characterIndex: 4
   creator: "Amari\xE9n Games"
   updateTimeStamp: 
-  charSpriteIndex: 0
   speed: 5
   turn: 2
   jump: 2

@@ -56,7 +56,7 @@ public class CharacterEditor : MonoBehaviour {
         List<string> savedChars = new List<string> {};
         for (int i = 0; i < charFile.Length; i++) {
             GameRam.customCharacters.Add(LoadChar(charFile[i]));
-            savedChars.Add(GameRam.customCharacters[i].name);
+            savedChars.Add(GameRam.customCharacters[i].characterName);
         }
 
         // Update Total list for gameplay.
@@ -86,29 +86,29 @@ public class CharacterEditor : MonoBehaviour {
     }
 
     public void SetName() {
-        currentCharData.name = nameBox.text;
+        currentCharData.characterName = nameBox.text;
     }
 
     public void Save(bool forSure) {
         if (!exiting) {
-            if (currentCharData.name == "") {
+            if (currentCharData.characterName == "") {
                 warningText.text = "Character name is required.";
             }
             else {
                 if (!forSure) {
-                    charDataPath = Path.Combine(charDir, currentCharData.name+".sbcc");
+                    charDataPath = Path.Combine(charDir, currentCharData.characterName+".sbcc");
                     if (File.Exists (charDataPath)) {
-                        warningText.text = "The character \"" + currentCharData.name + "\" already exists.\nDo you want to overwrite this character?";
+                        warningText.text = "The character \"" + currentCharData.characterName + "\" already exists.\nDo you want to overwrite this character?";
                     }
                     if (!File.Exists (charDataPath)) {
-                        warningText.text = "Are you sure you are ready to save the character \"" + currentCharData.name + "\"?";
+                        warningText.text = "Are you sure you are ready to save the character \"" + currentCharData.characterName + "\"?";
                     }
                 }
                 else {
                     currentCharData.creator = GameRam.currentSaveFile.fileName;
                     currentCharData.updateTimeStamp = System.DateTime.Now.ToString();
                     SaveChar(currentCharData, charDataPath);
-                    print ("Successfully saved " + currentCharData.name);
+                    print ("Successfully saved " + currentCharData.characterName);
                     UpdateLoadList();
                 }
             }
@@ -130,7 +130,7 @@ public class CharacterEditor : MonoBehaviour {
 
     public void Load() {
         currentCharData = LoadChar(charFile[loadChars.value]);
-        newName.text = currentCharData.name;
+        newName.text = currentCharData.characterName;
         speedSl.value = currentCharData.speed;
         turnSl.value = currentCharData.turn;
         jumpSl.value = currentCharData.jump;

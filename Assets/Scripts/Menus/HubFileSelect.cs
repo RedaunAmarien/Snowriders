@@ -84,7 +84,7 @@ public class HubFileSelect : MonoBehaviour
         }
     }
 
-    public void OnNavigateCustom(HubMultiplayerInput.Paras input)
+    public void OnNavigateCustom(HubMultiplayerInput.Parameters input)
     {
         if (!isActive || navLocked || input.index != 0)
             return;
@@ -212,7 +212,7 @@ public class HubFileSelect : MonoBehaviour
                 if (board.boardID == pin)
                 {
                     GameRam.ownedBoards.Add(board);
-                    // Debug.Log("Board " + board.name + " owned.");
+                    // Debug.Log("Board " + board.characterName + " owned.");
                 }
             }
         }

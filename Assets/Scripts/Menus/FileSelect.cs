@@ -150,7 +150,7 @@ public class FileSelect : MonoBehaviour {
 				foreach (Board board in GameRam.allBoards) {
 					if (board.boardID == pin) {
 						GameRam.ownedBoards.Add(board);
-						// Debug.Log("Board " + board.name + " owned.");
+						// Debug.Log("Board " + board.characterName + " owned.");
 					}
 				}
 			}
@@ -244,7 +244,7 @@ public class FileSelect : MonoBehaviour {
 				int bronzes = 0;
 				int black = 0;
 				for (int j = 0; j < saveData[i].courseGrade.Length; j++) {
-					if (saveData[i].courseGrade[j] == SaveData.CourseGrade.Black) black ++;
+					if (saveData[i].courseGrade[j] == SaveData.CourseGrade.Glass) black ++;
 					if (saveData[i].courseGrade[j] == SaveData.CourseGrade.Bronze) bronzes ++;
 					if (saveData[i].courseGrade[j] == SaveData.CourseGrade.Silver) silvers ++;
 					if (saveData[i].courseGrade[j] == SaveData.CourseGrade.Gold) golds ++;

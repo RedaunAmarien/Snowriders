@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Windows;
 
 public class HubMultiplayerInput : MonoBehaviour
 {
@@ -12,10 +13,13 @@ public class HubMultiplayerInput : MonoBehaviour
     {
         hubController = GameObject.Find("Controller");
         transform.parent = hubController.transform;
-        myIndex = GetComponent<PlayerInput>().playerIndex;
+        PlayerInput input = GetComponent<PlayerInput>();
+        myIndex = input.playerIndex;
+        GameRam.inputDevice[input.playerIndex] = input.user.pairedDevices[0];
+        GameRam.inputUser[input.playerIndex] = input.user;
     }
 
-    public struct Paras {
+    public struct Parameters {
         public InputValue val;
         public int index;
     }
@@ -23,7 +27,7 @@ public class HubMultiplayerInput : MonoBehaviour
     // Update is called once per frame
     void OnNavigate(InputValue val)
     {
-        Paras paras = new Paras();
+        Parameters paras = new();
         paras.val = val;
         paras.index = myIndex;
         gameObject.SendMessageUpwards("OnNavigateCustom", paras);

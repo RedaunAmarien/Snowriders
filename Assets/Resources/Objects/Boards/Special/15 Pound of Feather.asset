@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b557dd034a45c34fa36b82f950ae5dc, type: 3}
   m_Name: 15 Pound of Feather
   m_EditorClassIdentifier: 
-  name: Pound of Feather
+  boardName: Feather Board
   description: Can you fly?
   boardID: 18
   shopIndex: 15

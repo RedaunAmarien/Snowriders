@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b557dd034a45c34fa36b82f950ae5dc, type: 3}
   m_Name: 03 Control L1
   m_EditorClassIdentifier: 
-  name: Control Lv. 1
+  boardName: Control Lv. 1
   description: A board for turning sharp.
   boardID: 9
   shopIndex: 3

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b557dd034a45c34fa36b82f950ae5dc, type: 3}
   m_Name: 02 Trick L1
   m_EditorClassIdentifier: 
-  name: Trick Lv. 1
+  boardName: Trick Lv. 1
   description: A board for jumping high.
   boardID: 6
   shopIndex: 2

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b557dd034a45c34fa36b82f950ae5dc, type: 3}
   m_Name: 08 Balance L3
   m_EditorClassIdentifier: 
-  name: Balance Lv. 3
+  boardName: Balance Lv. 3
   description: The best-balanced board.
   boardID: 2
   shopIndex: 8

@@ -3,20 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 public class HubUIBridge : MonoBehaviour
 {
+    [SerializeField] UIDocument uiDoc;
+    VisualElement fader;
     VisualElement fileSelectRoot;
     VisualElement racePrepRoot;
     VisualElement courseSelectRoot;
     VisualElement loadedFileRoot;
-    [SerializeField] UIDocument uiDoc;
-    Button createButton;
-    Button deleteButton;
-    Button backButton;
-    ListView fileList;
-    VisualTreeAsset listItemTemplate;
     public Label fileName, coinCount, goldMed, silvMed, bronMed, goldTick, silvTick, bronTick;
     public Label infoName;
     public Label infoDescription;
@@ -24,17 +21,21 @@ public class HubUIBridge : MonoBehaviour
     [SerializeField] Sprite bronzeSprite;
     [SerializeField] Sprite silverSprite;
     [SerializeField] Sprite goldSprite;
+    [SerializeField] Sprite blackTicket;
+    [SerializeField] Sprite bronzeTicket;
+    [SerializeField] Sprite silverTicket;
+    [SerializeField] Sprite goldTicket;
     TextField newNameField;
     int newFileSlot;
 
     void Awake()
     {
         //File References
+        fader = uiDoc.rootVisualElement.Q<VisualElement>("Fader");
         fileSelectRoot = uiDoc.rootVisualElement.Q<VisualElement>("FileSelect");
         racePrepRoot = uiDoc.rootVisualElement.Q<VisualElement>("RacePrep");
         courseSelectRoot = uiDoc.rootVisualElement.Q<VisualElement>("CourseSelect");
         loadedFileRoot = uiDoc.rootVisualElement.Q<VisualElement>("Stats");
-        fileList = uiDoc.rootVisualElement.Q<ListView>("FileList");
         infoName = uiDoc.rootVisualElement.Q<Label>("SubjectName");
         infoDescription = uiDoc.rootVisualElement.Q<Label>("SubjectDescription");
 
@@ -81,6 +82,15 @@ public class HubUIBridge : MonoBehaviour
                 courseSelectRoot.AddToClassList("hidden");
                 break;
         }
+    }
+
+    public void FadeIn()
+    {
+        fader.AddToClassList("fader-hide");
+    }   
+    public void FadeOut()
+    {
+        fader.RemoveFromClassList("fader-hide");
     }
 
     public void HighlightSave(int slot)
@@ -189,7 +199,7 @@ public class HubUIBridge : MonoBehaviour
         List<VisualElement> jStars = jRoot.Query(name: "Star").ToList();
 
         portrait.style.backgroundImage = new StyleBackground(GameRam.allCharacters[GameRam.charForP[index]].charSprite);
-        charName.text = GameRam.allCharacters[GameRam.charForP[index]].name;
+        charName.text = GameRam.allCharacters[GameRam.charForP[index]].characterName;
 
         if (GameRam.allCharacters[GameRam.charForP[index]].speed > 7)
             sStars.ForEach(x => x.style.backgroundImage = new StyleBackground(goldSprite));
@@ -257,7 +267,7 @@ public class HubUIBridge : MonoBehaviour
         List<VisualElement> cStars = cRoot.Query(name: "Star").ToList();
         List<VisualElement> jStars = jRoot.Query(name: "Star").ToList();
 
-        boardName.text = GameRam.ownedBoards[GameRam.boardForP[index]].name;
+        boardName.text = GameRam.ownedBoards[GameRam.boardForP[index]].boardName;
 
         if (GameRam.allCharacters[GameRam.charForP[index]].speed + GameRam.ownedBoards[GameRam.boardForP[index]].speed > 7)
             sStars.ForEach(x => x.style.backgroundImage = new StyleBackground(goldSprite));
@@ -330,7 +340,7 @@ public class HubUIBridge : MonoBehaviour
             case SaveData.CourseGrade.None:
                 grade.style.backgroundImage = null;
                 break;
-            case SaveData.CourseGrade.Black:
+            case SaveData.CourseGrade.Glass:
                 grade.style.backgroundImage = new StyleBackground(blackSprite);
                 break;
             case SaveData.CourseGrade.Bronze:
@@ -350,5 +360,42 @@ public class HubUIBridge : MonoBehaviour
         prize2.text = string.Format("2nd: {0}", course.prizeMoney[1].ToString("N0"));
         prize3.text = string.Format("3rd: {0}", course.prizeMoney[2].ToString("N0"));
         prize4.text = string.Format("4th: {0}", course.prizeMoney[3].ToString("N0"));
+    }
+
+    public void UpdateChallengeSelect(Challenge challenge)
+    {
+        Label courseName = courseSelectRoot.Q<Label>("CourseName");
+        VisualElement grade = courseSelectRoot.Q<VisualElement>("CourseGrade");
+        VisualElement preview = courseSelectRoot.Q<VisualElement>("CoursePreview");
+        Label lapCount = courseSelectRoot.Q<Label>("LapCount");
+        Label courseLength = courseSelectRoot.Q<Label>("Length");
+        Label prize1 = courseSelectRoot.Q<Label>("Prize1");
+        Label prize2 = courseSelectRoot.Q<Label>("Prize2");
+        Label prize3 = courseSelectRoot.Q<Label>("Prize3");
+        Label prize4 = courseSelectRoot.Q<Label>("Prize4");
+
+        courseName.text = challenge.challengeName;
+        switch (challenge.challengeLevel)
+        {
+            case Challenge.TicketLevel.Glass:
+                grade.style.backgroundImage = new StyleBackground(blackTicket);
+                break;
+            case Challenge.TicketLevel.Bronze:
+                grade.style.backgroundImage = new StyleBackground(bronzeTicket);
+                break;
+            case Challenge.TicketLevel.Silver:
+                grade.style.backgroundImage = new StyleBackground(silverTicket);
+                break;
+            case Challenge.TicketLevel.Gold:
+                grade.style.backgroundImage = new StyleBackground(goldTicket);
+                break;
+        }
+        preview.style.backgroundImage = challenge.challengeCourse.preview;
+        lapCount.text = string.Format("{0} laps", challenge.challengeCourse.defaultLapCount.ToString("N0"));
+        courseLength.text = string.Format("{0}m", challenge.challengeCourse.courseLength.ToString("N0"));
+        prize1.text = "Requirements:";
+        prize2.text = challenge.boardRule ? string.Format("Use the {0}", challenge.requiredBoard.boardName) : "Any Board";
+        prize3.text = challenge.coinRule ? string.Format("Finish with at least {0:N0} coints", challenge.requiredCoinCount) : "No Point Requirement";
+        prize4.text = challenge.timeRule ? string.Format("Finish under {0} seconds", challenge.timeLimitInSeconds) : "No Time Limit";
     }
 }

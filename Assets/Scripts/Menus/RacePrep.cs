@@ -28,7 +28,7 @@ public class RacePrep : MonoBehaviour {
     public GameObject courseSlotPref;
     public Transform courseSlotParent;
     public ChosenCourse[] courses;
-    public ChallengeConditions[] challenges;
+    public Challenge[] challenges;
     List<GameObject> courseSlot = new List<GameObject>();
     List<TextMeshProUGUI> ranks = new List<TextMeshProUGUI>();
 
@@ -49,8 +49,8 @@ public class RacePrep : MonoBehaviour {
         GameRam.controlp = new int[4];
         GameRam.charForP = new int[4];
         GameRam.boardForP = new int[4];
-        GameRam.inpUse = new InputUser[4];
-        GameRam.inpDev = new InputDevice[4];
+        GameRam.inputUser = new InputUser[4];
+        GameRam.inputDevice = new InputDevice[4];
 
 		// Main Menu
         loadSet.SetActive(false);
@@ -123,7 +123,7 @@ public class RacePrep : MonoBehaviour {
                     {
                         ranks[i].text = "";
                     }
-                    else if (GameRam.currentSaveFile.courseGrade[i] == SaveData.CourseGrade.Black)
+                    else if (GameRam.currentSaveFile.courseGrade[i] == SaveData.CourseGrade.Glass)
                     {
                         ranks[i].text = "<sprite=\"Medals\" index=3>";
                     }
@@ -201,8 +201,8 @@ public class RacePrep : MonoBehaviour {
     public void OnPlayerJoined(PlayerInput player)
     {
         GameRam.playerCount = player.user.index + 1;
-        GameRam.inpUse[player.user.index] = player.user;
-        GameRam.inpDev[player.user.index] = player.user.pairedDevices[0];
+        GameRam.inputUser[player.user.index] = player.user;
+        GameRam.inputDevice[player.user.index] = player.user.pairedDevices[0];
         Debug.LogFormat("Player {0} joined using {1}.", player.user.id, player.user.pairedDevices[0]);
     }
 

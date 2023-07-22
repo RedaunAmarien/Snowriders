@@ -15,8 +15,9 @@ MonoBehaviour:
   courseName: Steep Cliff
   courseSceneName: Track6
   courseCutsceneName: Track6cut
-  courseIndex: 5
+  courseIndex: 6
   defaultLapCount: 3
+  courseLength: 0
   defaultCpu:
   - {fileID: 11400000, guid: 481d7a099e9f09f4e8f9b319aa55bcb9, type: 2}
   - {fileID: 11400000, guid: 69532b60c268730448e67c97842de0a9, type: 2}
@@ -28,3 +29,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3135586e4b78b11488456293127e63db, type: 2}
   - {fileID: 11400000, guid: ae81b17dfff0a6a47be0e8d3a962a8dd, type: 2}
   prizeMoney: 88130000c4090000e204000071020000
+  minimap: {fileID: 0}
+  preview: {fileID: 0}
+  hiddenInStoryMode: 1
+  hiddenInBattleMode: 0

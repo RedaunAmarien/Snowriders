@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b557dd034a45c34fa36b82f950ae5dc, type: 3}
   m_Name: 09 Speed L3
   m_EditorClassIdentifier: 
-  name: Speed Lv. 3
+  boardName: Speed Lv. 3
   description: The board for going the fastest.
   boardID: 5
   shopIndex: 9

@@ -180,130 +180,18 @@ MonoBehaviour:
   fadePanel: {fileID: 1411847694}
   fadeDelay: 1
   demoMode: 0
-  demoCourse: Track0
-  demoPlayerCount: 1
+  demoCourse: {fileID: 11400000, guid: 2a7f39476c64348469dd165998c60967, type: 2}
+  demoPlayerCount: 0
   demoChars:
-  - name: Redaun
-    creator: 
-    updateTimeStamp: 
-    charSpriteIndex: 0
-    speed: 3
-    turn: 3
-    jump: 3
-    special: 0
-    skinCol: 0
-    head: 0
-    hairStyle: 0
-    hairCol: 0
-    top: 0
-    bottom: 0
-    shoe: 0
-    custom: 0
-  - name: Ariston
-    creator: 
-    updateTimeStamp: 
-    charSpriteIndex: 4
-    speed: 5
-    turn: 2
-    jump: 2
-    special: 0
-    skinCol: 0
-    head: 0
-    hairStyle: 0
-    hairCol: 0
-    top: 0
-    bottom: 0
-    shoe: 0
-    custom: 0
-  - name: Lex
-    creator: 
-    updateTimeStamp: 
-    charSpriteIndex: 6
-    speed: 2
-    turn: 2
-    jump: 5
-    special: 0
-    skinCol: 0
-    head: 0
-    hairStyle: 0
-    hairCol: 0
-    top: 0
-    bottom: 0
-    shoe: 0
-    custom: 0
-  - name: Takohachi
-    creator: 
-    updateTimeStamp: 
-    charSpriteIndex: 5
-    speed: 2
-    turn: 5
-    jump: 2
-    special: 0
-    skinCol: 0
-    head: 0
-    hairStyle: 0
-    hairCol: 0
-    top: 0
-    bottom: 0
-    shoe: 0
-    custom: 0
+  - {fileID: 11400000, guid: be0dd09675e96fb419aae61bd4acaff2, type: 2}
+  - {fileID: 11400000, guid: 69532b60c268730448e67c97842de0a9, type: 2}
+  - {fileID: 11400000, guid: e156ac59ad11ba044bb379fde9fca1b5, type: 2}
+  - {fileID: 11400000, guid: e71d156a354e0364d853d4ef6211ddb9, type: 2}
   demoBoards:
-  - name: A
-    description: 
-    boardID: 0
-    shopIndex: 0
-    level: 0
-    speed: 3
-    turn: 3
-    jump: 3
-    boardCost:
-      coins: 0
-      bronzeTickets: 0
-      silverTickets: 0
-      goldTickets: 0
-    specialAbility: 
-  - name: A
-    description: 
-    boardID: 0
-    shopIndex: 0
-    level: 0
-    speed: 3
-    turn: 3
-    jump: 3
-    boardCost:
-      coins: 0
-      bronzeTickets: 0
-      silverTickets: 0
-      goldTickets: 0
-    specialAbility: 
-  - name: A
-    description: 
-    boardID: 0
-    shopIndex: 0
-    level: 0
-    speed: 3
-    turn: 3
-    jump: 3
-    boardCost:
-      coins: 0
-      bronzeTickets: 0
-      silverTickets: 0
-      goldTickets: 0
-    specialAbility: 
-  - name: A
-    description: 
-    boardID: 0
-    shopIndex: 0
-    level: 0
-    speed: 3
-    turn: 3
-    jump: 3
-    boardCost:
-      coins: 0
-      bronzeTickets: 0
-      silverTickets: 0
-      goldTickets: 0
-    specialAbility: 
+  - {fileID: 11400000, guid: f7a6e4a21df734a4da4859da67c51383, type: 2}
+  - {fileID: 11400000, guid: f2c7c6ec79134f845b5bda286dd7cd89, type: 2}
+  - {fileID: 11400000, guid: bad4a308bdacf184b8630c9b6f9f50c7, type: 2}
+  - {fileID: 11400000, guid: 813cbfc2226503a498d242300595b851, type: 2}
   demoLayout: XInputControllerWindows
 --- !u!4 &817649024
 Transform:

@@ -110,3 +110,7 @@ VisualElement {
     position: absolute;
     top: 20px;
 }
+
+.fader-hide {
+    opacity: 0;
+}

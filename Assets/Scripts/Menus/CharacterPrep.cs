@@ -142,7 +142,7 @@ public class CharacterPrep : MonoBehaviour {
             lArrow.anchorMax = new Vector2 (0, .95f);
 
             // Keep text and image fields updated.
-            charText.text = GameRam.allCharacters[GameRam.charForP[myNumber]].name;
+            charText.text = GameRam.allCharacters[GameRam.charForP[myNumber]].characterName;
             pSpeed.fillAmount = GameRam.allCharacters[GameRam.charForP[myNumber]].speed/10f;
             tSpeed.fillAmount = 0;
             pTurn.fillAmount = GameRam.allCharacters[GameRam.charForP[myNumber]].turn/10f;
@@ -176,7 +176,7 @@ public class CharacterPrep : MonoBehaviour {
                 boardText.color = Color.white;
             // }
             // else {
-            //     boardText.text = GameRam.ownedBoardData[GameRam.boardForP[myNumber]].name + " (Locked)";
+            //     boardText.text = GameRam.ownedBoardData[GameRam.boardForP[myNumber]].characterName + " (Locked)";
             //     boardText.color = Color.gray;
             // }
             tSpeed.fillAmount = (GameRam.allCharacters[GameRam.charForP[myNumber]].speed + GameRam.ownedBoards[GameRam.boardForP[myNumber]].speed)/10f;

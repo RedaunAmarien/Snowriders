@@ -16,7 +16,7 @@
                 <ui:VisualElement name="CoursePreview" style="background-image: url(&apos;project://database/Assets/Materials/Textures/testtrackTEX.png?fileID=2800000&amp;guid=76a9b168af27ce646b464cbae09c16f2&amp;type=3#testtrackTEX&apos;); width: 75%; height: 100%; -unity-background-scale-mode: scale-to-fit; align-self: flex-start; align-items: flex-start;" />
             </ui:VisualElement>
             <ui:VisualElement name="RacePrep" class="topMenu hidden" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.33); margin-left: 8px; margin-right: 8px; margin-top: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; flex-direction: row; justify-content: center; transition-delay: 0s, 0.5s;">
-                <ui:VisualElement name="P0" class="playerBox" style="justify-content: center; align-items: center; align-self: stretch;">
+                <ui:VisualElement name="P0" class="playerBox hidden" style="justify-content: center; align-items: center; align-self: stretch;">
                     <ui:VisualElement style="background-image: url(&apos;project://database/Assets/Sprites/HeadSprite.png?fileID=21300000&amp;guid=603e5d696b1ac944d804f4adb8caa401&amp;type=3#HeadSprite_0&apos;); -unity-background-scale-mode: scale-to-fit; width: 256px; height: 256px;">
                         <ui:VisualElement name="Portrait" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Sprites/CharacterPortraits1.png?fileID=-4409327933661749935&amp;guid=562b0f12a84600f4e9354958ab4218d6&amp;type=3#CharacterPortraits1_15&apos;); -unity-background-scale-mode: scale-to-fit; border-top-left-radius: 128px; border-bottom-left-radius: 128px; border-top-right-radius: 128px; border-bottom-right-radius: 128px;" />
                     </ui:VisualElement>
@@ -64,7 +64,7 @@
                     </ui:VisualElement>
                     <ui:Label tabindex="-1" text="Balance Lv. 0" display-tooltip-when-elided="true" name="BoardName" />
                 </ui:VisualElement>
-                <ui:VisualElement name="P1" class="playerBox" style="justify-content: center; align-items: center; align-self: stretch;">
+                <ui:VisualElement name="P1" class="playerBox hidden" style="justify-content: center; align-items: center; align-self: stretch;">
                     <ui:VisualElement style="background-image: url(&apos;project://database/Assets/Sprites/HeadSprite.png?fileID=21300002&amp;guid=603e5d696b1ac944d804f4adb8caa401&amp;type=3#HeadSprite_1&apos;); -unity-background-scale-mode: scale-to-fit; width: 256px; height: 256px;">
                         <ui:VisualElement name="Portrait" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Sprites/CharacterPortraits1.png?fileID=-4409327933661749935&amp;guid=562b0f12a84600f4e9354958ab4218d6&amp;type=3#CharacterPortraits1_15&apos;); -unity-background-scale-mode: scale-to-fit; border-top-left-radius: 128px; border-bottom-left-radius: 128px; border-top-right-radius: 128px; border-bottom-right-radius: 128px;" />
                     </ui:VisualElement>
@@ -112,7 +112,7 @@
                     </ui:VisualElement>
                     <ui:Label tabindex="-1" text="Balance Lv. 0" display-tooltip-when-elided="true" name="BoardName" />
                 </ui:VisualElement>
-                <ui:VisualElement name="P2" class="playerBox" style="justify-content: center; align-items: center; align-self: stretch;">
+                <ui:VisualElement name="P2" class="playerBox hidden" style="justify-content: center; align-items: center; align-self: stretch;">
                     <ui:VisualElement style="background-image: url(&apos;project://database/Assets/Sprites/HeadSprite.png?fileID=21300004&amp;guid=603e5d696b1ac944d804f4adb8caa401&amp;type=3#HeadSprite_2&apos;); -unity-background-scale-mode: scale-to-fit; width: 256px; height: 256px;">
                         <ui:VisualElement name="Portrait" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Sprites/CharacterPortraits1.png?fileID=-4409327933661749935&amp;guid=562b0f12a84600f4e9354958ab4218d6&amp;type=3#CharacterPortraits1_15&apos;); -unity-background-scale-mode: scale-to-fit; border-top-left-radius: 128px; border-bottom-left-radius: 128px; border-top-right-radius: 128px; border-bottom-right-radius: 128px;" />
                     </ui:VisualElement>
@@ -160,7 +160,7 @@
                     </ui:VisualElement>
                     <ui:Label tabindex="-1" text="Balance Lv. 0" display-tooltip-when-elided="true" name="BoardName" />
                 </ui:VisualElement>
-                <ui:VisualElement name="P3" class="playerBox" style="justify-content: center; align-items: center; align-self: stretch;">
+                <ui:VisualElement name="P3" class="playerBox hidden" style="justify-content: center; align-items: center; align-self: stretch;">
                     <ui:VisualElement style="background-image: url(&apos;project://database/Assets/Sprites/HeadSprite.png?fileID=21300006&amp;guid=603e5d696b1ac944d804f4adb8caa401&amp;type=3#HeadSprite_3&apos;); -unity-background-scale-mode: scale-to-fit; width: 256px; height: 256px;">
                         <ui:VisualElement name="Portrait" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Sprites/CharacterPortraits1.png?fileID=-4409327933661749935&amp;guid=562b0f12a84600f4e9354958ab4218d6&amp;type=3#CharacterPortraits1_15&apos;); -unity-background-scale-mode: scale-to-fit; border-top-left-radius: 128px; border-bottom-left-radius: 128px; border-top-right-radius: 128px; border-bottom-right-radius: 128px;" />
                     </ui:VisualElement>
@@ -506,5 +506,6 @@
             </ui:VisualElement>
             <ui:VisualElement name="MiniMenu" style="background-color: rgba(0, 0, 0, 0.33); width: 20%; border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; margin-left: 8px; margin-right: 8px; margin-top: 8px; margin-bottom: 8px;" />
         </ui:VisualElement>
+        <ui:VisualElement name="Fader" class="fader-hide" style="flex-grow: 0; background-color: rgb(0, 0, 0); flex-shrink: 0; position: absolute; left: -2px; top: -2px; right: -2px; bottom: -2px; transition-property: scale, opacity; transition-duration: 0.5s, 0.5s; transition-timing-function: ease-in-out, ease-in-out; transition-delay: 0s, 0s;" />
     </ui:VisualElement>
 </ui:UXML>
