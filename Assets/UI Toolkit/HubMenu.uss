@@ -1,3 +1,22 @@
+VisualElement {
+    transition-property: scale, opacity;
+    transition-duration: 0.5s, 0.5s;
+    transition-timing-function: ease-in-out, ease-in-out-sine;
+}
+
+#Star {
+    background-image: url('project://database/Assets/Sprites/Medals.png?fileID=1699839288339780594&guid=05adc2954d37a7e49930cc5416d2e13d&type=3#Medal_Gold');
+    -unity-background-scale-mode: scale-to-fit;
+    width: 32px;
+    flex-shrink: 0;
+    height: 32px;
+}
+
+#NamingRoot {
+    position: absolute;
+    top: 20px;
+}
+
 .unity-label {
     color: rgb(255, 255, 255);
     -unity-font-definition: url('project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans%20SDF%201.asset?fileID=11400000&guid=fafd0aad09833434aa190a407109affa&type=2#LiberationSans SDF 1');
@@ -92,25 +111,11 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-#Star {
-    background-image: url('project://database/Assets/Sprites/Medals.png?fileID=1699839288339780594&guid=05adc2954d37a7e49930cc5416d2e13d&type=3#Medal_Gold');
-    -unity-background-scale-mode: scale-to-fit;
-    width: 32px;
-    flex-shrink: 0;
-    height: 32px;
-}
-
-VisualElement {
-    transition-property: scale;
-    transition-duration: 0.5s;
-    transition-timing-function: ease-in-out;
-}
-
-#NamingRoot {
-    position: absolute;
-    top: 20px;
-}
-
 .fader-hide {
     opacity: 0;
+}
+
+.flash-on {
+    opacity: 0.5;
+    scale: 0.9 0.9;
 }

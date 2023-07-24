@@ -220,12 +220,6 @@ Transform:
   m_Father: {fileID: 1469314644}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &180799096 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7221068806108558610, guid: 0424e0cd9f149f24ca2e5d73f39c893e,
-    type: 3}
-  m_PrefabInstance: {fileID: 2010920948}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &186638848
 GameObject:
   m_ObjectHideFlags: 0
@@ -4006,14 +4000,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8de5c33ffce2b0549b7d68ac0c6de377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentMenuSet: 
   optionCode: 
   moveTime: 0.075
-  cam: {fileID: 938463357}
-  loadSet: {fileID: 180799096}
   rootOptions:
   - optionName: Kiosk
-    optionDescription: 
+    optionDescription: Select save file, change options, or quit the game.
     camera: {fileID: 556020342}
     door: {fileID: 0}
     events:
@@ -4021,7 +4012,7 @@ MonoBehaviour:
         m_Calls: []
     subOptions:
     - optionName: File Select
-      optionDescription: 
+      optionDescription: Select a save file or create a new one.
       camera: {fileID: 5426330023825910800}
       door: {fileID: 0}
       events:
@@ -4029,7 +4020,9 @@ MonoBehaviour:
           m_Calls: []
       subOptions: []
     - optionName: Options
-      optionDescription: 
+      optionDescription: '<color=red>(Unavailable)</color>
+
+        Change game options.'
       camera: {fileID: 5426330024702503459}
       door: {fileID: 0}
       events:
@@ -4037,7 +4030,9 @@ MonoBehaviour:
           m_Calls: []
       subOptions: []
     - optionName: Quit Game
-      optionDescription: 
+      optionDescription: 'Exit the game.
+
+        Unsaved data will be lost.'
       camera: {fileID: 556020342}
       door: {fileID: 0}
       events:
@@ -4045,7 +4040,7 @@ MonoBehaviour:
           m_Calls: []
       subOptions: []
   - optionName: Race
-    optionDescription: 
+    optionDescription: Hit the slopes!
     camera: {fileID: 1988853516}
     door: {fileID: 0}
     events:
@@ -4053,7 +4048,7 @@ MonoBehaviour:
         m_Calls: []
     subOptions:
     - optionName: Story
-      optionDescription: 
+      optionDescription: Play the story mode, earning medals and coins.
       camera: {fileID: 5426330024510313438}
       door: {fileID: 0}
       events:
@@ -4061,7 +4056,7 @@ MonoBehaviour:
           m_Calls: []
       subOptions: []
     - optionName: Battle
-      optionDescription: 
+      optionDescription: Play with friends locally, earning coins together.
       camera: {fileID: 464086545187897919}
       door: {fileID: 0}
       events:
@@ -4069,7 +4064,10 @@ MonoBehaviour:
           m_Calls: []
       subOptions: []
     - optionName: Online
-      optionDescription: 
+      optionDescription: '<color=red>(Unavailable)</color>
+
+        Play with friends
+        online, earning coins for yourself.'
       camera: {fileID: 5426330024737272659}
       door: {fileID: 0}
       events:
@@ -4077,7 +4075,7 @@ MonoBehaviour:
           m_Calls: []
       subOptions: []
     - optionName: Challenge
-      optionDescription: 
+      optionDescription: Take on challenges to earn tickets.
       camera: {fileID: 5426330023524561285}
       door: {fileID: 0}
       events:
@@ -4085,7 +4083,7 @@ MonoBehaviour:
           m_Calls: []
       subOptions: []
   - optionName: Mall
-    optionDescription: 
+    optionDescription: Spend tickets and coins.
     camera: {fileID: 1328142229}
     door: {fileID: 0}
     events:
@@ -4093,7 +4091,7 @@ MonoBehaviour:
         m_Calls: []
     subOptions:
     - optionName: Board Shop
-      optionDescription: 
+      optionDescription: Upgrade or buy new boards.
       camera: {fileID: 1716682205}
       door: {fileID: 0}
       events:
@@ -4101,7 +4099,10 @@ MonoBehaviour:
           m_Calls: []
       subOptions:
       - optionName: Upgrade
-        optionDescription: 
+        optionDescription: '<color=red>(Unavailable)</color>
+
+          Upgrade your
+          basic board.'
         camera: {fileID: 0}
         door: {fileID: 0}
         events:
@@ -4109,7 +4110,7 @@ MonoBehaviour:
             m_Calls: []
         subOptions: []
       - optionName: Buy
-        optionDescription: 
+        optionDescription: Buy new special boards.
         camera: {fileID: 0}
         door: {fileID: 0}
         events:
@@ -4117,7 +4118,10 @@ MonoBehaviour:
             m_Calls: []
         subOptions: []
     - optionName: Salon
-      optionDescription: 
+      optionDescription: '<color=red>(Unavailable)</color>
+
+        Change up your
+        style and stats.'
       camera: {fileID: 5426330025418869185}
       door: {fileID: 0}
       events:
@@ -4125,7 +4129,10 @@ MonoBehaviour:
           m_Calls: []
       subOptions: []
     - optionName: Gift Shop
-      optionDescription: 
+      optionDescription: '<color=red>(Unavailable)</color>
+
+        Buy clothes and
+        accessories.'
       camera: {fileID: 5426330024698680646}
       door: {fileID: 0}
       events:
@@ -4134,7 +4141,6 @@ MonoBehaviour:
       subOptions: []
   currentOptions: []
   currentOptionIndex: 0
-  progressBar: {fileID: 1552984412}
   fadeDelay: 0.5
   audioSources:
   - {fileID: 8304587732618175751}
@@ -4176,7 +4182,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  gameMode: 0
   playerOptionA: 00000000000000000000000000000000
   playerOptionB: 00000000000000000000000000000000
   courseOption: 0
@@ -4235,6 +4240,7 @@ MonoBehaviour:
   bronzeTicket: {fileID: 0}
   silverTicket: {fileID: 0}
   goldTicket: {fileID: 0}
+  flashDelay: 0.5
 --- !u!114 &1010885146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10350,18 +10356,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1492429594}
   m_CullTransparentMesh: 0
---- !u!114 &1552984412 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7221068804120650836, guid: 0424e0cd9f149f24ca2e5d73f39c893e,
-    type: 3}
-  m_PrefabInstance: {fileID: 2010920948}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1554516438
 GameObject:
   m_ObjectHideFlags: 0

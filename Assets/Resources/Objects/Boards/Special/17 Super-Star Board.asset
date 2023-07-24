@@ -24,5 +24,5 @@ MonoBehaviour:
     coins: 50000
     bronzeTickets: 0
     silverTickets: 0
-    goldTickets: 1
-  specialAbility: 
+    goldTickets: 2
+  specialAbility: A board from your dreams.

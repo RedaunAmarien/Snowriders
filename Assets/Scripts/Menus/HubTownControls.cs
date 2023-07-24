@@ -4,23 +4,27 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
+using UnityEditor.TextCore.Text;
+using System.Linq;
+using System;
 
 public class HubTownControls : MonoBehaviour
 {
     [SerializeField] private string optionCode;
+    [SerializeField] private int currentOptionIndex;
     [SerializeField] private float moveTime;
+    [SerializeField] private float fadeDelay;
     [SerializeField] private List<HubTownOption> rootOptions;
     [SerializeField] private List<HubTownOption> currentOptions;
-    [SerializeField] private int currentOptionIndex;
-
-    [SerializeField] private float fadeDelay;
     [SerializeField] private AudioSource[] audioSources;
     [SerializeField] HubUIBridge uiBridge;
     private bool navHasReset = true;
     bool overridden;
+    bool cancelling;
 
     void Start()
     {
+        uiBridge.StartFlash(uiBridge.pressStart);
         GameRam.inputUser = new UnityEngine.InputSystem.Users.InputUser[4];
         GameRam.inputDevice = new UnityEngine.InputSystem.InputDevice[4];
         //Start audios in sync
@@ -34,15 +38,14 @@ public class HubTownControls : MonoBehaviour
         currentOptionIndex = 0;
 
         if (GameRam.currentSaveFile == null)
-        {
-            StartCoroutine(WaitOneFrame());
-            return;
-        }
+            StartCoroutine(FirstLoad());
+        else
+            uiBridge.UpdateFileDisplay();
     }
 
-    IEnumerator WaitOneFrame()
+    IEnumerator FirstLoad()
     {
-        yield return new WaitForEndOfFrame();
+        yield return null;
         optionCode = "0";
         currentOptions = rootOptions[0].subOptions;
         OnSubmitCustom(0);
@@ -96,18 +99,21 @@ public class HubTownControls : MonoBehaviour
         if (overridden || index != 0 || optionCode == "")
             return;
 
+        cancelling = true;
         ToggleCam(currentOptions[currentOptionIndex].camera, currentOptions[currentOptionIndex].door, false);
-        optionCode = optionCode.Substring(0, optionCode.Length - 1);
+        //Debug.LogFormat("Cancel: {0} >> {1}", optionCode, optionCode.Substring(0, optionCode.Length - 1));
+        int[] codeArray = Array.ConvertAll(optionCode.ToCharArray(), (c) => (int)Char.GetNumericValue(c));
+        optionCode = "";
+
         currentOptions = rootOptions;
-        for (int i = 0; i < optionCode.Length; i++)
+        for (int i = 0; i < codeArray.Length; i++)
         {
-            int j = int.Parse(optionCode.Substring(i, 1));
-            currentOptionIndex = j;
-            if (i < optionCode.Length - 1)
-                currentOptions = currentOptions[j].subOptions;
+            currentOptionIndex = codeArray[i];
+            if (i < codeArray.Length - 1)
+                OnSubmitCustom(0);
         }
-        currentOptionIndex = 0;
         ToggleCam(currentOptions[currentOptionIndex].camera, currentOptions[currentOptionIndex].door, true);
+        cancelling = false;
     }
 
     void OnSubmitCustom(int index)
@@ -116,8 +122,10 @@ public class HubTownControls : MonoBehaviour
             return;
 
         currentOptions[currentOptionIndex].events.Invoke();
-        ToggleCam(currentOptions[currentOptionIndex].camera, currentOptions[currentOptionIndex].door, false);
-        optionCode += currentOptionIndex.ToString();
+        if (!cancelling)
+            ToggleCam(currentOptions[currentOptionIndex].camera, currentOptions[currentOptionIndex].door, false);
+        //Debug.LogFormat("Submit: {0} >> {1}{2}", optionCode, optionCode + currentOptionIndex, cancelling ? " (Cancel)" : "");
+        optionCode += currentOptionIndex;
         //currentOptions[currentOptionIndex].currentChoice = currentOptionIndex;
         if (currentOptions[currentOptionIndex].subOptions.Count > 0)
         {
@@ -125,7 +133,8 @@ public class HubTownControls : MonoBehaviour
             currentOptionIndex = 0;
             //currentOptionTier++;
         }
-        ToggleCam(currentOptions[currentOptionIndex].camera, currentOptions[currentOptionIndex].door, true);
+        if (!cancelling)
+            ToggleCam(currentOptions[currentOptionIndex].camera, currentOptions[currentOptionIndex].door, true);
 
         switch (optionCode)
         {
@@ -142,6 +151,7 @@ public class HubTownControls : MonoBehaviour
                 break;
             case "02":
                 Application.Quit();
+                OnUnavailable();
                 break;
 
             case "1": //Race Hub
@@ -161,6 +171,8 @@ public class HubTownControls : MonoBehaviour
                 break;
             case "13": //Challenge Mode
                 GameRam.maxPlayerCount = 1;
+                GameRam.itemsOn = false;
+                GameRam.coinsOn = false;
                 GetComponent<HubRacePrep>().Activate(GameMode.Challenge);
                 overridden = true;
                 break;
@@ -184,11 +196,20 @@ public class HubTownControls : MonoBehaviour
                 OnUnavailable();
                 break;
             default: //Anything Not Specified
-                Debug.LogWarning("Not a valid option.");
+                Debug.LogWarningFormat("{0} not a valid option.", optionCode);
                 //currentOptionTier++;
                 OnCancelCustom(0);
                 break;
         }
+    }
+
+    public void InputStart(int index)
+    {
+        if (index != 0)
+            return;
+
+        uiBridge.StopFlash(uiBridge.pressStart);
+        uiBridge.FadeIn();
     }
 
     void ToggleCam(CinemachineVirtualCamera camera = null, DoorOpener door = null, bool activate = true)
@@ -214,7 +235,7 @@ public class HubTownControls : MonoBehaviour
 
     void OnUnavailable()
     {
-        Debug.LogWarning("Unavailable");
+        Debug.LogWarningFormat("{0}:{1} Unavailable", optionCode, currentOptions[currentOptionIndex].optionName);
         OnCancelCustom(0);
 
     }

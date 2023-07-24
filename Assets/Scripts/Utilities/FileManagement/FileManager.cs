@@ -23,7 +23,7 @@ public static class FileManager
         return path;
     }
 
-    public static object LoadFile(string path)
+    public static SaveData LoadFile(string path)
     {
 
         if (!File.Exists(path))
@@ -38,7 +38,7 @@ public static class FileManager
 
         try
         {
-            object save = formatter.Deserialize(file);
+            SaveData save = (SaveData)formatter.Deserialize(file);
             file.Close();
             return save;
         }

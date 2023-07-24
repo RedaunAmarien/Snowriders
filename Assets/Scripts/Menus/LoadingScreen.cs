@@ -9,12 +9,13 @@ public class LoadingScreen : MonoBehaviour {
     public Gradient progressBarColor;
     public Text progressText, tipText;
     public string[] tips;
+    public string defaultScene;
 
     void Start() {
         tipText.text = tips[Random.Range(0, tips.Length)];
         if (GameRam.nextSceneToLoad == null) {
             GameRam.nextSceneType = SceneType.Menu;
-            GameRam.nextSceneToLoad = "Kiosk";
+            GameRam.nextSceneToLoad = defaultScene;
             StartCoroutine(LoadScene("OpeningCinematic"));
         }
         else {

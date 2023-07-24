@@ -133,6 +133,8 @@ public class HubRacePrep : MonoBehaviour
                 break;
             case PlayerState.ChoosingCourse:
                 playerState[playerIndex] = PlayerState.ChoosingBoard;
+                uiBridge.HideWindow(HubUIBridge.WindowSet.CourseSelect);
+                uiBridge.RevealWindow(HubUIBridge.WindowSet.RacePrep);
                 break;
         }
     }

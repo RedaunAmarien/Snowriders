@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 13 Wealth Board
   m_EditorClassIdentifier: 
   boardName: Wealth Board
-  description: Novelty board. Earn 1000 coins per minute.
+  description: Novelty board. Earn 1,000 coins per minute.
   boardID: 16
   shopIndex: 13
   level: 5
@@ -23,6 +23,6 @@ MonoBehaviour:
   boardCost:
     coins: 20000
     bronzeTickets: 0
-    silverTickets: 0
-    goldTickets: 1
+    silverTickets: 1
+    goldTickets: 0
   specialAbility: Earns money as you play.

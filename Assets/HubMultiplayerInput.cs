@@ -17,6 +17,7 @@ public class HubMultiplayerInput : MonoBehaviour
         myIndex = input.playerIndex;
         GameRam.inputDevice[input.playerIndex] = input.user.pairedDevices[0];
         GameRam.inputUser[input.playerIndex] = input.user;
+        gameObject.SendMessageUpwards("InputStart", myIndex);
     }
 
     public struct Parameters {

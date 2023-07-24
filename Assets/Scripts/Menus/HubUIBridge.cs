@@ -14,9 +14,12 @@ public class HubUIBridge : MonoBehaviour
     VisualElement racePrepRoot;
     VisualElement courseSelectRoot;
     VisualElement loadedFileRoot;
+    public VisualElement leftArrow;
+    public VisualElement rightArrow;
     public Label fileName, coinCount, goldMed, silvMed, bronMed, goldTick, silvTick, bronTick;
     public Label infoName;
     public Label infoDescription;
+    public Label pressStart;
     [SerializeField] Sprite blackSprite;
     [SerializeField] Sprite bronzeSprite;
     [SerializeField] Sprite silverSprite;
@@ -27,6 +30,8 @@ public class HubUIBridge : MonoBehaviour
     [SerializeField] Sprite goldTicket;
     TextField newNameField;
     int newFileSlot;
+    bool elementFlashing;
+    public float flashDelay;
 
     void Awake()
     {
@@ -38,6 +43,10 @@ public class HubUIBridge : MonoBehaviour
         loadedFileRoot = uiDoc.rootVisualElement.Q<VisualElement>("Stats");
         infoName = uiDoc.rootVisualElement.Q<Label>("SubjectName");
         infoDescription = uiDoc.rootVisualElement.Q<Label>("SubjectDescription");
+        pressStart = uiDoc.rootVisualElement.Q<Label>("PressStart");
+        leftArrow = uiDoc.rootVisualElement.Q<VisualElement>("LeftArrow");
+        rightArrow = uiDoc.rootVisualElement.Q<VisualElement>("RightArrow");
+        StartCoroutine(FlashingArrows());
 
         //Current File Stats
         fileName = loadedFileRoot.Q<Label>("FileName");
@@ -48,6 +57,11 @@ public class HubUIBridge : MonoBehaviour
         goldTick = loadedFileRoot.Q<Label>("GoldTick");
         silvTick = loadedFileRoot.Q<Label>("SilvTick");
         bronTick = loadedFileRoot.Q<Label>("BronTick");
+    }
+
+    public void FirstLoad()
+    {
+        
     }
 
     public enum WindowSet { FileSelect, RacePrep, CourseSelect };
@@ -87,10 +101,42 @@ public class HubUIBridge : MonoBehaviour
     public void FadeIn()
     {
         fader.AddToClassList("fader-hide");
+        pressStart.AddToClassList("fader-hide");
+        elementFlashing = false;
     }   
     public void FadeOut()
     {
         fader.RemoveFromClassList("fader-hide");
+        elementFlashing = true;
+    }
+
+    public void StartFlash(VisualElement element)
+    {
+        elementFlashing = true;
+        StartCoroutine(ContinuousFlash(element));
+    }
+    public void StopFlash(VisualElement element)
+    {
+        elementFlashing = false;
+    }
+
+    IEnumerator FlashingArrows()
+    {
+        while (true)
+        {
+            yield return new WaitForSecondsRealtime(flashDelay);
+            leftArrow.ToggleInClassList("flash-on");
+            rightArrow.ToggleInClassList("flash-on");
+        }
+    }
+
+    IEnumerator ContinuousFlash(VisualElement element)
+    {
+        while (elementFlashing)
+        {
+            yield return new WaitForSecondsRealtime(flashDelay);
+            element.ToggleInClassList("flash-on");
+        }
     }
 
     public void HighlightSave(int slot)

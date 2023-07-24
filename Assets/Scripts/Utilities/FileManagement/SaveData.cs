@@ -5,13 +5,17 @@ using System;
 public class SaveData
 {
     public enum CourseGrade { None, Glass, Bronze, Silver, Gold };
-    public string fileName, version;
+    public string fileName;
+    public string version;
     public int saveSlot;
     public int coins;
     public List<int> completedChallenge;
-    public int ticketBronze, ticketSilver, ticketGold;
+    public int ticketBronze;
+    public int ticketSilver;
+    public int ticketGold;
     public CourseGrade[] courseGrade;
-    public List<int> ownedBoardID, ownedItemID;
+    public List<int> ownedBoardID;
+    public List<int> ownedItemID;
     public List<bool> unlockedBoard;
     public bool storyStarted;
     public DateTime lastSaved;
