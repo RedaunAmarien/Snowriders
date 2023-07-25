@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Animations;
 using UnityEngine.Audio;
 
@@ -10,13 +11,19 @@ public class AIControls : MonoBehaviour
     public GameObject startWaypoint, prevWaypoint, nextWaypoint;
     [Tooltip("The point at which the AI will switch to the next waypoint.\n0 = Halfway between, 1 = At the next waypoint."), Range(0, 1)]
     public float wayPointChangePoint;
-    public float turnAng, jumpDelay, chainTrickDelay;
+    public float turnAngle, jumpDelay, chainTrickDelay;
     public Canvas canvas;
     public bool finished, foundTarget, usingAlt;
     Vector3 offsetWaypoint;
     AIWaypoint aiWaypoint;
     RacerCore racerCore;
     PlayerRaceControls playerRaceControls;
+    NavMeshPath navPath;
+    public float distanceFromDestination;
+    public Vector3 nextCorner;
+    public Vector3 goal;
+    float navTick = 0;
+    public float navUpdateTime = 1;
 
     void Start()
     {
@@ -29,6 +36,9 @@ public class AIControls : MonoBehaviour
         prevWaypoint = startWaypoint;
         aiWaypoint = prevWaypoint.GetComponent<AIWaypoint>();
         nextWaypoint = aiWaypoint.nextInChain;
+        goal = GameObject.Find("Lift").transform.position;
+        navPath = new NavMeshPath();
+        NavMesh.CalculatePath(transform.position, goal, NavMesh.AllAreas, navPath);
 
         if (racerCore.playerNum != 0) canvas.gameObject.SetActive(false);
     }
@@ -47,23 +57,31 @@ public class AIControls : MonoBehaviour
             }
 
             //Update Waypoints
-            float a = (transform.position - prevWaypoint.transform.position).sqrMagnitude;
-            float b = (transform.position - nextWaypoint.transform.position).sqrMagnitude;
-            float c = (prevWaypoint.transform.position - nextWaypoint.transform.position).sqrMagnitude;
-            if (a - b >= c * wayPointChangePoint)
+            //float a = (transform.position - prevWaypoint.transform.position).sqrMagnitude;
+            //float b = (transform.position - nextWaypoint.transform.position).sqrMagnitude;
+            //float c = (prevWaypoint.transform.position - nextWaypoint.transform.position).sqrMagnitude;
+            //if (a - b >= c * wayPointChangePoint)
+            //{
+            //    SwitchWaypoint();
+            //}
+            NavMesh.CalculatePath(transform.position, goal, NavMesh.AllAreas, navPath);
+            for (int i = 1; i < navPath.corners.Length-1; i++)
             {
-                SwitchWaypoint();
+                Debug.DrawLine(navPath.corners[i], navPath.corners[i+1], Color.magenta);
             }
+            nextCorner = navPath.corners[1];
 
             //Follow Waypoints
-            turnAng = Vector3.SignedAngle(transform.forward, transform.position - offsetWaypoint, transform.up);
-            Debug.DrawLine(transform.position, prevWaypoint.transform.position, Color.white, .1f);
-            Debug.DrawLine(transform.position, offsetWaypoint, Color.magenta, .1f);
+            turnAngle = Vector3.SignedAngle(transform.forward, transform.position - navPath.corners[1], transform.up);
+            //Debug.DrawLine(transform.position, navPath.destination, Color.red, 0.1f);
+            Debug.DrawLine(transform.position, nextCorner, Color.green, 0.1f);
+            //Debug.DrawLine(transform.position, prevWaypoint.transform.position, Color.white, .1f);
+            //Debug.DrawLine(transform.position, offsetWaypoint, Color.magenta, .1f);
 
-            if (turnAng > 45) playerRaceControls.lStickPos = new Vector2(-0.7f, -0.7f);
-            else if (turnAng < -45) playerRaceControls.lStickPos = new Vector2(0.7f, -0.7f);
-            else if (turnAng > 5) playerRaceControls.lStickPos = Vector2.left;
-            else if (turnAng < -5) playerRaceControls.lStickPos = Vector2.right;
+            if (turnAngle > 45) playerRaceControls.lStickPos = new Vector2(-0.7f, -0.7f);
+            else if (turnAngle < -45) playerRaceControls.lStickPos = new Vector2(0.7f, -0.7f);
+            else if (turnAngle > 5) playerRaceControls.lStickPos = Vector2.left;
+            else if (turnAngle < -5) playerRaceControls.lStickPos = Vector2.right;
             else playerRaceControls.lStickPos = Vector2.zero;
 
             // Use items

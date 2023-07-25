@@ -651,8 +651,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNum: 0
-  charName: 
-  boardName: 
+  character: {fileID: 0}
+  board: {fileID: 0}
   speed: 10
   traction: 0
   turnSpeed: 50
@@ -749,13 +749,17 @@ MonoBehaviour:
   prevWaypoint: {fileID: 0}
   nextWaypoint: {fileID: 0}
   wayPointChangePoint: 0.5
-  turnAng: 0
+  turnAngle: 0
   jumpDelay: 0.2
   chainTrickDelay: 0.35
   canvas: {fileID: 5958155256459766273}
   finished: 0
   foundTarget: 0
   usingAlt: 0
+  distanceFromDestination: 0
+  nextCorner: {x: 0, y: 0, z: 0}
+  goal: {x: 0, y: 0, z: 0}
+  navUpdateTime: 0.1
 --- !u!114 &1918653811797975337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -790,7 +794,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c29ed6db498c244c83d8284c6415e30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerNum: 0
   camRotSpeed: -0.15
   camAngle: {x: 0, y: 0.5, z: 0}
   camOffset: {x: 0, y: 1.5, z: -2}
@@ -21933,6 +21936,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
