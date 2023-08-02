@@ -1,9 +1,6 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Animations;
-using UnityEngine.Audio;
 
 public class AIControls : MonoBehaviour
 {
@@ -19,11 +16,17 @@ public class AIControls : MonoBehaviour
     RacerCore racerCore;
     PlayerRaceControls playerRaceControls;
     NavMeshPath navPath;
-    public float distanceFromDestination;
+    public float distFromDest;
+    public float altDistFromDest;
     public Vector3 nextCorner;
+    public int cornerCount;
     public Vector3 goal;
     float navTick = 0;
+    public float stickMoveSpeed;
+    public Vector2 targetTurn;
+    public Vector2 actualTurn;
     public float navUpdateTime = 1;
+    bool alreadyCrouching;
 
     void Start()
     {
@@ -53,36 +56,52 @@ public class AIControls : MonoBehaviour
             //Jump when slowed down
             if (racerCore.relativeVelocity.z <= racerCore.speed * .4f)
             {
-                StartCoroutine(Jump());
+                StartCoroutine(Jump(0));
             }
 
             //Update Waypoints
-            //float a = (transform.position - prevWaypoint.transform.position).sqrMagnitude;
-            //float b = (transform.position - nextWaypoint.transform.position).sqrMagnitude;
-            //float c = (prevWaypoint.transform.position - nextWaypoint.transform.position).sqrMagnitude;
-            //if (a - b >= c * wayPointChangePoint)
-            //{
-            //    SwitchWaypoint();
-            //}
-            NavMesh.CalculatePath(transform.position, goal, NavMesh.AllAreas, navPath);
-            for (int i = 1; i < navPath.corners.Length-1; i++)
+            if (NavMesh.CalculatePath(transform.position, goal, NavMesh.AllAreas, navPath))
             {
-                Debug.DrawLine(navPath.corners[i], navPath.corners[i+1], Color.magenta);
+                distFromDest = Vector3.Distance(navPath.corners[0], navPath.corners[1]);
+                cornerCount = navPath.corners.Length;
+                for (int i = 1; i < navPath.corners.Length - 1; i++)
+                {
+                    Debug.DrawLine(navPath.corners[i], navPath.corners[i + 1], Color.magenta);
+                    distFromDest += Vector3.Distance(navPath.corners[i], navPath.corners[i + 1]);
+                }
+                nextCorner = navPath.corners[1];
+                float dropDist = Vector3.Distance(transform.position, navPath.corners[1]);
+                if (cornerCount > 2 && navPath.corners[1].y - navPath.corners[2].y > 2 && dropDist < 2.5f)
+                {
+                    StartCoroutine(Jump(dropDist));
+                }
             }
-            nextCorner = navPath.corners[1];
+            else
+            {
+                if (distFromDest < 5)
+                {
+                    nextCorner = goal;
+                }
+                else
+                {
+                    nextCorner = transform.position + transform.forward * 10;
+                }
+            }
 
             //Follow Waypoints
-            turnAngle = Vector3.SignedAngle(transform.forward, transform.position - navPath.corners[1], transform.up);
-            //Debug.DrawLine(transform.position, navPath.destination, Color.red, 0.1f);
-            Debug.DrawLine(transform.position, nextCorner, Color.green, 0.1f);
-            //Debug.DrawLine(transform.position, prevWaypoint.transform.position, Color.white, .1f);
-            //Debug.DrawLine(transform.position, offsetWaypoint, Color.magenta, .1f);
+            turnAngle = Vector3.SignedAngle(nextCorner - transform.position, transform.forward, transform.up);
+            Debug.DrawLine(transform.position, nextCorner, Color.green);
 
-            if (turnAngle > 45) playerRaceControls.lStickPos = new Vector2(-0.7f, -0.7f);
-            else if (turnAngle < -45) playerRaceControls.lStickPos = new Vector2(0.7f, -0.7f);
-            else if (turnAngle > 5) playerRaceControls.lStickPos = Vector2.left;
-            else if (turnAngle < -5) playerRaceControls.lStickPos = Vector2.right;
-            else playerRaceControls.lStickPos = Vector2.zero;
+            bool leftTurn = turnAngle > 0 ? true : false;
+            if (Mathf.Abs(turnAngle) > 45)
+                targetTurn = leftTurn ? new Vector2(-1, -1).normalized : new Vector2(1, -1).normalized;
+            else if (Mathf.Abs(turnAngle) > 5)
+                targetTurn = leftTurn ? Vector2.left : Vector2.right;
+            else
+                targetTurn = Vector2.zero;
+
+            actualTurn = Vector2.MoveTowards(actualTurn, targetTurn, stickMoveSpeed * Time.deltaTime);
+            playerRaceControls.lStickPos = actualTurn;
 
             // Use items
             if (racerCore.itemType != racerCore.blankItem) playerRaceControls.OnItemAI();
@@ -92,29 +111,6 @@ public class AIControls : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (isNotAI)
-            return;
-
-        if (other.gameObject.GetComponent<AIWaypoint>() != null)
-        {
-            if (other.gameObject == nextWaypoint)
-            {
-                SwitchWaypoint();
-            }
-            // Reset Waypoint if discovering one outside of range.
-            if (other.gameObject != nextWaypoint && other.gameObject != prevWaypoint)
-            {
-                GameObject lostWaypoint = nextWaypoint;
-                nextWaypoint = other.gameObject;
-                Debug.LogWarningFormat("{0} got distracted by waypoint {1} while looking for waypoint {2} at location {3}.", racerCore.character.characterName, prevWaypoint, lostWaypoint, transform.position);
-                SwitchWaypoint();
-            }
-            // Act on Waypoint flags
-            if (aiWaypoint.tryJump && !playerRaceControls.lockControls && racerCore.grounded)
-            {
-                StartCoroutine(Jump());
-            }
-        }
     }
 
     void SwitchWaypoint()
@@ -174,9 +170,12 @@ public class AIControls : MonoBehaviour
         nextWaypoint = startWaypoint;
     }
 
-    public IEnumerator Jump()
+    public IEnumerator Jump(float dropDist)
     {
-        int jumps = aiWaypoint.tricksPossible;
+        if (alreadyCrouching)
+            yield break; ;
+        alreadyCrouching = true;
+        int jumps = Mathf.FloorToInt(dropDist/2f);
         if (racerCore.highJumpReady)
         {
             jumps++;
@@ -187,6 +186,7 @@ public class AIControls : MonoBehaviour
             yield return new WaitForSeconds(jumpDelay);
             playerRaceControls.lStickPos = Vector2.zero;
             playerRaceControls.OnJumpAI(false);
+            alreadyCrouching = false;
         }
         else
         {
@@ -208,6 +208,7 @@ public class AIControls : MonoBehaviour
                 };
                 yield return new WaitForSeconds(jumpDelay);
                 playerRaceControls.OnJumpAI(false);
+                alreadyCrouching = false;
                 // Debug.Log(i + " tricks attempted. Current direction " + z + ".");
                 yield return new WaitForSeconds(chainTrickDelay);
             }

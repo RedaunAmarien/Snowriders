@@ -758,7 +758,11 @@ MonoBehaviour:
   usingAlt: 0
   distanceFromDestination: 0
   nextCorner: {x: 0, y: 0, z: 0}
+  cornerCount: 0
   goal: {x: 0, y: 0, z: 0}
+  stickMoveSpeed: 5
+  targetTurn: {x: 0, y: 0}
+  actualTurn: {x: 0, y: 0}
   navUpdateTime: 0.1
 --- !u!114 &1918653811797975337
 MonoBehaviour:
