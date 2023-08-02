@@ -2195,6 +2195,101 @@ PrefabInstance:
       propertyPath: nextCheck
       value: 
       objectReference: {fileID: 199209703}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Looped
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Resolution
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Appearance.width
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.data[0].position.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.data[1].position.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.data[1].position.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.data[1].position.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.data[2].position.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.data[2].position.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.data[2].position.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.data[3].position.x
+      value: 10.000005
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.data[3].position.y
+      value: 165
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.data[3].position.z
+      value: -280
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.data[4].position.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.data[4].position.y
+      value: 165
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.data[4].position.z
+      value: -315.2233
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.data[5].position.y
+      value: 165
+      objectReference: {fileID: 0}
+    - target: {fileID: 3526538800259117964, guid: e09f042c794784d4b97af14ef8706e57,
+        type: 3}
+      propertyPath: m_Waypoints.Array.data[5].position.z
+      value: -280
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2373,37 +2468,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 2150044562243273127, guid: 730e0fe4d3a50da4fb7280a34cd65a1a, type: 3}
---- !u!114 &2070519472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4226684824128687340}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AgentTypeID: 0
-  m_CollectObjects: 2
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 0
-  m_DefaultArea: 0
-  m_GenerateLinks: 1
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.33333334
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: d793ff66b58bc15499ba52324253cee0, type: 2}
-  m_BuildHeightMesh: 0
 --- !u!33 &86763798586776846
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2454,7 +2518,6 @@ GameObject:
   - component: {fileID: 4383266232213524601}
   - component: {fileID: 5539222163625402449}
   - component: {fileID: 2070519471}
-  - component: {fileID: 2070519472}
   m_Layer: 0
   m_Name: Track
   m_TagString: Track
@@ -2703,7 +2766,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.33333334
+  m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: bf98a9a5bf0a3a247b0e0ad5da22c747, type: 2}
   m_BuildHeightMesh: 0
@@ -2736,25 +2799,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8572649280844727616}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AgentTypeID: 0
-  m_CollectObjects: 0
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 0
-  m_DefaultArea: 1
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
   m_GenerateLinks: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.33333334
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
-  m_BuildHeightMesh: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff

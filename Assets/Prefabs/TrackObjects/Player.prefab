@@ -750,13 +750,14 @@ MonoBehaviour:
   nextWaypoint: {fileID: 0}
   wayPointChangePoint: 0.5
   turnAngle: 0
-  jumpDelay: 0.2
-  chainTrickDelay: 0.35
+  jumpDelay: 0.1
+  chainTrickDelay: 0.1
   canvas: {fileID: 5958155256459766273}
   finished: 0
   foundTarget: 0
   usingAlt: 0
-  distanceFromDestination: 0
+  distFromDest: 0
+  altDistFromDest: 0
   nextCorner: {x: 0, y: 0, z: 0}
   cornerCount: 0
   goal: {x: 0, y: 0, z: 0}

@@ -1450,7 +1450,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4719424049491562, guid: e09f042c794784d4b97af14ef8706e57, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 22.14
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 4719424049491562, guid: e09f042c794784d4b97af14ef8706e57, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1458,7 +1458,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4719424049491562, guid: e09f042c794784d4b97af14ef8706e57, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 68.87
+      value: 68
       objectReference: {fileID: 0}
     - target: {fileID: 4719424049491562, guid: e09f042c794784d4b97af14ef8706e57, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2644,6 +2644,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1170281356}
+    - targetCorrespondingSourceObject: {fileID: 100004, guid: 25ab18851d9ec1c4fbe70dc46e918573,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1170281360}
   m_SourcePrefab: {fileID: 100100000, guid: 25ab18851d9ec1c4fbe70dc46e918573, type: 3}
 --- !u!1 &1170281354 stripped
 GameObject:
@@ -2734,10 +2738,29 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.33333334
+  m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 06fcc78547be2204fa51229a95133ad7, type: 2}
   m_BuildHeightMesh: 0
+--- !u!114 &1170281360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1170281354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!1001 &1280712429
 PrefabInstance:
   m_ObjectHideFlags: 0

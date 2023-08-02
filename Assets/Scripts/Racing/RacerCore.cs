@@ -306,8 +306,9 @@ public class RacerCore : MonoBehaviour
                 lastCheckpoint = nextCheckpoint;
                 nextCheckpoint = chPnt.nextCheck;
                 nextCheckVal = chPnt.nextCheck.GetComponent<Checkpoint>().value;
-                if (chPnt.isLift)
+                if (chPnt.isLift && !chPnt.onCooldown)
                 {
+                    chPnt.Cooldown(rigid);
                     lastCheckpoint = firstCheckpoint;
                     nextCheckpoint = firstCheckpoint.GetComponent<Checkpoint>().nextCheck;
                     if (playerUI != null && GameRam.gameMode == GameMode.Challenge)
@@ -316,9 +317,9 @@ public class RacerCore : MonoBehaviour
                     }
                     currentLap++;
                     boostOn = false;
-                    rigid.velocity = Vector3.zero;
-                    transform.SetPositionAndRotation(playerStartPoint.position, playerStartPoint.rotation);
-                    rigid.AddRelativeForce(new Vector3(0, 0, jumpForce.z * 2));
+                    //rigid.velocity = Vector3.zero;
+                    //transform.SetPositionAndRotation(playerStartPoint.position, playerStartPoint.rotation);
+                    //rigid.AddRelativeForce(new Vector3(0, 0, jumpForce.z * 2));
                     if (aiControls != null) aiControls.NewLap();
                 }
                 if (chPnt.isFinish && currentLap >= totalLaps)

@@ -195,7 +195,7 @@ public class PlayerRaceControls : MonoBehaviour
         }
     }
 
-    public void OnJumpAI(bool down)
+    public void OnJumpAI(bool crouch)
     {
 
         // During Race
@@ -203,7 +203,7 @@ public class PlayerRaceControls : MonoBehaviour
         {
             if (racerCore.grounded)
             {
-                if (down)
+                if (crouch)
                 {
                     racerCore.animator.SetBool("Crouching", true);
                 }
@@ -233,7 +233,7 @@ public class PlayerRaceControls : MonoBehaviour
             else
             {
                 // Combo tricks in air
-                if (!down && comboAble)
+                if (!crouch && comboAble)
                 {
                     if (lStickPos.x > .2f)
                     {

@@ -175,7 +175,7 @@ public class AIControls : MonoBehaviour
         if (alreadyCrouching)
             yield break; ;
         alreadyCrouching = true;
-        int jumps = Mathf.FloorToInt(dropDist/2f);
+        int jumps = Mathf.FloorToInt(dropDist);
         if (racerCore.highJumpReady)
         {
             jumps++;
@@ -192,6 +192,7 @@ public class AIControls : MonoBehaviour
         {
             for (int i = 0; i < jumps; i++)
             {
+                Debug.LogFormat("Player {0} attempting chain of {1} more tricks off {2:N2} meter ledge.", racerCore.playerNum, jumps-i, dropDist);
                 playerRaceControls.OnJumpAI(true);
                 int z = Random.Range(1, 9);
                 playerRaceControls.lStickPos = z switch
@@ -208,10 +209,10 @@ public class AIControls : MonoBehaviour
                 };
                 yield return new WaitForSeconds(jumpDelay);
                 playerRaceControls.OnJumpAI(false);
-                alreadyCrouching = false;
                 // Debug.Log(i + " tricks attempted. Current direction " + z + ".");
                 yield return new WaitForSeconds(chainTrickDelay);
             }
+            alreadyCrouching = false;
         }
     }
 }
