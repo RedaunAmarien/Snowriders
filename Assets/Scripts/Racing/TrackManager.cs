@@ -112,7 +112,7 @@ public class TrackManager : MonoBehaviour
             racerCore[i].playerStartPoint = courseSettings.startPoint;
             racerCore[i].spotLock = true;
             aiControls[i] = player[i].GetComponent<AIControls>();
-            aiControls[i].startWaypoint = courseSettings.startWaypoint;
+            //aiControls[i].startWaypoint = courseSettings.startWaypoint;
             playerUI[i] = player[i].GetComponent<PlayerUI>();
             playerRaceControls[i] = player[i].GetComponent<PlayerRaceControls>();
             playerUI[i].reverseVCam.gameObject.layer = 13 + i;
@@ -132,9 +132,9 @@ public class TrackManager : MonoBehaviour
 
         if (GameRam.playerCount == 0)
         {
-            foreach (PlayerUI p in playerUI)
+            foreach (PlayerUI ui in playerUI)
             {
-                p.playerCamera.gameObject.SetActive(true);
+                ui.playerCamera.gameObject.SetActive(true);
             }
         }
         else
@@ -256,54 +256,32 @@ public class TrackManager : MonoBehaviour
         {
             //Attempt to assign character.
             int offset = 0;
-            if (!demoMode)
+            //if (!demoMode)
+            //{
+            GameRam.charForP[i] = courseSettings.defaultCpu[i - GameRam.playerCount + offset];
+            GameRam.boardForP[i] = courseSettings.defaultCpuBoard[i - GameRam.playerCount + offset];
+            //Check for repeat character and reassign if found.
+            for (int j = 0; j < pCharacterList.Count; j++)
             {
-                GameRam.charForP[i] = courseSettings.defaultCpu[i - GameRam.playerCount + offset];
-                GameRam.boardForP[i] = courseSettings.defaultCpuBoard[i - GameRam.playerCount + offset];
-                //Check for repeat character and reassign if found.
-                for (int j = 0; j < pCharacterList.Count; j++)
+                if (GameRam.charForP[i] == pCharacterList[j])
                 {
-                    if (GameRam.charForP[i] == pCharacterList[j])
-                    {
-                        offset++;
-                        GameRam.charForP[i] = courseSettings.defaultCpu[i - GameRam.playerCount + offset];
-                        GameRam.boardForP[i] = courseSettings.defaultCpuBoard[i - GameRam.playerCount + offset];
-                    }
+                    offset++;
+                    GameRam.charForP[i] = courseSettings.defaultCpu[i - GameRam.playerCount + offset];
+                    GameRam.boardForP[i] = courseSettings.defaultCpuBoard[i - GameRam.playerCount + offset];
                 }
             }
+            //}
             pCharacterList.Add(GameRam.charForP[i]);
             // Destroy(playerRaceControls[i]);
             if (GameRam.playerCount != 0 && i != 0) Destroy(playerUI[i]);
         }
 
-        for (int i = 0; i < GameRam.playerCount; i++)
+        for (int i = 0; i < 4; i++)
         {
             //Initialize character stats from data.
             racerCore[i].character = GameRam.allCharacters[GameRam.charForP[i]];
             racerCore[i].board = GameRam.ownedBoards[GameRam.boardForP[i]];
             racerCore[i].Initialize(demoMode);
-        }
-
-        for (int i = GameRam.playerCount; i < 4; i++)
-        {
-
-            //Initialize character stats from data.
-
-            //Speed: Max 18, Min 15.
-            racerCore[i].speed = 14f + (2f / 3f) + (GameRam.allCharacters[GameRam.charForP[i]].speed + GameRam.allBoards[GameRam.boardForP[i]].speed) / 3f;
-
-            //Traction: Max .04, Min .015.
-            racerCore[i].traction = (11f / 900f) + (GameRam.allCharacters[GameRam.charForP[i]].turn + GameRam.allBoards[GameRam.boardForP[i]].turn) / 360f;
-
-            //Jump: Max 250, Min 175.
-            racerCore[i].jumpForce.y = 166f + (2f / 3f) + (GameRam.allCharacters[GameRam.charForP[i]].jump + GameRam.allBoards[GameRam.boardForP[i]].jump) * (8f + (1f / 3f));
-
-            //Display stats
-            racerCore[i].character = GameRam.allCharacters[GameRam.charForP[i]];
-            racerCore[i].board = GameRam.allBoards[GameRam.boardForP[i]];
-            racerCore[i].totalLaps = GameRam.lapCount;
-
-            racerCore[i].AssignSpecialBoards();
         }
 
         //Setup Challenges
@@ -347,10 +325,10 @@ public class TrackManager : MonoBehaviour
                     playerPosition[i].index = racerCore[i].playerNum;
                     playerPosition[i].lap = racerCore[i].currentLap;
                     playerPosition[i].checkpoint = racerCore[i].nextCheckVal;
-                    playerPosition[i].distance = racerCore[i].checkDist;
+                    playerPosition[i].distance = racerCore[i].distanceToLift;
                     playerPosition[i].finished = racerCore[i].finished;
                 }
-                playerPosition = playerPosition.OrderByDescending(x => x.lap).ThenByDescending(x => x.checkpoint).ThenByDescending(x => x.distance).ToList();
+                playerPosition = playerPosition.OrderByDescending(x => x.lap).ThenBy(x => x.distance).ToList();
                 for (int i = 0; i < player.Length; i++)
                 {
                     playerPosition[i].place = i + 1;

@@ -18,8 +18,9 @@ public class ItemProjectile : MonoBehaviour
     [SerializeField] private Collider target;
     [SerializeField] private Material[] material;
 
-    public enum WeaponType { Ice, Parachute, Bomb, Snowman, Tornado, Slapstick };
+    public enum WeaponType { None, Ice, Parachute, Bomb, Snowman, Tornado, Slapstick };
     public WeaponType weaponType;
+    public enum ItemType { None, Invisibility, HighJump, Slow, TripleSlow, Rock, TripleRock, Steal, TripleSteal, Rocket, SuperRocket };
     public bool reflected;
     public GameObject parentPlayer;
 

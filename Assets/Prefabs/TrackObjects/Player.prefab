@@ -665,20 +665,45 @@ MonoBehaviour:
   finalPlace: 0
   totalLaps: 0
   coins: 0
-  firstCheckpoint: {fileID: 0}
-  lastCheckpoint: {fileID: 0}
-  nextCheckpoint: {fileID: 0}
-  weaponType: 0
-  shots: 0
-  blankWeap: 0
-  itemType: 0
-  blankItem: 0
+  distanceToLift: 0
+  currentItem: 0
+  currentWeapon: 0
+  weaponAmmo: 0
   statusTime: 4
   rollTime: 2
   standTime: 1
   rocket1: {x: 7, y: 2, z: 5}
   rocket2: {x: 5, y: 5, z: 10}
   highJumpForce: {x: 0, y: 2, z: 0}
+  moneyBoardTime: 0.06
+  relativeVelocity: {x: 0, y: 0, z: 0}
+  grounded: 0
+  boostOn: 0
+  boostForce: 0
+  boostAddSpeed: 0
+  invisible: 0
+  spotLock: 0
+  grabbing: 0
+  tricking: 0
+  jumping: 0
+  highJumpReady: 0
+  respawning: 0
+  ltdr: 0
+  lgdr: 0
+  grabsChained: 0
+  grabsCombo: 0
+  tricksChained: 0
+  slows: 0
+  firstCheckpoint: {fileID: 0}
+  trackManager: {fileID: 0}
+  animator: {fileID: 4079147485254934116}
+  playerStartPoint: {fileID: 0}
+  lastCheckpoint: {fileID: 0}
+  nextCheckpoint: {fileID: 0}
+  audioMaker: {fileID: 0}
+  audioSource: {fileID: 0}
+  aiControls: {fileID: 0}
+  playerCamera: {fileID: 6819687486660758418}
   rock: {fileID: 1547970631204228, guid: 4f729b5deb48e6144b160cdb24efd424, type: 3}
   rockSpawn: {fileID: 1959727427861855511}
   projectile: {fileID: 1942741235233250, guid: 6c250d544925346439d4b7536bca074e, type: 3}
@@ -703,35 +728,7 @@ MonoBehaviour:
   - {fileID: -6292459627741719466, guid: 562b0f12a84600f4e9354958ab4218d6, type: 3}
   - {fileID: -5633498348829720769, guid: 562b0f12a84600f4e9354958ab4218d6, type: 3}
   - {fileID: 2170970421244147848, guid: 562b0f12a84600f4e9354958ab4218d6, type: 3}
-  moneyBoardTime: 0.06
-  grounded: 0
-  boostOn: 0
-  boostForce: 0
-  boostAddSpeed: 0
-  invisible: 0
-  spotLock: 0
-  grabbing: 0
-  tricking: 0
-  jumping: 0
-  highJumpReady: 0
-  respawning: 0
-  ltdr: 0
-  lgdr: 0
-  grabsChained: 0
-  grabsCombo: 0
-  tricksChained: 0
-  slows: 0
-  trackManager: {fileID: 0}
-  courseSettings: {fileID: 0}
   playerUI: {fileID: 0}
-  audioMaker: {fileID: 0}
-  audioSource: {fileID: 0}
-  aiControls: {fileID: 0}
-  animator: {fileID: 4079147485254934116}
-  playerStartPoint: {fileID: 0}
-  rigid: {fileID: 2015200323473864437}
-  playerCamera: {fileID: 6819687486660758418}
-  relativeVelocity: {x: 0, y: 0, z: 0}
 --- !u!114 &6104156553658430391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -745,17 +742,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isNotAI: 0
-  startWaypoint: {fileID: 0}
-  prevWaypoint: {fileID: 0}
-  nextWaypoint: {fileID: 0}
-  wayPointChangePoint: 0.5
+  currentPriority: 0
   turnAngle: 0
   jumpDelay: 0.1
-  chainTrickDelay: 0.1
+  chainTrickDelay: 0.2
   canvas: {fileID: 5958155256459766273}
   finished: 0
   foundTarget: 0
-  usingAlt: 0
   distFromDest: 0
   altDistFromDest: 0
   nextCorner: {x: 0, y: 0, z: 0}
@@ -764,7 +757,6 @@ MonoBehaviour:
   stickMoveSpeed: 5
   targetTurn: {x: 0, y: 0}
   actualTurn: {x: 0, y: 0}
-  navUpdateTime: 0.1
 --- !u!114 &1918653811797975337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -839,6 +831,7 @@ MonoBehaviour:
   forwardVCam: {fileID: 4187013254604326496}
   reverseVCam: {fileID: 6347196887455873660}
   itemSprite:
+  - {fileID: 21300084, guid: 532f380d8842f2140af106c5364a517c, type: 3}
   - {fileID: 21300064, guid: 532f380d8842f2140af106c5364a517c, type: 3}
   - {fileID: 21300066, guid: 532f380d8842f2140af106c5364a517c, type: 3}
   - {fileID: 21300068, guid: 532f380d8842f2140af106c5364a517c, type: 3}
@@ -849,22 +842,20 @@ MonoBehaviour:
   - {fileID: 21300078, guid: 532f380d8842f2140af106c5364a517c, type: 3}
   - {fileID: 21300080, guid: 532f380d8842f2140af106c5364a517c, type: 3}
   - {fileID: 21300082, guid: 532f380d8842f2140af106c5364a517c, type: 3}
-  - {fileID: 21300084, guid: 532f380d8842f2140af106c5364a517c, type: 3}
   weaponSprite:
+  - {fileID: 21300024, guid: 73925fdad5f693e44a5497be82aa6af2, type: 3}
   - {fileID: 21300012, guid: 73925fdad5f693e44a5497be82aa6af2, type: 3}
   - {fileID: 21300014, guid: 73925fdad5f693e44a5497be82aa6af2, type: 3}
   - {fileID: 21300016, guid: 73925fdad5f693e44a5497be82aa6af2, type: 3}
   - {fileID: 21300018, guid: 73925fdad5f693e44a5497be82aa6af2, type: 3}
   - {fileID: 21300020, guid: 73925fdad5f693e44a5497be82aa6af2, type: 3}
   - {fileID: 21300022, guid: 73925fdad5f693e44a5497be82aa6af2, type: 3}
-  - {fileID: 21300024, guid: 73925fdad5f693e44a5497be82aa6af2, type: 3}
   placeSprite:
   - {fileID: -4151903721989687772, guid: c701f8d8f653d5a438deaa4c349a1675, type: 3}
   - {fileID: 8972823458404240004, guid: c701f8d8f653d5a438deaa4c349a1675, type: 3}
   - {fileID: -2407802576196914536, guid: c701f8d8f653d5a438deaa4c349a1675, type: 3}
   - {fileID: 8495044376292254474, guid: c701f8d8f653d5a438deaa4c349a1675, type: 3}
   finished: 0
-  camIsReversed: 0
 --- !u!65 &2004282455030052571
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27809,8 +27800,8 @@ GameObject:
   m_Component:
   - component: {fileID: 853394128283900690}
   - component: {fileID: 5814404904546525227}
-  - component: {fileID: 6251433335907684414}
   - component: {fileID: 8028964047624729746}
+  - component: {fileID: 3374158269559257673}
   m_Layer: 0
   m_Name: PlayerCam
   m_TagString: Untagged
@@ -27885,14 +27876,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &6251433335907684414
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6819687486660758418}
-  m_Enabled: 0
 --- !u!114 &8028964047624729746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27927,6 +27910,14 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!81 &3374158269559257673
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819687486660758418}
+  m_Enabled: 0
 --- !u!1 &8154328763855560480
 GameObject:
   m_ObjectHideFlags: 0

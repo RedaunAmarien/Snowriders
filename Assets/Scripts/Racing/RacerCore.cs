@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations;
+using UnityEngine.AI;
 
 public class RacerCore : MonoBehaviour
 {
@@ -12,58 +11,97 @@ public class RacerCore : MonoBehaviour
     [Header("Character Settings")]
     public Character character;
     public Board board;
-    //public string charName;
-    //public string boardName;
-    public float speed, traction, turnSpeed;
+    public float speed;
+    public float traction;
+    public float turnSpeed;
     public Vector3 jumpForce;
 
     [Header("Race Stats")]
     public bool finished;
-    public int place, currentLap;
+    public int place;
+    public int currentLap;
     public float nextCheckVal;
     public float checkDist;
-    public int finalPlace, totalLaps;
+    public int finalPlace;
+    public int totalLaps;
     public int coins;
-    public GameObject firstCheckpoint, lastCheckpoint, nextCheckpoint;
+    public float distanceToLift;
 
     [Header("Items and Weapons")]
-    public int weaponType;
-    public int shots, blankWeap, itemType, blankItem, statusTime, rollTime, standTime;
+    public ItemProjectile.ItemType currentItem;
+    public ItemProjectile.WeaponType currentWeapon;
+    public int weaponAmmo;
+    [SerializeField] private int statusTime;
+    [SerializeField] private int rollTime;
+    [SerializeField] private int standTime;
     [Tooltip("X = Lifetime, Y = Acceleration, Z = Additional Max Speed")]
-    public Vector3 rocket1, rocket2;
-    public Vector3 highJumpForce;
-    public GameObject rock, rockSpawn, projectile, shootSpawn, dropCoin, characterModel, iceCube, snowman, balloon, highJumpParticles, lockParticles, slowed, rocketParticles1, rocketParticles2;
-    public SpriteRenderer headSprite;
-    public Sprite[] headSpriteSrc;
-    public float moneyBoardTime;
+    [SerializeField] private Vector3 rocket1;
+    [SerializeField] private Vector3 rocket2;
+    [SerializeField] private Vector3 highJumpForce;
+    [SerializeField] private float moneyBoardTime;
 
     [Header("Physics")]
+    public Vector3 relativeVelocity;
     public bool grounded;
-    public bool boostOn;
-    public float boostForce, boostAddSpeed;
-    public bool invisible, spotLock, grabbing, tricking, jumping, highJumpReady, respawning;
-    public int ltdr, lgdr, grabsChained, grabsCombo, tricksChained, slows;
+    [SerializeField] private bool boostOn;
+    [SerializeField] private float boostForce;
+    [SerializeField] private float boostAddSpeed;
+    public bool invisible;
+    public bool spotLock;
+    public bool grabbing;
+    public bool tricking;
+    [SerializeField] private bool jumping;
+    public bool highJumpReady;
+    [SerializeField] private bool respawning;
+    public int ltdr;
+    public int lgdr;
+    [SerializeField] private int grabsChained;
+    [SerializeField] private int grabsCombo;
+    [SerializeField] private int tricksChained;
+    [SerializeField] private int slows;
 
     // Objects
-    PlayerRaceControls playerRaceControls;
+    [Header("References")]
+    public GameObject firstCheckpoint;
     public TrackManager trackManager;
-    public CourseSettings courseSettings;
-    public PlayerUI playerUI;
-    public AudioMaker audioMaker;
-    public AudioSource audioSource;
-    public AIControls aiControls;
     public Animator animator;
     public Transform playerStartPoint;
-    public Rigidbody rigid;
-    public GameObject playerCamera;
-    public Vector3 relativeVelocity;
-    bool initialized, replayCamOn;
+    public NavMeshPath navPath;
+    [SerializeField] private GameObject lastCheckpoint;
+    [SerializeField] private GameObject nextCheckpoint;
+    [SerializeField] private AudioMaker audioMaker;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AIControls aiControls;
+    [SerializeField] private GameObject playerCamera;
+    [SerializeField] private GameObject rock;
+    [SerializeField] private GameObject rockSpawn;
+    [SerializeField] private GameObject projectile;
+    [SerializeField] private GameObject shootSpawn;
+    [SerializeField] private GameObject dropCoin;
+    [SerializeField] private GameObject characterModel;
+    [SerializeField] private GameObject iceCube;
+    [SerializeField] private GameObject snowman;
+    [SerializeField] private GameObject balloon;
+    [SerializeField] private GameObject highJumpParticles;
+    [SerializeField] private GameObject lockParticles;
+    [SerializeField] private GameObject slowed;
+    [SerializeField] private GameObject rocketParticles1;
+    [SerializeField] private GameObject rocketParticles2;
+    [SerializeField] private SpriteRenderer headSprite;
+    [SerializeField] private Sprite[] headSpriteSrc;
+
+    //Internal
+    public PlayerUI playerUI;
+    PlayerRaceControls playerRaceControls;
+    Rigidbody rigid;
+    bool initialized;
+    bool replayCamOn;
+    Vector3 goal;
 
     void Start()
     {
         // Initialize Objects and Stats
         trackManager = GameObject.Find("TrackManager").GetComponent<TrackManager>();
-        courseSettings = GameObject.Find("CourseSettings").GetComponent<CourseSettings>();
         rigid = gameObject.GetComponent<Rigidbody>();
 
         playerRaceControls = gameObject.GetComponent<PlayerRaceControls>();
@@ -71,149 +109,140 @@ public class RacerCore : MonoBehaviour
         aiControls = GetComponent<AIControls>();
         audioMaker = GetComponentInChildren<AudioMaker>();
         audioSource = GetComponentInChildren<AudioSource>();
-        if (playerNum < GameRam.playerCount) audioSource.spatialBlend = 0;
-        // course = GameObject.FindGameObjectWithTag("CourseController");
-        // corCon = course.GetComponent<CourseControl>();
+        if (playerNum < GameRam.playerCount)
+            audioSource.spatialBlend = 0;
         jumpForce.z = speed * 10;
-        // firstCheckpoint = GameObject.Find("Start");
         lastCheckpoint = firstCheckpoint;
         nextCheckpoint = firstCheckpoint.GetComponent<Checkpoint>().nextCheck;
         nextCheckVal = nextCheckpoint.GetComponent<Checkpoint>().value;
 
         currentLap = 1;
+        goal = GameObject.Find("Lift").transform.position;
 
         rigid = gameObject.GetComponent<Rigidbody>();
         finished = false;
         rigid.maxAngularVelocity = 0.05f;
 
-        // Become character.
-        if (trackManager.demoMode)
-        {
-            headSprite.sprite = character.charSprite;
-        }
-        else if (GameRam.charForP[playerNum] < GameRam.defaultCharacters.Count)
-        {
-            headSprite.sprite = character.charSprite;
-        }
-        else
-        {
-            headSprite.sprite = headSpriteSrc[^1];
-        }
-        if (playerNum < GameRam.playerCount) headSprite.gameObject.SetActive(false);
-
         // Initialize items.
-        blankWeap = playerUI.weaponSprite.Length - 1;
-        weaponType = blankWeap;
-        blankItem = playerUI.itemSprite.Length - 1;
-        itemType = blankItem;
-        shots = 0;
+        currentWeapon = ItemProjectile.WeaponType.None;
+        currentItem = ItemProjectile.ItemType.None;
+        weaponAmmo = 0;
         coins = 0;
 
-        initialized = true;
         replayCamOn = true;
     }
 
     public void Initialize(bool demoMode = false)
     {
+        if (!demoMode && playerNum == 0)
+            gameObject.GetComponentInChildren<AudioListener>().enabled = true;
+
+        // Become character.
+        headSprite.sprite = character.charSprite;
+        if (playerNum < GameRam.playerCount)
+            headSprite.gameObject.SetActive(false);
+
         //Speed: Max 18, Min 15.
-        speed = demoMode ? 15f : Mathf.LerpUnclamped(15, 18, (character.speed + board.speed) / 10f);
+        speed = Mathf.LerpUnclamped(15, 18, (character.speed + board.speed) / 10f);
 
         //Traction: Max .04, Min .015.
-        traction = demoMode ? .015f : Mathf.LerpUnclamped(0.015f, 0.04f, (character.turn + board.turn) / 10f);
+        traction = Mathf.LerpUnclamped(0.015f, 0.04f, (character.turn + board.turn) / 10f);
 
         //Jump: Max 250, Min 175.
-        jumpForce.y = demoMode ? 175f : Mathf.LerpUnclamped(175, 250, (character.jump + board.jump) / 10f);
+        jumpForce.y = Mathf.LerpUnclamped(175, 250, (character.jump + board.jump) / 10f);
 
-        //Display stats
-        //charName = character.characterName;
-        //boardName = demoMode ? "Demo Board" : board.name;
         totalLaps = GameRam.lapCount;
 
-        AssignSpecialBoards();
-    }
-
-    public void AssignSpecialBoards()
-    {
         if (board.boardName == "Pound of Feather")
         {
             jumpForce.y = 300;
             jumpForce.z = 20;
         }
-        if (board.boardName == "Block of Soap")
+        else if (board.boardName == "Block of Soap")
         {
             traction = 0;
         }
+        initialized = true;
+        spotLock = true;
     }
 
     void Update()
     {
-        if (initialized)
-        {
-            // Update Checkpoints
-            checkDist = (transform.position - lastCheckpoint.transform.position).sqrMagnitude - (transform.position - nextCheckpoint.transform.position).sqrMagnitude;
-            // if (finished) checkDist += 1000000;
-            //Debug.DrawLine(transform.position, lastCheckpoint.transform.position, Color.gray, .25f);
-            //Debug.DrawLine(transform.position, nextCheckpoint.transform.position, Color.green, .25f);
-            //Debug.DrawLine(lastCheckpoint.transform.position, nextCheckpoint.transform.position, Color.red, .1f);
+        if (!initialized)
+            return;
 
-            // Update variable limits.
-            if (coins < 0) coins = 0;
-            if (shots <= 0)
+        // Update Checkpoints
+        //// Replace with quick checkpoint system soon
+        //checkDist = (transform.position - lastCheckpoint.transform.position).sqrMagnitude - (transform.position - nextCheckpoint.transform.position).sqrMagnitude;
+
+        // Update variable limits.
+        if (coins < 0) coins = 0;
+        if (weaponAmmo <= 0)
+        {
+            currentWeapon = ItemProjectile.WeaponType.None;
+        }
+
+        //Update Navigation
+        if (NavMesh.CalculatePath(transform.position, goal, NavMesh.AllAreas, navPath) && navPath.corners.Length > 2)
+        {
+            distanceToLift = Vector3.Distance(navPath.corners[0], navPath.corners[1]);
+            for (int i = 1; i < navPath.corners.Length - 1; i++)
             {
-                weaponType = 6;
+                Debug.DrawLine(navPath.corners[i], navPath.corners[i + 1], Color.magenta);
+                distanceToLift += Vector3.Distance(navPath.corners[i], navPath.corners[i + 1]);
             }
         }
     }
 
     void FixedUpdate()
     {
-        if (initialized)
-        {
-            // Get relative velocity.
-            relativeVelocity = new Vector3(Vector3.Dot(transform.right, rigid.velocity), Vector3.Dot(-transform.up, rigid.velocity), Vector3.Dot(transform.forward, rigid.velocity));
+        if (!initialized)
+            return;
 
-            // Slow down player when finished.
-            if (finished)
+        // Get relative velocity.
+        relativeVelocity = new Vector3(Vector3.Dot(transform.right, rigid.velocity), Vector3.Dot(-transform.up, rigid.velocity), Vector3.Dot(transform.forward, rigid.velocity));
+
+        // Slow down player when finished.
+        if (finished)
+        {
+            rigid.AddRelativeForce(-relativeVelocity * 2, ForceMode.Acceleration);
+        }
+
+        // Control player when not finished.
+        else
+        {
+            // Slowdown from other players.
+            if (!boostOn && relativeVelocity.z > speed / (slows + 1)) rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
+            if (boostOn && relativeVelocity.z > (speed + boostAddSpeed) / (slows + 1)) rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
+            if (slows > 0) slowed.SetActive(true);
+            else slowed.SetActive(false);
+
+            // Use rockets and fans.
+            if (boostOn)
             {
-                rigid.AddRelativeForce(-relativeVelocity * 2, ForceMode.Acceleration);
+                rigid.AddRelativeForce(0, 0, boostForce, ForceMode.Acceleration);
+                if (relativeVelocity.z > speed + boostAddSpeed) rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
             }
 
-            // Control player when not finished.
+            // Keep player below max speeds.
+            if (relativeVelocity.x > Mathf.Abs(speed)) rigid.AddRelativeForce(-relativeVelocity.x, 0, 0, ForceMode.Acceleration);
+            if (relativeVelocity.z > speed && !boostOn) rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
+            if (spotLock) rigid.AddRelativeForce(-relativeVelocity.x, 0, -relativeVelocity.z, ForceMode.VelocityChange);
+
+            if (grounded)
+            {
+                // Slow horizontal movement.
+                rigid.AddRelativeForce(traction * -relativeVelocity.x, 0, 0, ForceMode.VelocityChange);
+
+                // Turn board around when going backwards.
+                if (relativeVelocity.z < -1) transform.Rotate(0, 180, 0);
+            }
             else
             {
-                // Slowdown from other players.
-                if (!boostOn && relativeVelocity.z > speed / (slows + 1)) rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
-                if (boostOn && relativeVelocity.z > (speed + boostAddSpeed) / (slows + 1)) rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
-                if (slows > 0) slowed.SetActive(true);
-                else slowed.SetActive(false);
-
-                // Use rockets and fans.
-                if (boostOn)
+                // Apply feather board
+                if (board.boardName == "Pound of Feather")
                 {
-                    rigid.AddRelativeForce(0, 0, boostForce, ForceMode.Acceleration);
-                    if (relativeVelocity.z > speed + boostAddSpeed) rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
-                }
-
-                // Keep player below max speeds.
-                if (relativeVelocity.x > Mathf.Abs(speed)) rigid.AddRelativeForce(-relativeVelocity.x, 0, 0, ForceMode.Acceleration);
-                if (relativeVelocity.z > speed && !boostOn) rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
-                if (spotLock) rigid.AddRelativeForce(-relativeVelocity.x, 0, -relativeVelocity.z, ForceMode.VelocityChange);
-
-                if (grounded)
-                {
-                    // Slow horizontal movement.
-                    rigid.AddRelativeForce(traction * -relativeVelocity.x, 0, 0, ForceMode.VelocityChange);
-
-                    // Turn board around when going backwards.
-                    if (relativeVelocity.z < -1) transform.Rotate(0, 180, 0);
-                }
-                else
-                {
-                    // Apply feather board
-                    if (board.boardName == "Pound of Feather")
-                    {
-                        rigid.AddRelativeForce(-Physics.gravity / 2f);
-                    }
+                    rigid.AddRelativeForce(-Physics.gravity / 2f);
                 }
             }
         }
@@ -221,13 +250,13 @@ public class RacerCore : MonoBehaviour
 
     void LateUpdate()
     {
-        if (initialized)
+        if (!initialized)
+            return;
+
+        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0);
+        if (Mathf.Abs(transform.localEulerAngles.x) > 60)
         {
-            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0);
-            if (Mathf.Abs(transform.localEulerAngles.x) > 60)
-            {
-                transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, transform.localEulerAngles.z);
-            }
+            transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, transform.localEulerAngles.z);
         }
     }
 
@@ -300,15 +329,15 @@ public class RacerCore : MonoBehaviour
         // Checkpoint
         if (other.gameObject.CompareTag("Checkpoint"))
         {
-            Checkpoint chPnt = other.GetComponent<Checkpoint>();
-            if (!finished && chPnt.gameObject != lastCheckpoint)
+            Checkpoint check = other.GetComponent<Checkpoint>();
+            if (!finished && check.gameObject != lastCheckpoint)
             {
                 lastCheckpoint = nextCheckpoint;
-                nextCheckpoint = chPnt.nextCheck;
-                nextCheckVal = chPnt.nextCheck.GetComponent<Checkpoint>().value;
-                if (chPnt.isLift && !chPnt.onCooldown)
+                nextCheckpoint = check.nextCheck;
+                nextCheckVal = check.nextCheck.GetComponent<Checkpoint>().value;
+                if (check.isLift && !check.onCooldown)
                 {
-                    chPnt.Cooldown(rigid);
+                    check.Cooldown(rigid);
                     lastCheckpoint = firstCheckpoint;
                     nextCheckpoint = firstCheckpoint.GetComponent<Checkpoint>().nextCheck;
                     if (playerUI != null && GameRam.gameMode == GameMode.Challenge)
@@ -317,19 +346,16 @@ public class RacerCore : MonoBehaviour
                     }
                     currentLap++;
                     boostOn = false;
-                    //rigid.velocity = Vector3.zero;
-                    //transform.SetPositionAndRotation(playerStartPoint.position, playerStartPoint.rotation);
-                    //rigid.AddRelativeForce(new Vector3(0, 0, jumpForce.z * 2));
                     if (aiControls != null) aiControls.NewLap();
                 }
-                if (chPnt.isFinish && currentLap >= totalLaps)
+                if (check.isFinish && currentLap >= totalLaps)
                 {
                     finalPlace = place;
-                    // corCon.Finish(playerNum);
                     trackManager.Finish(playerNum);
                     if (playerUI != null)
                     {
-                        if (GameRam.gameMode == GameMode.Challenge) playerUI.LapTime(currentLap);
+                        if (GameRam.gameMode == GameMode.Challenge)
+                            playerUI.LapTime(currentLap);
                         playerUI.finished = true;
                     }
                     aiControls.finished = true;
@@ -337,7 +363,7 @@ public class RacerCore : MonoBehaviour
                     playerUI.timerOn = false;
                 }
             }
-            else if (!finished && chPnt.gameObject == lastCheckpoint)
+            else if (!finished && check.gameObject == lastCheckpoint)
             {
                 Debug.LogWarning("Wrong direction.");
             }
@@ -347,8 +373,10 @@ public class RacerCore : MonoBehaviour
         {
             coins += 100;
             audioMaker.Play("coinPickup");
-            if (other.GetComponent<CoinSpin>().respawnTime == -1) Destroy(other.gameObject);
-            else StartCoroutine(other.GetComponent<CoinSpin>().Respawn());
+            if (other.GetComponent<CoinSpin>().respawnTime == -1)
+                Destroy(other.gameObject);
+            else
+                StartCoroutine(other.GetComponent<CoinSpin>().Respawn());
         }
         // Item Box
         if (other.gameObject.CompareTag("BlueBox"))
@@ -365,7 +393,8 @@ public class RacerCore : MonoBehaviour
                 switch (place)
                 {
                     case 1:
-                        itemType = WeightedRandom.Range(
+                        currentItem = (ItemProjectile.ItemType)WeightedRandom.Range(
+                            new IntRange(0, 0, 0)/*Null*/,
                             new IntRange(0, 0, 5)/*Invis*/,
                             new IntRange(1, 1, 5)/*HighJump*/,
                             new IntRange(2, 2, 4)/*SlowOne*/,
@@ -378,7 +407,8 @@ public class RacerCore : MonoBehaviour
                             new IntRange(9, 9, 0)/*SuperRocket*/);
                         break;
                     case 2:
-                        itemType = WeightedRandom.Range(
+                        currentItem = (ItemProjectile.ItemType)WeightedRandom.Range(
+                            new IntRange(0, 0, 0)/*Null*/,
                             new IntRange(0, 0, 4)/*Invis*/,
                             new IntRange(1, 1, 4)/*HighJump*/,
                             new IntRange(2, 2, 5)/*SlowOne*/,
@@ -391,7 +421,8 @@ public class RacerCore : MonoBehaviour
                             new IntRange(9, 9, .5f)/*SuperRocket*/);
                         break;
                     case 3:
-                        itemType = WeightedRandom.Range(
+                        currentItem = (ItemProjectile.ItemType)WeightedRandom.Range(
+                            new IntRange(0, 0, 0)/*Null*/,
                             new IntRange(0, 0, 1)/*Invis*/,
                             new IntRange(1, 1, 1)/*HighJump*/,
                             new IntRange(2, 2, 1)/*SlowOne*/,
@@ -404,7 +435,8 @@ public class RacerCore : MonoBehaviour
                             new IntRange(9, 9, 3)/*SuperRocket*/);
                         break;
                     case 4:
-                        itemType = WeightedRandom.Range(
+                        currentItem = (ItemProjectile.ItemType)WeightedRandom.Range(
+                            new IntRange(0, 0, 0)/*Null*/,
                             new IntRange(0, 0, 1)/*Invis*/,
                             new IntRange(1, 1, 1)/*HighJump*/,
                             new IntRange(2, 2, 2)/*SlowOne*/,
@@ -434,7 +466,8 @@ public class RacerCore : MonoBehaviour
                 switch (place)
                 {
                     case 1:
-                        weaponType = WeightedRandom.Range(
+                        currentWeapon = (ItemProjectile.WeaponType)WeightedRandom.Range(
+                            new IntRange(0, 0, 0)/*None*/,
                             new IntRange(0, 0, 3)/*Ice*/,
                             new IntRange(1, 1, 1)/*Balloon*/,
                             new IntRange(2, 2, 5)/*Bomb*/,
@@ -443,7 +476,8 @@ public class RacerCore : MonoBehaviour
                             new IntRange(5, 5, 3)/*Slap*/);
                         break;
                     case 2:
-                        weaponType = WeightedRandom.Range(
+                        currentWeapon = (ItemProjectile.WeaponType)WeightedRandom.Range(
+                            new IntRange(0, 0, 0)/*None*/,
                             new IntRange(0, 0, 2)/*Ice*/,
                             new IntRange(1, 1, 1)/*Balloon*/,
                             new IntRange(2, 2, 3)/*Bomb*/,
@@ -452,7 +486,8 @@ public class RacerCore : MonoBehaviour
                             new IntRange(5, 5, 2)/*Slap*/);
                         break;
                     case 3:
-                        weaponType = WeightedRandom.Range(
+                        currentWeapon = (ItemProjectile.WeaponType)WeightedRandom.Range(
+                            new IntRange(0, 0, 0)/*None*/,
                             new IntRange(0, 0, 2)/*Ice*/,
                             new IntRange(1, 1, 3)/*Balloon*/,
                             new IntRange(2, 2, 1)/*Bomb*/,
@@ -461,7 +496,8 @@ public class RacerCore : MonoBehaviour
                             new IntRange(5, 5, 2)/*Slap*/);
                         break;
                     case 4:
-                        weaponType = WeightedRandom.Range(
+                        currentWeapon = (ItemProjectile.WeaponType)WeightedRandom.Range(
+                            new IntRange(0, 0, 0)/*None*/,
                             new IntRange(0, 0, 3)/*Ice*/,
                             new IntRange(1, 1, 5)/*Balloon*/,
                             new IntRange(2, 2, 1)/*Bomb*/,
@@ -470,27 +506,27 @@ public class RacerCore : MonoBehaviour
                             new IntRange(5, 5, 3)/*Slap*/);
                         break;
                 }
-                shots = 3;
+                weaponAmmo = 3;
             }
         }
         // Get hit by weapons.
         if (!invisible && other.gameObject.CompareTag("Projectile"))
         {
-            var itemProj = other.transform.parent.GetComponent<ItemProjectile>();
-            if (itemProj.parentPlayer != gameObject)
+            var projectile = other.transform.parent.GetComponent<ItemProjectile>();
+            if (projectile.parentPlayer != gameObject)
             {
-                if ((grabbing || tricking) && !itemProj.reflected)
+                if ((grabbing || tricking) && !projectile.reflected)
                 {
-                    GameObject clone = Instantiate(projectile, shootSpawn.transform.position, shootSpawn.transform.rotation);
+                    GameObject clone = Instantiate(this.projectile, shootSpawn.transform.position, shootSpawn.transform.rotation);
                     clone.transform.Rotate(0, 180, 0);
-                    clone.GetComponent<ItemProjectile>().weaponType = itemProj.weaponType;
+                    clone.GetComponent<ItemProjectile>().weaponType = projectile.weaponType;
                     clone.GetComponent<ItemProjectile>().parentPlayer = gameObject;
                     clone.GetComponent<ItemProjectile>().reflected = true;
                     audioMaker.Play("reflectAttack");
                 }
                 else
                 {
-                    switch (itemProj.weaponType)
+                    switch (projectile.weaponType)
                     {
                         case ItemProjectile.WeaponType.Ice:
                             StartCoroutine(Ice());
@@ -512,7 +548,7 @@ public class RacerCore : MonoBehaviour
                             break;
                     }
                 }
-                Destroy(itemProj.gameObject);
+                Destroy(projectile.gameObject);
             }
         }
     }
@@ -520,11 +556,20 @@ public class RacerCore : MonoBehaviour
     // Start race.
     public void SetGo()
     {
-        if (playerUI != null) playerUI.timerOn = true;
-        if (playerRaceControls != null) playerRaceControls.lockControls = false;
+        if (playerUI != null)
+            playerUI.timerOn = true;
+        if (playerRaceControls != null)
+            playerRaceControls.lockControls = false;
         spotLock = false;
-        if (board.boardName == "Poverty Board") StartCoroutine(Poverty());
-        if (board.boardName == "Wealth Board") StartCoroutine(Wealth());
+        if (board == null)
+        {
+            Debug.LogError("Board not found. Constant boards will not work this race.");
+            return;
+        }
+        if (board.boardName == "Poverty Board")
+            StartCoroutine(Poverty());
+        if (board.boardName == "Wealth Board")
+            StartCoroutine(Wealth());
     }
 
     // Physics Functions.
@@ -693,78 +738,53 @@ public class RacerCore : MonoBehaviour
     // Use weapons and items.
     public void Shoot()
     {
-        if (shots > 0)
+        if (weaponAmmo > 0)
         {
             GameObject clone = Instantiate(projectile, shootSpawn.transform.position, shootSpawn.transform.rotation);
-            clone.GetComponent<ItemProjectile>().weaponType = (ItemProjectile.WeaponType)weaponType;
+            clone.GetComponent<ItemProjectile>().weaponType = currentWeapon;
             clone.GetComponent<ItemProjectile>().parentPlayer = gameObject;
-            shots--;
+            weaponAmmo--;
         }
     }
 
     public void Item()
     {
-        switch (itemType)
+        switch (currentItem)
         {
-            case 0:
-                // Invisibility
+            case ItemProjectile.ItemType.None:
+                break;
+            case ItemProjectile.ItemType.Invisibility:
                 StartCoroutine(UseInvisibility());
-                itemType = blankItem;
                 break;
-            case 1:
-                // High Jump
+            case ItemProjectile.ItemType.HighJump:
                 UseHighJump();
-                itemType = blankItem;
                 break;
-            case 2:
-                // Slow
-                // corCon.UseSlow(playerNum);
+            case ItemProjectile.ItemType.Slow:
                 trackManager.UseSlow(playerNum);
-                itemType = blankItem;
                 break;
-            case 3:
-                // Triple Slow
-                // corCon.UseTripleSlow(playerNum);
+            case ItemProjectile.ItemType.TripleSlow:
                 trackManager.UseTripleSlow(playerNum);
-                itemType = blankItem;
                 break;
-            case 4:
-                // Rock
+            case ItemProjectile.ItemType.Rock:
                 Instantiate(rock, rockSpawn.transform.position, rockSpawn.transform.rotation);
-                itemType = blankItem;
                 break;
-            case 5:
-                // Triple Rock
-                // corCon.UseTripleStop(playerNum);
+            case ItemProjectile.ItemType.TripleRock:
                 trackManager.UseTripleStop(playerNum);
-                itemType = blankItem;
                 break;
-            case 6:
-                // Steal
-                // corCon.UseSteal(playerNum);
+            case ItemProjectile.ItemType.Steal:
                 trackManager.UseSteal(playerNum);
-                itemType = blankItem;
                 break;
-            case 7:
-                // Triple Steal
-                // corCon.UseTripleSteal(playerNum);
+            case ItemProjectile.ItemType.TripleSteal:
                 trackManager.UseTripleSteal(playerNum);
-                itemType = blankItem;
                 break;
-            case 8:
-                // Rocket
+            case ItemProjectile.ItemType.Rocket:
                 StartCoroutine(UseBoost(rocket1));
-                itemType = blankItem;
                 break;
-            case 9:
-                // Super Rocket
+            case ItemProjectile.ItemType.SuperRocket:
                 StartCoroutine(UseBoost(rocket2));
-                itemType = blankItem;
-                break;
-            case 10:
-                // None
                 break;
         }
+        currentItem = ItemProjectile.ItemType.None;
     }
 
     // Get affected by Red Weapons.

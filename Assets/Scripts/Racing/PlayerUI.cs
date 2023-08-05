@@ -31,7 +31,7 @@ public class PlayerUI : MonoBehaviour
     public Camera playerCamera;
     public CinemachineVirtualCamera forwardVCam, reverseVCam;
     public Sprite[] itemSprite, weaponSprite, placeSprite;
-    public bool finished, camIsReversed;
+    public bool finished;
     RacerCore racerCore;
     // CourseControl corCon;
     //public Camera reverseCam;
@@ -90,7 +90,9 @@ public class PlayerUI : MonoBehaviour
         }
 
         // Fix Audio Listeners at some point.
-        playerCamera.GetComponent<AudioListener>().enabled = true;
+        TrackManager track = GameObject.Find("TrackManager").GetComponent<TrackManager>();
+        if (!track.demoMode || racerCore.playerNum == 0)
+            playerCamera.GetComponent<AudioListener>().enabled = true;
         finishGraphic.SetActive(false);
         pauseMenu.SetActive(false);
     }
@@ -126,48 +128,16 @@ public class PlayerUI : MonoBehaviour
                 placementText.fontSize = 130;
                 placementText.color = placementColor[3];
             }
-            if (racerCore.shots <= 0) shotsText.text = "";
-            else shotsText.text = racerCore.shots.ToString();
+            if (racerCore.weaponAmmo <= 0) shotsText.text = "";
+            else shotsText.text = racerCore.weaponAmmo.ToString();
             timeText.text = racerCore.trackManager.printTimer;
         }
 
         else finishGraphic.SetActive(true);
 
         // Update collectItem and weapon displays.
-        blueItem.sprite = itemSprite[racerCore.itemType];
-        redItem.sprite = weaponSprite[racerCore.weaponType];
-    }
-
-    void FixedUpdate()
-    {
-        // Camera Follow
-        //Vector3 vel = Vector3.zero;
-        //playerCamera.transform.position = Vector3.SmoothDamp(playerCamera.transform.position, transform.TransformPoint(camOffset), ref vel, camSmoothTime);
-
-        //vel = Vector3.zero;
-        //reverseCam.transform.position = Vector3.SmoothDamp(reverseCam.transform.localPosition, transform.TransformPoint(revCamOffset), ref vel, camSmoothTime);
-
-        //if (finished)
-        //{
-        //    playerCamera.transform.RotateAround(transform.position, Vector3.up, camRotSpeed);
-        //    reverseCam.transform.RotateAround(transform.position, Vector3.up, camRotSpeed);
-        //}
-        //else
-        //{
-        //    playerCamera.transform.LookAt(transform.position + camAngle, Vector3.up);
-        //    reverseCam.transform.LookAt(transform.position + camAngle, Vector3.up);
-        //}
-
-        if (camIsReversed)
-        {
-            forwardVCam.Priority = 0;
-            //reverseView.SetActive(true);
-        }
-        else
-        {
-            forwardVCam.Priority = 10;
-            //reverseView.SetActive(false);
-        }
+        blueItem.sprite = itemSprite[(int)racerCore.currentItem];
+        redItem.sprite = weaponSprite[(int)racerCore.currentWeapon];
     }
 
     public void Pause(int option)

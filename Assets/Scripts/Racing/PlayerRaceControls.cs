@@ -1,10 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.Audio;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 public class PlayerRaceControls : MonoBehaviour
@@ -119,10 +115,12 @@ public class PlayerRaceControls : MonoBehaviour
 
     public void OnLookBack(InputValue val)
     {
-        float p = val.Get<float>();
+        float v = val.Get<float>();
         //Look Backwards.
-        if (p == 0) playerUI.camIsReversed = false;
-        else playerUI.camIsReversed = true;
+        if (v == 0)
+            playerUI.forwardVCam.Priority = 10;
+        else
+            playerUI.forwardVCam.Priority = 0;
     }
 
     public void OnJump(InputValue val)
@@ -209,6 +207,7 @@ public class PlayerRaceControls : MonoBehaviour
                 }
                 else
                 {
+                    racerCore.animator.SetBool("Crouching", false);
                     // Jump and perform tricks if touching the ground.
                     racerCore.Jump();
                     if (lStickPos.x > .2f)
