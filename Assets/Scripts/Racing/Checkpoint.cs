@@ -6,8 +6,9 @@ using UnityEngine;
 public class Checkpoint : MonoBehaviour
 {
     public float value;
-    public GameObject nextCheck, respawn;
-    public bool isStart, isFinish, isLift;
+    public GameObject nextCheck;
+    public enum CheckpointType { Default, StartLine, FinishLine, Lift };
+    public CheckpointType type;
     public float cooldownTime;
     public bool onCooldown;
     Collider thisCollider;
@@ -17,13 +18,19 @@ public class Checkpoint : MonoBehaviour
     {
         thisCollider = GetComponent<Collider>();
         path = GetComponent<CinemachineSmoothPath>();
+        if (gameObject.name == "Lift")
+            type = CheckpointType.Lift;
+        else if (gameObject.name == "Start")
+            type = CheckpointType.StartLine;
+        else if (gameObject.name == "Finish")
+            type = CheckpointType.FinishLine;
     }
 
     public void Cooldown(Rigidbody player)
     {
         if (onCooldown)
             return;
-        
+
         StartCoroutine(CooldownTimer());
         player.isKinematic = true;
         //player.transform.position = path.m_Waypoints[0].position;
@@ -32,11 +39,11 @@ public class Checkpoint : MonoBehaviour
 
     public IEnumerator CooldownTimer()
     {
-        thisCollider.isTrigger = false;
+        thisCollider.enabled = false;
         onCooldown = true;
         yield return new WaitForSeconds(cooldownTime);
         onCooldown = false;
-        thisCollider.isTrigger = true;
+        thisCollider.enabled = true;
     }
 
     public IEnumerator Animate(Rigidbody player)

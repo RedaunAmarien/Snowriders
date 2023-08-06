@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Splines;
 
 public class RacerCore : MonoBehaviour
 {
@@ -25,7 +26,14 @@ public class RacerCore : MonoBehaviour
     public int finalPlace;
     public int totalLaps;
     public int coins;
+    public float splineLength;
     public float distanceToLift;
+    public float distanceFromSpline;
+    public Unity.Mathematics.float3 nearestSplinePoint;
+    public float nearestSplineTime;
+    [SerializeField] Transform respawnPoint;
+    SplineContainer aiSpline;
+    public SplinePath<Spline> aiSplinePath;
 
     [Header("Items and Weapons")]
     public ItemProjectile.ItemType currentItem;
@@ -130,6 +138,10 @@ public class RacerCore : MonoBehaviour
         coins = 0;
 
         replayCamOn = true;
+        aiSpline = GameObject.Find("AI Path").GetComponent<SplineContainer>();
+        splineLength = aiSpline.CalculateLength();
+        Debug.Log(splineLength.ToString("N3"));
+        aiSplinePath = new SplinePath<Spline>(aiSpline.Splines);
     }
 
     public void Initialize(bool demoMode = false)
@@ -183,15 +195,8 @@ public class RacerCore : MonoBehaviour
         }
 
         //Update Navigation
-        if (NavMesh.CalculatePath(transform.position, goal, NavMesh.AllAreas, navPath) && navPath.corners.Length > 2)
-        {
-            distanceToLift = Vector3.Distance(navPath.corners[0], navPath.corners[1]);
-            for (int i = 1; i < navPath.corners.Length - 1; i++)
-            {
-                Debug.DrawLine(navPath.corners[i], navPath.corners[i + 1], Color.magenta);
-                distanceToLift += Vector3.Distance(navPath.corners[i], navPath.corners[i + 1]);
-            }
-        }
+        distanceFromSpline = SplineUtility.GetNearestPoint(aiSplinePath, transform.position, out nearestSplinePoint, out nearestSplineTime);
+        distanceToLift = splineLength - nearestSplineTime * splineLength;
     }
 
     void FixedUpdate()
@@ -330,12 +335,13 @@ public class RacerCore : MonoBehaviour
         if (other.gameObject.CompareTag("Checkpoint"))
         {
             Checkpoint check = other.GetComponent<Checkpoint>();
+            respawnPoint = other.transform;
             if (!finished && check.gameObject != lastCheckpoint)
             {
                 lastCheckpoint = nextCheckpoint;
                 nextCheckpoint = check.nextCheck;
                 nextCheckVal = check.nextCheck.GetComponent<Checkpoint>().value;
-                if (check.isLift && !check.onCooldown)
+                if (check.type == Checkpoint.CheckpointType.Lift && !check.onCooldown)
                 {
                     check.Cooldown(rigid);
                     lastCheckpoint = firstCheckpoint;
@@ -348,7 +354,7 @@ public class RacerCore : MonoBehaviour
                     boostOn = false;
                     if (aiControls != null) aiControls.NewLap();
                 }
-                if (check.isFinish && currentLap >= totalLaps)
+                if (check.type == Checkpoint.CheckpointType.FinishLine && currentLap >= totalLaps)
                 {
                     finalPlace = place;
                     trackManager.Finish(playerNum);
@@ -636,8 +642,7 @@ public class RacerCore : MonoBehaviour
             respawning = true;
             playerRaceControls.lockControls = true;
             yield return new WaitForSeconds(3);
-            Transform spawnSpot = nextCheckpoint.GetComponent<Checkpoint>().respawn.transform;
-            transform.SetPositionAndRotation(spawnSpot.position + new Vector3(0, 2, 0), spawnSpot.rotation);
+            transform.SetPositionAndRotation(respawnPoint.position, respawnPoint.rotation);
             rigid.velocity = Vector3.zero;
             playerRaceControls.lockControls = false;
             respawning = false;

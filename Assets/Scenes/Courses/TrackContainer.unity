@@ -180,7 +180,7 @@ MonoBehaviour:
   fadePanel: {fileID: 1411847694}
   fadeDelay: 1
   demoMode: 0
-  demoCourse: {fileID: 11400000, guid: 2a7f39476c64348469dd165998c60967, type: 2}
+  demoCourse: {fileID: 11400000, guid: 09f11cae74b3f3c49ad9cb44c45bc37a, type: 2}
   demoPlayerCount: 0
   demoChars:
   - {fileID: 11400000, guid: be0dd09675e96fb419aae61bd4acaff2, type: 2}

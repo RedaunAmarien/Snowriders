@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using Cinemachine.Utility;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Splines;
 
 public class AIControls : MonoBehaviour
 {
@@ -34,6 +37,10 @@ public class AIControls : MonoBehaviour
     //public float navUpdateTime = 1;
     bool alreadyCrouching;
     private bool shootDelayOn;
+    public Vector3 turnAngleTarget;
+    [Range(0f, 1f)]
+    public float splinePoint;
+    public float distanceFromTarget;
 
     void Start()
     {
@@ -50,7 +57,8 @@ public class AIControls : MonoBehaviour
         racerCore.navPath = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, goal, NavMesh.AllAreas, racerCore.navPath);
 
-        if (racerCore.playerNum != 0) canvas.gameObject.SetActive(false);
+        if (racerCore.playerNum != 0)
+            canvas.gameObject.SetActive(false);
     }
 
     void Update()
@@ -62,33 +70,46 @@ public class AIControls : MonoBehaviour
             return;
 
         //Update Navigation
-        if (racerCore.navPath != null)
-        {
-            distFromDest = Vector3.Distance(racerCore.navPath.corners[0], racerCore.navPath.corners[1]);
-            cornerCount = racerCore.navPath.corners.Length;
-            for (int i = 1; i < racerCore.navPath.corners.Length - 1; i++)
-            {
-                //Debug.DrawLine(racerCore.navPath.corners[i], racerCore.navPath.corners[i + 1], Color.magenta);
-                distFromDest += Vector3.Distance(racerCore.navPath.corners[i], racerCore.navPath.corners[i + 1]);
-            }
-            nextCorner = racerCore.navPath.corners[1];
-        }
-        else
-        {
-            if (distFromDest < 5)
-            {
-                nextCorner = goal;
-            }
-            else
-            {
-                nextCorner = transform.position + transform.forward * 10;
-            }
-        }
-        turnAngle = Vector3.SignedAngle(nextCorner - transform.position, transform.forward, transform.up);
-        Debug.DrawLine(transform.position, nextCorner, Color.green);
+
+        //if (racerCore.navPath != null)
+        //{
+        //    distFromDest = Vector3.Distance(racerCore.navPath.corners[0], racerCore.navPath.corners[1]);
+        //    cornerCount = racerCore.navPath.corners.Length;
+        //    for (int i = 1; i < racerCore.navPath.corners.Length - 1; i++)
+        //    {
+        //        //Debug.DrawLine(racerCore.navPath.corners[i], racerCore.navPath.corners[i + 1], Color.magenta);
+        //        distFromDest += Vector3.Distance(racerCore.navPath.corners[i], racerCore.navPath.corners[i + 1]);
+        //    }
+        //    nextCorner = racerCore.navPath.corners[1];
+        //}
+        //else
+        //{
+        //    if (distFromDest < 5)
+        //    {
+        //        nextCorner = goal;
+        //    }
+        //    else
+        //    {
+        //        nextCorner = transform.position + transform.forward * 10;
+        //    }
+        //}
+        //turnAngle = Vector3.SignedAngle(nextCorner - transform.position, transform.forward, transform.up);
+        //Debug.DrawLine(transform.position, nextCorner, Color.green);
+
+        splinePoint = racerCore.nearestSplineTime + (racerCore.relativeVelocity.z * 0.000001f * racerCore.splineLength);
+        if (splinePoint >= 1)
+            splinePoint = 1;
+
+        turnAngleTarget = racerCore.aiSplinePath.EvaluatePosition(splinePoint);
+        distanceFromTarget = Vector3.Distance(transform.position, turnAngleTarget);
+        Debug.DrawLine(transform.position, turnAngleTarget, Color.yellow);
+
+        turnAngle = Vector3.SignedAngle(turnAngleTarget - transform.position, transform.forward, transform.up);
 
         //Decide current Priority
-        if (Mathf.Abs(turnAngle) > 5)
+        if (racerCore.relativeVelocity.z <= racerCore.speed * 0.125f)
+            currentPriority = Priority.Speed;
+        else if (Mathf.Abs(turnAngle) > 5)
             currentPriority = Priority.Steering;
         else if (racerCore.relativeVelocity.z <= racerCore.speed * 0.5f)
             currentPriority = Priority.Speed;
@@ -205,6 +226,7 @@ public class AIControls : MonoBehaviour
             return;
 
         //nextWaypoint = startWaypoint;
+        splinePoint = 0;
     }
 
     public IEnumerator ShootDelay()
