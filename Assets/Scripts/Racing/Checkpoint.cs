@@ -1,5 +1,4 @@
-﻿using Cinemachine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,56 +6,26 @@ public class Checkpoint : MonoBehaviour
 {
     public float value;
     public GameObject nextCheck;
+    [Tooltip("The location to respawn at, relative to the object's transform.")]
+    public Vector3 respawnPositionOffset = Vector3.zero;
+    [Tooltip("The rotation to respawn at, in world rotation.")]
+    public float respawnRotation = 0;
     public enum CheckpointType { Default, StartLine, FinishLine, Lift };
     public CheckpointType type;
-    public float cooldownTime;
-    public bool onCooldown;
-    Collider thisCollider;
-    CinemachineSmoothPath path;
 
     private void Start()
     {
-        thisCollider = GetComponent<Collider>();
-        path = GetComponent<CinemachineSmoothPath>();
-        if (gameObject.name == "Lift")
-            type = CheckpointType.Lift;
-        else if (gameObject.name == "Start")
+        if (gameObject.name == "Start")
             type = CheckpointType.StartLine;
         else if (gameObject.name == "Finish")
             type = CheckpointType.FinishLine;
     }
 
-    public void Cooldown(Rigidbody player)
+    private void OnDrawGizmosSelected()
     {
-        if (onCooldown)
-            return;
-
-        StartCoroutine(CooldownTimer());
-        player.isKinematic = true;
-        //player.transform.position = path.m_Waypoints[0].position;
-        StartCoroutine(Animate(player));
-    }
-
-    public IEnumerator CooldownTimer()
-    {
-        thisCollider.enabled = false;
-        onCooldown = true;
-        yield return new WaitForSeconds(cooldownTime);
-        onCooldown = false;
-        thisCollider.enabled = true;
-    }
-
-    public IEnumerator Animate(Rigidbody player)
-    {
-        float scale = 0;
-        while (scale < path.MaxPos)
-        {
-            yield return null;
-            player.transform.position = path.EvaluatePosition(scale);
-            scale += Time.deltaTime;
-        }
-        player.isKinematic = false;
-        player.transform.SetPositionAndRotation(player.GetComponent<RacerCore>().playerStartPoint.position, player.GetComponent<RacerCore>().playerStartPoint.rotation);
-        player.AddRelativeForce(new Vector3(0, 0, player.GetComponent<RacerCore>().jumpForce.z * 2));
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(transform.position + respawnPositionOffset, 0.25f);
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(respawnPositionOffset + transform.position,  Quaternion.Euler(0, respawnRotation, 0) * transform.forward);
     }
 }

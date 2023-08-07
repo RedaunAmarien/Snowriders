@@ -31,9 +31,10 @@ public class RacerCore : MonoBehaviour
     public float distanceFromSpline;
     public Unity.Mathematics.float3 nearestSplinePoint;
     public float nearestSplineTime;
-    [SerializeField] Transform respawnPoint;
+    [SerializeField] Vector3 respawnPosition;
+    [SerializeField] Vector3 respawnRotation;
     SplineContainer aiSpline;
-    public SplinePath<Spline> aiSplinePath;
+    public SplinePath aiSplinePath;
 
     [Header("Items and Weapons")]
     public ItemProjectile.ItemType currentItem;
@@ -70,6 +71,7 @@ public class RacerCore : MonoBehaviour
 
     // Objects
     [Header("References")]
+    public List<Checkpoint> checkpointList;
     public GameObject firstCheckpoint;
     public TrackManager trackManager;
     public Animator animator;
@@ -105,6 +107,7 @@ public class RacerCore : MonoBehaviour
     bool initialized;
     bool replayCamOn;
     Vector3 goal;
+    float timer = 0;
 
     void Start()
     {
@@ -138,10 +141,6 @@ public class RacerCore : MonoBehaviour
         coins = 0;
 
         replayCamOn = true;
-        aiSpline = GameObject.Find("AI Path").GetComponent<SplineContainer>();
-        splineLength = aiSpline.CalculateLength();
-        Debug.Log(splineLength.ToString("N3"));
-        aiSplinePath = new SplinePath<Spline>(aiSpline.Splines);
     }
 
     public void Initialize(bool demoMode = false)
@@ -176,16 +175,26 @@ public class RacerCore : MonoBehaviour
         }
         initialized = true;
         spotLock = true;
+
+        StartCoroutine(DelayStart());
+    }
+
+    IEnumerator DelayStart()
+    {
+        yield return new WaitForEndOfFrame();
+
+        //Choose Path
+        aiSpline = GameObject.Find("AI Path").GetComponent<SplineContainer>();
+        var manager = aiSpline.GetComponent<AIPathManager>();
+        int route = Random.Range(0, manager.routes.Count);
+        aiSplinePath = manager.routes[route].path;
+        splineLength = aiSplinePath.GetLength();
     }
 
     void Update()
     {
         if (!initialized)
             return;
-
-        // Update Checkpoints
-        //// Replace with quick checkpoint system soon
-        //checkDist = (transform.position - lastCheckpoint.transform.position).sqrMagnitude - (transform.position - nextCheckpoint.transform.position).sqrMagnitude;
 
         // Update variable limits.
         if (coins < 0) coins = 0;
@@ -194,8 +203,27 @@ public class RacerCore : MonoBehaviour
             currentWeapon = ItemProjectile.WeaponType.None;
         }
 
-        //Update Navigation
-        distanceFromSpline = SplineUtility.GetNearestPoint(aiSplinePath, transform.position, out nearestSplinePoint, out nearestSplineTime);
+        //NavMesh Navigation
+        if (NavMesh.CalculatePath(transform.position, goal, NavMesh.AllAreas, navPath))
+        {
+            for (int i = 1; i < navPath.corners.Length - 1; i++)
+            {
+                Debug.DrawLine(navPath.corners[i], navPath.corners[i + 1], Color.magenta);
+            }
+        }
+
+        ////Spline Navigation
+        //timer += Time.deltaTime;
+        //if (timer > 0.1f)
+        //{
+        //    UpdateNav();
+        //    timer = 0;
+        //}
+    }
+
+    void UpdateNav()
+    {
+        distanceFromSpline = SplineUtility.GetNearestPoint(aiSplinePath, transform.position, out nearestSplinePoint, out nearestSplineTime, 2, 2);
         distanceToLift = splineLength - nearestSplineTime * splineLength;
     }
 
@@ -335,25 +363,13 @@ public class RacerCore : MonoBehaviour
         if (other.gameObject.CompareTag("Checkpoint"))
         {
             Checkpoint check = other.GetComponent<Checkpoint>();
-            respawnPoint = other.transform;
+            respawnPosition = check.transform.position + check.respawnPositionOffset;
+            respawnRotation = Quaternion.Euler(0, check.respawnRotation, 0) * check.transform.forward;
             if (!finished && check.gameObject != lastCheckpoint)
             {
                 lastCheckpoint = nextCheckpoint;
                 nextCheckpoint = check.nextCheck;
                 nextCheckVal = check.nextCheck.GetComponent<Checkpoint>().value;
-                if (check.type == Checkpoint.CheckpointType.Lift && !check.onCooldown)
-                {
-                    check.Cooldown(rigid);
-                    lastCheckpoint = firstCheckpoint;
-                    nextCheckpoint = firstCheckpoint.GetComponent<Checkpoint>().nextCheck;
-                    if (playerUI != null && GameRam.gameMode == GameMode.Challenge)
-                    {
-                        playerUI.LapTime(currentLap);
-                    }
-                    currentLap++;
-                    boostOn = false;
-                    if (aiControls != null) aiControls.NewLap();
-                }
                 if (check.type == Checkpoint.CheckpointType.FinishLine && currentLap >= totalLaps)
                 {
                     finalPlace = place;
@@ -373,6 +389,22 @@ public class RacerCore : MonoBehaviour
             {
                 Debug.LogWarning("Wrong direction.");
             }
+
+        }
+        // Lift
+        if (other.gameObject.CompareTag("Lift"))
+        {
+            Lift lift = other.gameObject.GetComponent<Lift>();
+            lift.Cooldown(rigid);
+            lastCheckpoint = firstCheckpoint;
+            nextCheckpoint = firstCheckpoint.GetComponent<Checkpoint>().nextCheck;
+            if (playerUI != null && GameRam.gameMode == GameMode.Challenge)
+            {
+                playerUI.LapTime(currentLap);
+            }
+            currentLap++;
+            boostOn = false;
+            if (aiControls != null) aiControls.NewLap();
         }
         // Coin
         if (other.gameObject.CompareTag("Coin"))
@@ -642,7 +674,7 @@ public class RacerCore : MonoBehaviour
             respawning = true;
             playerRaceControls.lockControls = true;
             yield return new WaitForSeconds(3);
-            transform.SetPositionAndRotation(respawnPoint.position, respawnPoint.rotation);
+            transform.SetPositionAndRotation(respawnPosition, Quaternion.Euler(respawnRotation));
             rigid.velocity = Vector3.zero;
             playerRaceControls.lockControls = false;
             respawning = false;

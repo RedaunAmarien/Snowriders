@@ -1490,6 +1490,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1598871905}
   - component: {fileID: 1598871904}
+  - component: {fileID: 1598871906}
   m_Layer: 0
   m_Name: AI Path
   m_TagString: Untagged
@@ -2605,6 +2606,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1598871906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598871903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2569e508f04b9be4e92ae0c1bf386b4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  routes:
+  - slices:
+    - splineIndex: 0
+      range:
+        m_Start: 0
+        m_Count: 13
+        m_Direction: 0
+      isEnabled: 1
+      sliceLength: 0
+      distanceFromStart: 0
+    totalLength: 0
 --- !u!1 &1644323656
 GameObject:
   m_ObjectHideFlags: 0

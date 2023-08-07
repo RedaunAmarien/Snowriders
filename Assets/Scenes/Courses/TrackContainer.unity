@@ -135,6 +135,7 @@ GameObject:
   m_Component:
   - component: {fileID: 817649024}
   - component: {fileID: 817649023}
+  - component: {fileID: 817649025}
   m_Layer: 0
   m_Name: TrackManager
   m_TagString: Untagged
@@ -180,7 +181,7 @@ MonoBehaviour:
   fadePanel: {fileID: 1411847694}
   fadeDelay: 1
   demoMode: 0
-  demoCourse: {fileID: 11400000, guid: 09f11cae74b3f3c49ad9cb44c45bc37a, type: 2}
+  demoCourse: {fileID: 11400000, guid: 2a7f39476c64348469dd165998c60967, type: 2}
   demoPlayerCount: 0
   demoChars:
   - {fileID: 11400000, guid: be0dd09675e96fb419aae61bd4acaff2, type: 2}
@@ -208,6 +209,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &817649025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817649022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: 0b0cc787ff6b3fa4aa8577231b77c2b7, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: baf4901d298fef1479b0153752865195,
+    type: 3}
+  m_SortingOrder: 0
 --- !u!1 &953366355
 GameObject:
   m_ObjectHideFlags: 0

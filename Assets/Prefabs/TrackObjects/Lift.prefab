@@ -9,14 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4719424049491562}
+  - component: {fileID: -9203286478654557482}
   - component: {fileID: 65311197427920554}
-  - component: {fileID: 297371795330048767}
   - component: {fileID: 6516701310209130925}
   - component: {fileID: 2731594830587772377}
   - component: {fileID: 3526538800259117964}
   m_Layer: 0
   m_Name: Lift
-  m_TagString: Checkpoint
+  m_TagString: Lift
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -37,6 +37,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-9203286478654557482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1244388052169988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 776d0ceebc606014d9244d421d7474a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 51
+  nextCheck: {fileID: 0}
+  respawnPositionOffset: {x: 0, y: 5, z: 0}
+  respawnRotation: {x: 0, y: 0, z: 1}
+  type: 3
+  cooldownTime: 2
+  onCooldown: 0
 --- !u!65 &65311197427920554
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -58,26 +77,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.5, y: 1, z: 3.5}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &297371795330048767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1244388052169988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 042ed2a661319de40822bd01722af342, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  value: 51
-  nextCheck: {fileID: 0}
-  respawn: {fileID: 0}
-  isStart: 0
-  isFinish: 0
-  isLift: 1
-  cooldownTime: 2
-  onCooldown: 0
 --- !u!198 &6516701310209130925
 ParticleSystem:
   m_ObjectHideFlags: 0
