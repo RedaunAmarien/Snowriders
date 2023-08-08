@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.5539066, g: 0.5668128, b: 0.7694901, a: 1}
+  m_IndirectSpecularColor: {r: 0.51231533, g: 0.5040513, b: 0.49737227, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -181,7 +181,7 @@ MonoBehaviour:
   fadePanel: {fileID: 1411847694}
   fadeDelay: 1
   demoMode: 0
-  demoCourse: {fileID: 11400000, guid: 2a7f39476c64348469dd165998c60967, type: 2}
+  demoCourse: {fileID: 11400000, guid: b03ef2c026091a2469899043357e2d7f, type: 2}
   demoPlayerCount: 0
   demoChars:
   - {fileID: 11400000, guid: be0dd09675e96fb419aae61bd4acaff2, type: 2}

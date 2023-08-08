@@ -202,13 +202,13 @@ public class TrackManager : MonoBehaviour
         //Check custom rootOptions.
         if (GameRam.playerCount == 0)
         {
-            GameRam.lapCount = courseSettings.defaultLapCount;
+            GameRam.lapCount = courseSettings.courseInfo.defaultLapCount;
         }
         else
         {
             if (GameRam.lapCount == 0)
             {
-                GameRam.lapCount = courseSettings.defaultLapCount;
+                GameRam.lapCount = courseSettings.courseInfo.defaultLapCount;
             }
             if (GameRam.itemsOn == false)
             {
@@ -258,16 +258,16 @@ public class TrackManager : MonoBehaviour
             int offset = 0;
             //if (!demoMode)
             //{
-            GameRam.charForP[i] = courseSettings.defaultCpu[i - GameRam.playerCount + offset];
-            GameRam.boardForP[i] = courseSettings.defaultCpuBoard[i - GameRam.playerCount + offset];
+            GameRam.charForP[i] = courseSettings.courseInfo.defaultCpu[i - GameRam.playerCount + offset].characterIndex;
+            GameRam.boardForP[i] = courseSettings.courseInfo.defaultCpuBoard[i - GameRam.playerCount + offset].shopIndex;
             //Check for repeat character and reassign if found.
             for (int j = 0; j < pCharacterList.Count; j++)
             {
                 if (GameRam.charForP[i] == pCharacterList[j])
                 {
                     offset++;
-                    GameRam.charForP[i] = courseSettings.defaultCpu[i - GameRam.playerCount + offset];
-                    GameRam.boardForP[i] = courseSettings.defaultCpuBoard[i - GameRam.playerCount + offset];
+                    GameRam.charForP[i] = courseSettings.courseInfo.defaultCpu[i - GameRam.playerCount + offset].characterIndex;
+                    GameRam.boardForP[i] = courseSettings.courseInfo.defaultCpuBoard[i - GameRam.playerCount + offset].shopIndex;
                 }
             }
             //}

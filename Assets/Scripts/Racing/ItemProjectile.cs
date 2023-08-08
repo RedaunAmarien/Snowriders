@@ -29,7 +29,7 @@ public class ItemProjectile : MonoBehaviour
         if (weaponType == WeaponType.Bomb) bomb = true;
         if (weaponType == WeaponType.Snowman || weaponType == WeaponType.Tornado) bouncy = true;
         reflected = false;
-        weaponSprite.GetComponent<ParticleSystem>().GetComponent<Renderer>().material = material[(int)weaponType];
+        weaponSprite.GetComponent<ParticleSystem>().GetComponent<Renderer>().material = material[(int)weaponType-1];
         rigid = GetComponent<Rigidbody>();
         rigid.AddRelativeForce(0, 0, speed, ForceMode.VelocityChange);
         StartCoroutine(Lifetime());

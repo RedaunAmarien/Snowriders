@@ -27,12 +27,13 @@ public class RacerCore : MonoBehaviour
     public int totalLaps;
     public int coins;
     public float splineLength;
+    public Vector3 liftPosition;
     public float distanceToLift;
     public float distanceFromSpline;
     public Unity.Mathematics.float3 nearestSplinePoint;
     public float nearestSplineTime;
     [SerializeField] Vector3 respawnPosition;
-    [SerializeField] Vector3 respawnRotation;
+    [SerializeField] Quaternion respawnRotation;
     SplineContainer aiSpline;
     public SplinePath aiSplinePath;
 
@@ -40,34 +41,34 @@ public class RacerCore : MonoBehaviour
     public ItemProjectile.ItemType currentItem;
     public ItemProjectile.WeaponType currentWeapon;
     public int weaponAmmo;
-    [SerializeField] private int statusTime;
-    [SerializeField] private int rollTime;
-    [SerializeField] private int standTime;
+    [SerializeField] int statusTime;
+    [SerializeField] int rollTime;
+    [SerializeField] int standTime;
     [Tooltip("X = Lifetime, Y = Acceleration, Z = Additional Max Speed")]
-    [SerializeField] private Vector3 rocket1;
-    [SerializeField] private Vector3 rocket2;
-    [SerializeField] private Vector3 highJumpForce;
-    [SerializeField] private float moneyBoardTime;
+    [SerializeField] Vector3 rocket1;
+    [SerializeField] Vector3 rocket2;
+    [SerializeField] Vector3 highJumpForce;
+    [SerializeField] float moneyBoardTime;
 
     [Header("Physics")]
     public Vector3 relativeVelocity;
     public bool grounded;
-    [SerializeField] private bool boostOn;
-    [SerializeField] private float boostForce;
-    [SerializeField] private float boostAddSpeed;
+    [SerializeField] bool boostOn;
+    [SerializeField] float boostForce;
+    [SerializeField] float boostAddSpeed;
     public bool invisible;
     public bool spotLock;
     public bool grabbing;
     public bool tricking;
-    [SerializeField] private bool jumping;
+    [SerializeField] bool jumping;
     public bool highJumpReady;
-    [SerializeField] private bool respawning;
+    [SerializeField] bool respawning;
     public int ltdr;
     public int lgdr;
-    [SerializeField] private int grabsChained;
-    [SerializeField] private int grabsCombo;
-    [SerializeField] private int tricksChained;
-    [SerializeField] private int slows;
+    [SerializeField] int grabsChained;
+    [SerializeField] int grabsCombo;
+    [SerializeField] int tricksChained;
+    [SerializeField] int slows;
 
     // Objects
     [Header("References")]
@@ -77,28 +78,28 @@ public class RacerCore : MonoBehaviour
     public Animator animator;
     public Transform playerStartPoint;
     public NavMeshPath navPath;
-    [SerializeField] private GameObject lastCheckpoint;
-    [SerializeField] private GameObject nextCheckpoint;
-    [SerializeField] private AudioMaker audioMaker;
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AIControls aiControls;
-    [SerializeField] private GameObject playerCamera;
-    [SerializeField] private GameObject rock;
-    [SerializeField] private GameObject rockSpawn;
-    [SerializeField] private GameObject projectile;
-    [SerializeField] private GameObject shootSpawn;
-    [SerializeField] private GameObject dropCoin;
-    [SerializeField] private GameObject characterModel;
-    [SerializeField] private GameObject iceCube;
-    [SerializeField] private GameObject snowman;
-    [SerializeField] private GameObject balloon;
-    [SerializeField] private GameObject highJumpParticles;
-    [SerializeField] private GameObject lockParticles;
-    [SerializeField] private GameObject slowed;
-    [SerializeField] private GameObject rocketParticles1;
-    [SerializeField] private GameObject rocketParticles2;
-    [SerializeField] private SpriteRenderer headSprite;
-    [SerializeField] private Sprite[] headSpriteSrc;
+    [SerializeField] GameObject lastCheckpoint;
+    [SerializeField] GameObject nextCheckpoint;
+    [SerializeField] AudioMaker audioMaker;
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AIControls aiControls;
+    [SerializeField] GameObject playerCamera;
+    [SerializeField] GameObject rock;
+    [SerializeField] GameObject rockSpawn;
+    [SerializeField] GameObject projectile;
+    [SerializeField] GameObject shootSpawn;
+    [SerializeField] GameObject dropCoin;
+    [SerializeField] GameObject characterModel;
+    [SerializeField] GameObject iceCube;
+    [SerializeField] GameObject snowman;
+    [SerializeField] GameObject balloon;
+    [SerializeField] GameObject highJumpParticles;
+    [SerializeField] GameObject lockParticles;
+    [SerializeField] GameObject slowed;
+    [SerializeField] GameObject rocketParticles1;
+    [SerializeField] GameObject rocketParticles2;
+    [SerializeField] SpriteRenderer headSprite;
+    [SerializeField] Sprite[] headSpriteSrc;
 
     //Internal
     public PlayerUI playerUI;
@@ -106,7 +107,6 @@ public class RacerCore : MonoBehaviour
     Rigidbody rigid;
     bool initialized;
     bool replayCamOn;
-    Vector3 goal;
     float timer = 0;
 
     void Start()
@@ -128,7 +128,7 @@ public class RacerCore : MonoBehaviour
         nextCheckVal = nextCheckpoint.GetComponent<Checkpoint>().value;
 
         currentLap = 1;
-        goal = GameObject.Find("Lift").transform.position;
+        liftPosition = GameObject.Find("Lift").transform.position;
 
         rigid = gameObject.GetComponent<Rigidbody>();
         finished = false;
@@ -141,6 +141,10 @@ public class RacerCore : MonoBehaviour
         coins = 0;
 
         replayCamOn = true;
+
+        liftPosition = GameObject.Find("Lift").transform.position;
+        navPath = new NavMeshPath();
+        NavMesh.CalculatePath(transform.position, liftPosition, NavMesh.AllAreas, navPath);
     }
 
     public void Initialize(bool demoMode = false)
@@ -203,28 +207,31 @@ public class RacerCore : MonoBehaviour
             currentWeapon = ItemProjectile.WeaponType.None;
         }
 
-        //NavMesh Navigation
-        if (NavMesh.CalculatePath(transform.position, goal, NavMesh.AllAreas, navPath))
+        //Update Navigation Timer
+        timer += Time.deltaTime;
+        if (timer > 0.125f)
         {
-            for (int i = 1; i < navPath.corners.Length - 1; i++)
-            {
-                Debug.DrawLine(navPath.corners[i], navPath.corners[i + 1], Color.magenta);
-            }
+            UpdateNav();
+            timer = 0;
         }
-
-        ////Spline Navigation
-        //timer += Time.deltaTime;
-        //if (timer > 0.1f)
-        //{
-        //    UpdateNav();
-        //    timer = 0;
-        //}
     }
 
     void UpdateNav()
     {
-        distanceFromSpline = SplineUtility.GetNearestPoint(aiSplinePath, transform.position, out nearestSplinePoint, out nearestSplineTime, 2, 2);
-        distanceToLift = splineLength - nearestSplineTime * splineLength;
+        //NavMesh
+        if (NavMesh.CalculatePath(transform.position, liftPosition, NavMesh.AllAreas, navPath))
+        {
+            distanceToLift = Vector3.Distance(transform.position, navPath.corners[1]);
+            for (int i = 1; i < navPath.corners.Length - 1; i++)
+            {
+                Debug.DrawLine(navPath.corners[i], navPath.corners[i + 1], Color.magenta, 0.25f);
+                distanceToLift += Vector3.Distance(navPath.corners[i], navPath.corners[i + 1]);
+            }
+        }
+
+        ////Spline
+        //distanceFromSpline = SplineUtility.GetNearestPoint(aiSplinePath, transform.position, out nearestSplinePoint, out nearestSplineTime, 2, 2);
+        //distanceToLift = splineLength - nearestSplineTime * splineLength;
     }
 
     void FixedUpdate()
@@ -364,7 +371,7 @@ public class RacerCore : MonoBehaviour
         {
             Checkpoint check = other.GetComponent<Checkpoint>();
             respawnPosition = check.transform.position + check.respawnPositionOffset;
-            respawnRotation = Quaternion.Euler(0, check.respawnRotation, 0) * check.transform.forward;
+            respawnRotation = Quaternion.LookRotation(Quaternion.Euler(0, check.respawnRotation, 0) * check.transform.forward, Vector3.up);
             if (!finished && check.gameObject != lastCheckpoint)
             {
                 lastCheckpoint = nextCheckpoint;
@@ -428,63 +435,148 @@ public class RacerCore : MonoBehaviour
                 coins -= 100;
                 StartCoroutine(other.GetComponent<CoinSpin>().Respawn());
                 audioMaker.Play("collectItem");
+                int val = Mathf.RoundToInt(Random.value * 100);
                 switch (place)
                 {
                     case 1:
-                        currentItem = (ItemProjectile.ItemType)WeightedRandom.Range(
-                            new IntRange(0, 0, 0)/*Null*/,
-                            new IntRange(0, 0, 5)/*Invis*/,
-                            new IntRange(1, 1, 5)/*HighJump*/,
-                            new IntRange(2, 2, 4)/*SlowOne*/,
-                            new IntRange(3, 3, 2)/*SlowThree*/,
-                            new IntRange(4, 4, 5)/*Rock*/,
-                            new IntRange(5, 5, 1)/*Pan*/,
-                            new IntRange(6, 6, 4)/*Steal*/,
-                            new IntRange(7, 7, 1)/*StealThree*/,
-                            new IntRange(8, 8, 1)/*Rocket*/,
-                            new IntRange(9, 9, 0)/*SuperRocket*/);
+                        switch (val)
+                        {
+                            case <= 18:
+                                currentItem = ItemProjectile.ItemType.Invisibility;
+                                break;
+                            case <= 36:
+                                currentItem = ItemProjectile.ItemType.HighJump;
+                                break;
+                            case <= 50:
+                                currentItem = ItemProjectile.ItemType.Slow;
+                                break;
+                            case <= 57:
+                                currentItem = ItemProjectile.ItemType.TripleSlow;
+                                break;
+                            case <= 75:
+                                currentItem = ItemProjectile.ItemType.Rock;
+                                break;
+                            case <= 79:
+                                currentItem = ItemProjectile.ItemType.TripleRock;
+                                break;
+                            case <= 93:
+                                currentItem = ItemProjectile.ItemType.Steal;
+                                break;
+                            case <= 97:
+                                currentItem = ItemProjectile.ItemType.TripleSteal;
+                                break;
+                            case <= 100:
+                                currentItem = ItemProjectile.ItemType.Rocket;
+                                break;
+                            default:
+                                currentItem = ItemProjectile.ItemType.SuperRocket;
+                                break;
+                        }
                         break;
                     case 2:
-                        currentItem = (ItemProjectile.ItemType)WeightedRandom.Range(
-                            new IntRange(0, 0, 0)/*Null*/,
-                            new IntRange(0, 0, 4)/*Invis*/,
-                            new IntRange(1, 1, 4)/*HighJump*/,
-                            new IntRange(2, 2, 5)/*SlowOne*/,
-                            new IntRange(3, 3, 4)/*SlowThree*/,
-                            new IntRange(4, 4, 4)/*Rock*/,
-                            new IntRange(5, 5, 3)/*Pan*/,
-                            new IntRange(6, 6, 4)/*Steal*/,
-                            new IntRange(7, 7, 1)/*StealThree*/,
-                            new IntRange(8, 8, 1)/*Rocket*/,
-                            new IntRange(9, 9, .5f)/*SuperRocket*/);
+                        switch (val)
+                        {
+                            case <= 13:
+                                currentItem = ItemProjectile.ItemType.Invisibility;
+                                break;
+                            case <= 26:
+                                currentItem = ItemProjectile.ItemType.HighJump;
+                                break;
+                            case <= 42:
+                                currentItem = ItemProjectile.ItemType.Slow;
+                                break;
+                            case <= 55:
+                                currentItem = ItemProjectile.ItemType.TripleSlow;
+                                break;
+                            case <= 68:
+                                currentItem = ItemProjectile.ItemType.Rock;
+                                break;
+                            case <= 78:
+                                currentItem = ItemProjectile.ItemType.TripleRock;
+                                break;
+                            case <= 91:
+                                currentItem = ItemProjectile.ItemType.Steal;
+                                break;
+                            case <= 95:
+                                currentItem = ItemProjectile.ItemType.TripleSteal;
+                                break;
+                            case <= 98:
+                                currentItem = ItemProjectile.ItemType.Rocket;
+                                break;
+                            default:
+                                currentItem = ItemProjectile.ItemType.SuperRocket;
+                                break;
+                        }
                         break;
                     case 3:
-                        currentItem = (ItemProjectile.ItemType)WeightedRandom.Range(
-                            new IntRange(0, 0, 0)/*Null*/,
-                            new IntRange(0, 0, 1)/*Invis*/,
-                            new IntRange(1, 1, 1)/*HighJump*/,
-                            new IntRange(2, 2, 1)/*SlowOne*/,
-                            new IntRange(3, 3, 1)/*SlowThree*/,
-                            new IntRange(4, 4, 1)/*Rock*/,
-                            new IntRange(5, 5, 1)/*Pan*/,
-                            new IntRange(6, 6, 3)/*Steal*/,
-                            new IntRange(7, 7, 5)/*StealThree*/,
-                            new IntRange(8, 8, 5)/*Rocket*/,
-                            new IntRange(9, 9, 3)/*SuperRocket*/);
+                        switch (val)
+                        {
+                            case <= 5:
+                                currentItem = ItemProjectile.ItemType.Invisibility;
+                                break;
+                            case <= 10:
+                                currentItem = ItemProjectile.ItemType.HighJump;
+                                break;
+                            case <= 15:
+                                currentItem = ItemProjectile.ItemType.Slow;
+                                break;
+                            case <= 20:
+                                currentItem = ItemProjectile.ItemType.TripleSlow;
+                                break;
+                            case <= 25:
+                                currentItem = ItemProjectile.ItemType.Rock;
+                                break;
+                            case <= 30:
+                                currentItem = ItemProjectile.ItemType.TripleRock;
+                                break;
+                            case <= 44:
+                                currentItem = ItemProjectile.ItemType.Steal;
+                                break;
+                            case <= 67:
+                                currentItem = ItemProjectile.ItemType.TripleSteal;
+                                break;
+                            case <= 90:
+                                currentItem = ItemProjectile.ItemType.Rocket;
+                                break;
+                            default:
+                                currentItem = ItemProjectile.ItemType.SuperRocket;
+                                break;
+                        }
                         break;
                     case 4:
-                        currentItem = (ItemProjectile.ItemType)WeightedRandom.Range(
-                            new IntRange(0, 0, 0)/*Null*/,
-                            new IntRange(0, 0, 1)/*Invis*/,
-                            new IntRange(1, 1, 1)/*HighJump*/,
-                            new IntRange(2, 2, 2)/*SlowOne*/,
-                            new IntRange(3, 3, 3)/*SlowThree*/,
-                            new IntRange(4, 4, 1)/*Rock*/,
-                            new IntRange(5, 5, 5)/*Pan*/,
-                            new IntRange(6, 6, 2)/*Steal*/,
-                            new IntRange(7, 7, 4)/*StealThree*/,
-                            new IntRange(8, 8, 4)/*Rocket*/,
-                            new IntRange(9, 9, 5)/*SuperRocket*/);
+                        switch (val)
+                        {
+                            case <= 4:
+                                currentItem = ItemProjectile.ItemType.Invisibility;
+                                break;
+                            case <= 8:
+                                currentItem = ItemProjectile.ItemType.HighJump;
+                                break;
+                            case <= 15:
+                                currentItem = ItemProjectile.ItemType.Slow;
+                                break;
+                            case <= 26:
+                                currentItem = ItemProjectile.ItemType.TripleSlow;
+                                break;
+                            case <= 30:
+                                currentItem = ItemProjectile.ItemType.Rock;
+                                break;
+                            case <= 48:
+                                currentItem = ItemProjectile.ItemType.TripleRock;
+                                break;
+                            case <= 55:
+                                currentItem = ItemProjectile.ItemType.Steal;
+                                break;
+                            case <= 69:
+                                currentItem = ItemProjectile.ItemType.TripleSteal;
+                                break;
+                            case <= 82:
+                                currentItem = ItemProjectile.ItemType.Rocket;
+                                break;
+                            default:
+                                currentItem = ItemProjectile.ItemType.SuperRocket;
+                                break;
+                        }
                         break;
                 }
             }
@@ -501,47 +593,100 @@ public class RacerCore : MonoBehaviour
                 coins -= 100;
                 StartCoroutine(other.GetComponent<CoinSpin>().Respawn());
                 audioMaker.Play("collectItem");
+                int val = Mathf.RoundToInt(Random.value * 100);
                 switch (place)
                 {
                     case 1:
-                        currentWeapon = (ItemProjectile.WeaponType)WeightedRandom.Range(
-                            new IntRange(0, 0, 0)/*None*/,
-                            new IntRange(0, 0, 3)/*Ice*/,
-                            new IntRange(1, 1, 1)/*Balloon*/,
-                            new IntRange(2, 2, 5)/*Bomb*/,
-                            new IntRange(3, 3, 5)/*Snow*/,
-                            new IntRange(4, 4, 1)/*Tornado*/,
-                            new IntRange(5, 5, 3)/*Slap*/);
+                        switch (val)
+                        {
+                            case <= 17:
+                                currentWeapon = ItemProjectile.WeaponType.Ice;
+                                break;
+                            case <= 23:
+                                currentWeapon = ItemProjectile.WeaponType.Parachute;
+                                break;
+                            case <= 51:
+                                currentWeapon = ItemProjectile.WeaponType.Bomb;
+                                break;
+                            case <= 79:
+                                currentWeapon = ItemProjectile.WeaponType.Snowman;
+                                break;
+                            case <= 85:
+                                currentWeapon = ItemProjectile.WeaponType.Tornado;
+                                break;
+                            default:
+                                currentWeapon = ItemProjectile.WeaponType.Slapstick;
+                                break;
+                        }
                         break;
                     case 2:
-                        currentWeapon = (ItemProjectile.WeaponType)WeightedRandom.Range(
-                            new IntRange(0, 0, 0)/*None*/,
-                            new IntRange(0, 0, 2)/*Ice*/,
-                            new IntRange(1, 1, 1)/*Balloon*/,
-                            new IntRange(2, 2, 3)/*Bomb*/,
-                            new IntRange(3, 3, 3)/*Snow*/,
-                            new IntRange(4, 4, 1)/*Tornado*/,
-                            new IntRange(5, 5, 2)/*Slap*/);
+                        switch (val)
+                        {
+                            case <= 17:
+                                currentWeapon = ItemProjectile.WeaponType.Ice;
+                                break;
+                            case <= 25:
+                                currentWeapon = ItemProjectile.WeaponType.Parachute;
+                                break;
+                            case <= 50:
+                                currentWeapon = ItemProjectile.WeaponType.Bomb;
+                                break;
+                            case <= 75:
+                                currentWeapon = ItemProjectile.WeaponType.Snowman;
+                                break;
+                            case <= 83:
+                                currentWeapon = ItemProjectile.WeaponType.Tornado;
+                                break;
+                            default:
+                                currentWeapon = ItemProjectile.WeaponType.Slapstick;
+                                break;
+                        }
                         break;
                     case 3:
-                        currentWeapon = (ItemProjectile.WeaponType)WeightedRandom.Range(
-                            new IntRange(0, 0, 0)/*None*/,
-                            new IntRange(0, 0, 2)/*Ice*/,
-                            new IntRange(1, 1, 3)/*Balloon*/,
-                            new IntRange(2, 2, 1)/*Bomb*/,
-                            new IntRange(3, 3, 1)/*Snow*/,
-                            new IntRange(4, 4, 3)/*Tornado*/,
-                            new IntRange(5, 5, 2)/*Slap*/);
+                        switch (val)
+                        {
+                            case <= 17:
+                                currentWeapon = ItemProjectile.WeaponType.Ice;
+                                break;
+                            case <= 42:
+                                currentWeapon = ItemProjectile.WeaponType.Parachute;
+                                break;
+                            case <= 50:
+                                currentWeapon = ItemProjectile.WeaponType.Bomb;
+                                break;
+                            case <= 58:
+                                currentWeapon = ItemProjectile.WeaponType.Snowman;
+                                break;
+                            case <= 83:
+                                currentWeapon = ItemProjectile.WeaponType.Tornado;
+                                break;
+                            default:
+                                currentWeapon = ItemProjectile.WeaponType.Slapstick;
+                                break;
+                        }
                         break;
                     case 4:
-                        currentWeapon = (ItemProjectile.WeaponType)WeightedRandom.Range(
-                            new IntRange(0, 0, 0)/*None*/,
-                            new IntRange(0, 0, 3)/*Ice*/,
-                            new IntRange(1, 1, 5)/*Balloon*/,
-                            new IntRange(2, 2, 1)/*Bomb*/,
-                            new IntRange(3, 3, 1)/*Snow*/,
-                            new IntRange(4, 4, 5)/*Tornado*/,
-                            new IntRange(5, 5, 3)/*Slap*/);
+                        switch (val)
+                        {
+                            case <= 17:
+                                currentWeapon = ItemProjectile.WeaponType.Ice;
+                                break;
+                            case <= 45:
+                                currentWeapon = ItemProjectile.WeaponType.Parachute;
+                                break;
+                            case <= 50:
+                                currentWeapon = ItemProjectile.WeaponType.Bomb;
+                                break;
+                            case <= 55:
+                                currentWeapon = ItemProjectile.WeaponType.Snowman;
+                                break;
+                            case <= 83:
+                                currentWeapon = ItemProjectile.WeaponType.Tornado;
+                                break;
+                            default:
+                                currentWeapon = ItemProjectile.WeaponType.Slapstick;
+                                break;
+                        }
                         break;
                 }
                 weaponAmmo = 3;
@@ -674,7 +819,7 @@ public class RacerCore : MonoBehaviour
             respawning = true;
             playerRaceControls.lockControls = true;
             yield return new WaitForSeconds(3);
-            transform.SetPositionAndRotation(respawnPosition, Quaternion.Euler(respawnRotation));
+            transform.SetPositionAndRotation(respawnPosition,respawnRotation);
             rigid.velocity = Vector3.zero;
             playerRaceControls.lockControls = false;
             respawning = false;

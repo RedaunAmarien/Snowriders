@@ -52,7 +52,7 @@ MonoBehaviour:
   value: 51
   nextCheck: {fileID: 0}
   respawnPositionOffset: {x: 0, y: 5, z: 0}
-  respawnRotation: {x: 0, y: 0, z: 1}
+  respawnRotation: 0
   type: 3
   cooldownTime: 2
   onCooldown: 0
@@ -75,8 +75,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3.5, y: 1, z: 3.5}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 3, z: 1}
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!198 &6516701310209130925
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -160,7 +160,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 3
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -714,9 +714,9 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: -1, z: 0}
+    m_Position: {x: 0, y: -0.5, z: 0}
     m_Rotation: {x: -90, y: 0, z: 0}
-    m_Scale: {x: 3.5, y: 3.5, z: 1}
+    m_Scale: {x: 1.25, y: 1.25, z: 1}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0

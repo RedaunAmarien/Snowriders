@@ -39,6 +39,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Courses/Track6.unity
     guid: 112aabaa49d181a488b49771f0bd99ba
   - enabled: 1
+    path: Assets/Scenes/Courses/Track7.unity
+    guid: 64f0f71e61a4e7a44a5556f73883e160
+  - enabled: 1
     path: Assets/Scenes/Cutscenes/Track1cut.unity
     guid: 143e261248459fa46b3d89602e0120ed
   - enabled: 1

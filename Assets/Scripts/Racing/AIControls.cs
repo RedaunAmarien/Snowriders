@@ -25,7 +25,6 @@ public class AIControls : MonoBehaviour
     public float altDistFromDest;
     public Vector3 nextCorner;
     public int cornerCount;
-    public Vector3 goal;
     public float stickMoveSpeed;
     public Vector2 targetTurn;
     public Vector2 actualTurn;
@@ -50,9 +49,8 @@ public class AIControls : MonoBehaviour
         //prevWaypoint = startWaypoint;
         //aiWaypoint = prevWaypoint.GetComponent<AIWaypoint>();
         //nextWaypoint = aiWaypoint.nextInChain;
-        goal = GameObject.Find("Lift").transform.position;
         racerCore.navPath = new NavMeshPath();
-        NavMesh.CalculatePath(transform.position, goal, NavMesh.AllAreas, racerCore.navPath);
+        NavMesh.CalculatePath(transform.position, racerCore.liftPosition, NavMesh.AllAreas, racerCore.navPath);
 
         if (racerCore.playerNum != 0)
             canvas.gameObject.SetActive(false);
@@ -73,7 +71,6 @@ public class AIControls : MonoBehaviour
             cornerCount = racerCore.navPath.corners.Length;
             for (int i = 1; i < racerCore.navPath.corners.Length - 1; i++)
             {
-                //Debug.DrawLine(racerCore.navPath.corners[i], racerCore.navPath.corners[i + 1], Color.magenta);
                 distFromDest += Vector3.Distance(racerCore.navPath.corners[i], racerCore.navPath.corners[i + 1]);
             }
             nextCorner = racerCore.navPath.corners[1];
@@ -82,7 +79,7 @@ public class AIControls : MonoBehaviour
         {
             if (distFromDest < 5)
             {
-                nextCorner = goal;
+                nextCorner = racerCore.liftPosition;
             }
             else
             {
@@ -97,20 +94,22 @@ public class AIControls : MonoBehaviour
         //if (splinePoint >= 1)
         //    splinePoint = 1;
 
-        //racerCore.aiSplinePath.Evaluate(splinePoint, out Unity.Mathematics.float3 pos, out Unity.Mathematics.float3 tan, out Unity.Mathematics.float3 up);
+            //racerCore.aiSplinePath.Evaluate(splinePoint, out Unity.Mathematics.float3 pos, out Unity.Mathematics.float3 tan, out Unity.Mathematics.float3 up);
 
-        //Vector3 tangentTarget = Vector3.Normalize(tan) + transform.position;
-        //Vector3 positionTarget = (Vector3)pos + Vector3.Normalize(tan)*5;
-        //float factor = Mathf.InverseLerp(minNavRange, maxNavRange, racerCore.distanceFromSpline);
-        ////float factor = Mathf.Lerp(0, racerCore.speed, racerCore.relativeVelocity.z);
+            //Vector3 tangentTarget = Vector3.Normalize(tan) + transform.position;
+            //Vector3 positionTarget = (Vector3)pos + Vector3.Normalize(tan)*5;
+            //float factor = Mathf.InverseLerp(minNavRange, maxNavRange, racerCore.distanceFromSpline);
+            ////float factor = Mathf.Lerp(0, racerCore.speed, racerCore.relativeVelocity.z);
 
-        //turnAngleTarget = Vector3.Lerp(tangentTarget, positionTarget, factor);
-        ////distanceFromTarget = Vector3.Distance(transform.position, turnAngleTarget);
-        //Debug.DrawLine(transform.position, turnAngleTarget, Color.yellow);
-        //turnAngle = Vector3.SignedAngle(turnAngleTarget - transform.position, transform.forward, transform.up);
+            //turnAngleTarget = Vector3.Lerp(tangentTarget, positionTarget, factor);
+            ////distanceFromTarget = Vector3.Distance(transform.position, turnAngleTarget);
+            //Debug.DrawLine(transform.position, turnAngleTarget, Color.yellow);
+            //turnAngle = Vector3.SignedAngle(turnAngleTarget - transform.position, transform.forward, transform.up);
 
-        //Decide current Priority
-        if (racerCore.relativeVelocity.z <= racerCore.speed * 0.01f)
+            //Decide current Priority
+        if (Mathf.Abs(turnAngle) > 60)
+            currentPriority = Priority.Steering;
+        else if (racerCore.relativeVelocity.z <= racerCore.speed * 0.01f)
             currentPriority = Priority.Speed;
         else if (Mathf.Abs(turnAngle) > 5)
             currentPriority = Priority.Steering;
