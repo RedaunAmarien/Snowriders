@@ -119,3 +119,7 @@ VisualElement {
     opacity: 0.5;
     scale: 0.9 0.9;
 }
+
+.unavailable {
+    color: rgb(128, 128, 128);
+}

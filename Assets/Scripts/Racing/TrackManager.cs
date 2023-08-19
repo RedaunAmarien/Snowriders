@@ -327,8 +327,9 @@ public class TrackManager : MonoBehaviour
                     playerPosition[i].checkpoint = racerCore[i].nextCheckVal;
                     playerPosition[i].distance = racerCore[i].distanceToLift;
                     playerPosition[i].finished = racerCore[i].finished;
+                    playerPosition[i].ridingLift = racerCore[i].isOnLift;
                 }
-                playerPosition = playerPosition.OrderByDescending(x => x.lap).ThenBy(x => x.distance).ToList();
+                playerPosition = playerPosition.OrderByDescending(x => x.lap).ThenByDescending(x => x.ridingLift).ThenBy(x => x.distance).ToList();
                 for (int i = 0; i < player.Length; i++)
                 {
                     playerPosition[i].place = i + 1;

@@ -59,6 +59,10 @@ public class HubTownControls : MonoBehaviour
 
         uiBridge.infoDescription.text = currentOptions[currentOptionIndex].optionDescription;
         uiBridge.infoName.text = currentOptions[currentOptionIndex].optionName;
+        if (!currentOptions[currentOptionIndex].isAvailable)
+            uiBridge.infoName.AddToClassList("unavailable");
+        else
+            uiBridge.infoName.RemoveFromClassList("unavailable");
     }
 
     void OnNavigateCustom(HubMultiplayerInput.Parameters input)

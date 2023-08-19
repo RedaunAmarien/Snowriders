@@ -220,6 +220,89 @@ Transform:
   m_Father: {fileID: 1469314644}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &143922959
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 88c8f5ec3a538924cb7be7a3cbf10ed5,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 88c8f5ec3a538924cb7be7a3cbf10ed5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 88c8f5ec3a538924cb7be7a3cbf10ed5,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 88c8f5ec3a538924cb7be7a3cbf10ed5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 88c8f5ec3a538924cb7be7a3cbf10ed5,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 88c8f5ec3a538924cb7be7a3cbf10ed5,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 88c8f5ec3a538924cb7be7a3cbf10ed5,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 88c8f5ec3a538924cb7be7a3cbf10ed5,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 88c8f5ec3a538924cb7be7a3cbf10ed5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 88c8f5ec3a538924cb7be7a3cbf10ed5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 88c8f5ec3a538924cb7be7a3cbf10ed5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7918335002988649766, guid: 88c8f5ec3a538924cb7be7a3cbf10ed5,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f5cce1edea645754783108f5d8335dc5, type: 2}
+    - target: {fileID: 919132149155446097, guid: 88c8f5ec3a538924cb7be7a3cbf10ed5,
+        type: 3}
+      propertyPath: m_Name
+      value: HubTown2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7202271454713460447, guid: 88c8f5ec3a538924cb7be7a3cbf10ed5,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f5cce1edea645754783108f5d8335dc5, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 88c8f5ec3a538924cb7be7a3cbf10ed5, type: 3}
 --- !u!1 &186638848
 GameObject:
   m_ObjectHideFlags: 0
@@ -4001,10 +4084,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   optionCode: 
+  currentOptionIndex: 0
   moveTime: 0.075
+  fadeDelay: 0.5
   rootOptions:
   - optionName: Kiosk
     optionDescription: Select save file, change options, or quit the game.
+    isAvailable: 1
     camera: {fileID: 556020342}
     door: {fileID: 0}
     events:
@@ -4013,6 +4099,7 @@ MonoBehaviour:
     subOptions:
     - optionName: File Select
       optionDescription: Select a save file or create a new one.
+      isAvailable: 1
       camera: {fileID: 5426330023825910800}
       door: {fileID: 0}
       events:
@@ -4023,6 +4110,7 @@ MonoBehaviour:
       optionDescription: '<color=red>(Unavailable)</color>
 
         Change game options.'
+      isAvailable: 0
       camera: {fileID: 5426330024702503459}
       door: {fileID: 0}
       events:
@@ -4033,6 +4121,7 @@ MonoBehaviour:
       optionDescription: 'Exit the game.
 
         Unsaved data will be lost.'
+      isAvailable: 1
       camera: {fileID: 556020342}
       door: {fileID: 0}
       events:
@@ -4041,6 +4130,7 @@ MonoBehaviour:
       subOptions: []
   - optionName: Race
     optionDescription: Hit the slopes!
+    isAvailable: 1
     camera: {fileID: 1988853516}
     door: {fileID: 0}
     events:
@@ -4049,6 +4139,7 @@ MonoBehaviour:
     subOptions:
     - optionName: Story
       optionDescription: Play the story mode, earning medals and coins.
+      isAvailable: 1
       camera: {fileID: 5426330024510313438}
       door: {fileID: 0}
       events:
@@ -4057,6 +4148,7 @@ MonoBehaviour:
       subOptions: []
     - optionName: Battle
       optionDescription: Play with friends locally, earning coins together.
+      isAvailable: 1
       camera: {fileID: 464086545187897919}
       door: {fileID: 0}
       events:
@@ -4068,6 +4160,7 @@ MonoBehaviour:
 
         Play with friends
         online, earning coins for yourself.'
+      isAvailable: 0
       camera: {fileID: 5426330024737272659}
       door: {fileID: 0}
       events:
@@ -4076,6 +4169,7 @@ MonoBehaviour:
       subOptions: []
     - optionName: Challenge
       optionDescription: Take on challenges to earn tickets.
+      isAvailable: 1
       camera: {fileID: 5426330023524561285}
       door: {fileID: 0}
       events:
@@ -4084,6 +4178,7 @@ MonoBehaviour:
       subOptions: []
   - optionName: Mall
     optionDescription: Spend tickets and coins.
+    isAvailable: 1
     camera: {fileID: 1328142229}
     door: {fileID: 0}
     events:
@@ -4092,6 +4187,7 @@ MonoBehaviour:
     subOptions:
     - optionName: Board Shop
       optionDescription: Upgrade or buy new boards.
+      isAvailable: 1
       camera: {fileID: 1716682205}
       door: {fileID: 0}
       events:
@@ -4103,6 +4199,7 @@ MonoBehaviour:
 
           Upgrade your
           basic board.'
+        isAvailable: 1
         camera: {fileID: 0}
         door: {fileID: 0}
         events:
@@ -4111,6 +4208,7 @@ MonoBehaviour:
         subOptions: []
       - optionName: Buy
         optionDescription: Buy new special boards.
+        isAvailable: 1
         camera: {fileID: 0}
         door: {fileID: 0}
         events:
@@ -4122,6 +4220,7 @@ MonoBehaviour:
 
         Change up your
         style and stats.'
+      isAvailable: 0
       camera: {fileID: 5426330025418869185}
       door: {fileID: 0}
       events:
@@ -4133,6 +4232,7 @@ MonoBehaviour:
 
         Buy clothes and
         accessories.'
+      isAvailable: 0
       camera: {fileID: 5426330024698680646}
       door: {fileID: 0}
       events:
@@ -4140,8 +4240,6 @@ MonoBehaviour:
           m_Calls: []
       subOptions: []
   currentOptions: []
-  currentOptionIndex: 0
-  fadeDelay: 0.5
   audioSources:
   - {fileID: 8304587732618175751}
   - {fileID: 4467892585121854694}
@@ -4426,94 +4524,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &1096361460
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: d20f143c5cae9d64dadbea2758217ae6,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d20f143c5cae9d64dadbea2758217ae6,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d20f143c5cae9d64dadbea2758217ae6,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d20f143c5cae9d64dadbea2758217ae6,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d20f143c5cae9d64dadbea2758217ae6,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d20f143c5cae9d64dadbea2758217ae6,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d20f143c5cae9d64dadbea2758217ae6,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d20f143c5cae9d64dadbea2758217ae6,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d20f143c5cae9d64dadbea2758217ae6,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d20f143c5cae9d64dadbea2758217ae6,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: d20f143c5cae9d64dadbea2758217ae6,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -7029948723529949830, guid: d20f143c5cae9d64dadbea2758217ae6,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -5568371526223589888, guid: d20f143c5cae9d64dadbea2758217ae6,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: d20f143c5cae9d64dadbea2758217ae6,
-        type: 3}
-      propertyPath: m_Name
-      value: HubTown2
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: d20f143c5cae9d64dadbea2758217ae6,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d20f143c5cae9d64dadbea2758217ae6, type: 3}
 --- !u!1 &1165499808
 GameObject:
   m_ObjectHideFlags: 3

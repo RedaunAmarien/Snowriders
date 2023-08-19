@@ -65,19 +65,22 @@ public class AIControls : MonoBehaviour
             return;
 
         //NavMesh Navigation
-        if (racerCore.navPath != null)
+        if (racerCore.navPath != null && racerCore.navPath.corners.Length > 1)
         {
             distFromDest = Vector3.Distance(racerCore.navPath.corners[0], racerCore.navPath.corners[1]);
             cornerCount = racerCore.navPath.corners.Length;
-            for (int i = 1; i < racerCore.navPath.corners.Length - 1; i++)
+            if (racerCore.navPath.corners.Length > 2)
             {
-                distFromDest += Vector3.Distance(racerCore.navPath.corners[i], racerCore.navPath.corners[i + 1]);
+                for (int i = 1; i < racerCore.navPath.corners.Length - 1; i++)
+                {
+                    distFromDest += Vector3.Distance(racerCore.navPath.corners[i], racerCore.navPath.corners[i + 1]);
+                }
             }
             nextCorner = racerCore.navPath.corners[1];
         }
         else
         {
-            if (distFromDest < 5)
+            if (racerCore.distanceToLift < 15)
             {
                 nextCorner = racerCore.liftPosition;
             }

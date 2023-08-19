@@ -39,6 +39,7 @@ public class Lift : Checkpoint
     public IEnumerator Animate(Rigidbody player)
     {
         float scale = 0;
+        player.GetComponent<RacerCore>().isOnLift = true;
         while (scale < path.MaxPos)
         {
             yield return null;
@@ -48,5 +49,7 @@ public class Lift : Checkpoint
         player.isKinematic = false;
         player.transform.SetPositionAndRotation(player.GetComponent<RacerCore>().playerStartPoint.position, player.GetComponent<RacerCore>().playerStartPoint.rotation);
         player.AddRelativeForce(new Vector3(0, 0, player.GetComponent<RacerCore>().jumpForce.z * 2));
+        player.GetComponent<RacerCore>().currentLap++;
+        player.GetComponent<RacerCore>().isOnLift = false;
     }
 }

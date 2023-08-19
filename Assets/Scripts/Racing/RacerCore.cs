@@ -36,6 +36,7 @@ public class RacerCore : MonoBehaviour
     [SerializeField] Quaternion respawnRotation;
     SplineContainer aiSpline;
     public SplinePath aiSplinePath;
+    public bool isOnLift;
 
     [Header("Items and Weapons")]
     public ItemProjectile.ItemType currentItem;
@@ -180,7 +181,7 @@ public class RacerCore : MonoBehaviour
         initialized = true;
         spotLock = true;
 
-        StartCoroutine(DelayStart());
+        //StartCoroutine(DelayStart());
     }
 
     IEnumerator DelayStart()
@@ -377,6 +378,10 @@ public class RacerCore : MonoBehaviour
                 lastCheckpoint = nextCheckpoint;
                 nextCheckpoint = check.nextCheck;
                 nextCheckVal = check.nextCheck.GetComponent<Checkpoint>().value;
+                //if (check.type == Checkpoint.CheckpointType.FinishLine)
+                //{
+                //    Debug.LogFormat("Player {0} crossing finish line on lap {1}/{2}.", playerNum, currentLap, totalLaps);
+                //}
                 if (check.type == Checkpoint.CheckpointType.FinishLine && currentLap >= totalLaps)
                 {
                     finalPlace = place;
@@ -409,7 +414,6 @@ public class RacerCore : MonoBehaviour
             {
                 playerUI.LapTime(currentLap);
             }
-            currentLap++;
             boostOn = false;
             if (aiControls != null) aiControls.NewLap();
         }
@@ -1080,7 +1084,12 @@ public class RacerCore : MonoBehaviour
                 rocketParticles2.SetActive(true);
                 rocketParticles1.SetActive(true);
             }
-            yield return new WaitForSeconds(stat.x);
+            float delay = 0;
+            while (delay < stat.x && boostOn)
+            {
+                yield return null;
+                delay += Time.deltaTime;
+            }
             boostOn = false;
             if (stat.x == 7)
             {
