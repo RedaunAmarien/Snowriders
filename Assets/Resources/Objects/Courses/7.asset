@@ -33,4 +33,4 @@ MonoBehaviour:
   preview: {fileID: -1304905567622442630, guid: 7106556abc7d8bc468a6af6d00bf9774,
     type: 3}
   hiddenInStoryMode: 1
-  hiddenInBattleMode: 1
+  hiddenInBattleMode: 0

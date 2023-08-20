@@ -162,11 +162,15 @@ public class HubTownControls : MonoBehaviour
                 break;
             case "10": //Story Mode
                 GameRam.maxPlayerCount = 1;
+                GameRam.itemsOn = true;
+                GameRam.coinsOn = true;
                 GetComponent<HubRacePrep>().Activate(GameMode.Story);
                 overridden = true;
                 break;
             case "11": //Battle Mode
                 GameRam.maxPlayerCount = 4;
+                GameRam.itemsOn = true;
+                GameRam.coinsOn = true;
                 GetComponent<HubRacePrep>().Activate(GameMode.Battle);
                 overridden = true;
                 break;

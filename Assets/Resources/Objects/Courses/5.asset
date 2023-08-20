@@ -17,7 +17,7 @@ MonoBehaviour:
   courseCutsceneName: Track5cut
   courseIndex: 5
   defaultLapCount: 3
-  courseLength: 0
+  courseLength: 850
   defaultCpu:
   - {fileID: 11400000, guid: be0dd09675e96fb419aae61bd4acaff2, type: 2}
   - {fileID: 11400000, guid: 69532b60c268730448e67c97842de0a9, type: 2}
@@ -29,7 +29,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 813cbfc2226503a498d242300595b851, type: 2}
   - {fileID: 11400000, guid: f2c7c6ec79134f845b5bda286dd7cd89, type: 2}
   prizeMoney: 983a00004c1d0000a60e000053070000
-  minimap: {fileID: 0}
+  minimap: {fileID: 21300000, guid: 8d4117a0fff1acf4f889236f87086d72, type: 3}
   preview: {fileID: 0}
   hiddenInStoryMode: 0
   hiddenInBattleMode: 0

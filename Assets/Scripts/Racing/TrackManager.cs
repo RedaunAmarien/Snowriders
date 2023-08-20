@@ -314,7 +314,7 @@ public class TrackManager : MonoBehaviour
     {
         if (doneStarting)
         {
-            if (GameRam.gameMode < GameMode.Challenge)
+            if (GameRam.gameMode != GameMode.Challenge)
             {
 
                 // Check who is in first place.
@@ -410,7 +410,7 @@ public class TrackManager : MonoBehaviour
         //Kickoff
         mapPanel.gameObject.SetActive(true);
         racerCore[0].SetGo();
-        if (GameRam.gameMode < GameMode.Challenge)
+        if (GameRam.gameMode != GameMode.Challenge)
         {
             racerCore[1].SetGo();
             racerCore[2].SetGo();
@@ -577,7 +577,7 @@ public class TrackManager : MonoBehaviour
                 Debug.LogErrorFormat("Player's rank of {0}(st/nd/rd/th) is outside of range 1st - 4th.", placement);
                 break;
         }
-        if (GameRam.gameMode < GameMode.Challenge)
+        if (GameRam.gameMode != GameMode.Challenge)
         {
             rankBarRoots["Root" + (placement - 1)].SetActive(true);
             rankBar["Name" + (placement - 1)].text = racerCore[userIndex].character.characterName;

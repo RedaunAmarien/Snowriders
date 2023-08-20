@@ -441,7 +441,7 @@ public class HubUIBridge : MonoBehaviour
         courseLength.text = string.Format("{0}m", challenge.challengeCourse.courseLength.ToString("N0"));
         prize1.text = "Requirements:";
         prize2.text = challenge.boardRule ? string.Format("Use the {0}", challenge.requiredBoard.boardName) : "Any Board";
-        prize3.text = challenge.coinRule ? string.Format("Finish with at least {0:N0} coints", challenge.requiredCoinCount) : "No Point Requirement";
+        prize3.text = challenge.coinRule ? string.Format("Finish with at least {0:N0} points", challenge.requiredCoinCount) : "No Point Requirement";
         prize4.text = challenge.timeRule ? string.Format("Finish under {0} seconds", challenge.timeLimitInSeconds) : "No Time Limit";
     }
 }

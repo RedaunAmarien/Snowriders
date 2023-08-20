@@ -50,15 +50,34 @@ public class HubRacePrep : MonoBehaviour
 
         allCourses = Resources.LoadAll<Course>("Objects/Courses").ToList();
         allCourses = allCourses.OrderBy(x => x.courseIndex).ToList();
-        foreach (Course course in allCourses)
-        {
-            openCourses.Add(course);
+        challengeList = Resources.LoadAll<Challenge>("Objects/Challenges").ToList();
 
-            if ((course.hiddenInBattleMode && GameRam.gameMode == GameMode.Battle) || (course.hiddenInStoryMode && GameRam.gameMode == GameMode.Story))
-                openCourses.Remove(course);
+        openCourses.Clear();
+        switch (GameRam.gameMode)
+        {
+            case GameMode.Online:
+            case GameMode.Battle:
+                foreach (Course course in allCourses)
+                {
+                    if (!course.hiddenInBattleMode)
+                        openCourses.Add(course);
+                }
+                break;
+            case GameMode.Story:
+                foreach (Course course in allCourses)
+                {
+                    if (!course.hiddenInStoryMode)
+                        openCourses.Add(course);
+                }
+                break;
+            case GameMode.Challenge:
+                foreach (Challenge challenge in challengeList)
+                {
+                    openCourses.Add(challenge.challengeCourse);
+                }
+                break;
         }
 
-        challengeList = Resources.LoadAll<Challenge>("Objects/Challenges").ToList();
         GameRam.charForP = new int[4];
         GameRam.boardForP = new int[4];
         //GameRam.inputUser = new InputUser[4];
