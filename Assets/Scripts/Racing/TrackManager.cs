@@ -8,6 +8,7 @@ using TMPro;
 using System.Linq;
 using System;
 using UnityEngine.Animations;
+using Cinemachine;
 
 public class TrackManager : MonoBehaviour
 {
@@ -20,6 +21,9 @@ public class TrackManager : MonoBehaviour
     int playersFinished, totalFinished;
     public GameObject playerPrefab;
     public GameObject[] player;
+    public CinemachineVirtualCamera[] forwardCams;
+    public CinemachineVirtualCamera[] reverseCams;
+    public Camera[] cameras;
     public List<PlayerPosition> playerPosition = new();
     GameObject[] items, weapons, coins;
     public Image miniMap;
@@ -63,14 +67,14 @@ public class TrackManager : MonoBehaviour
             demoMode = true;
             GameRam.courseToLoad = demoCourse.courseSceneName;
             GameRam.playerCount = demoPlayerCount;
-            GameRam.ownedBoards.AddRange(Resources.LoadAll<Board>("Objects/Boards/Basic"));
+            GameRam.ownedBoards = Resources.LoadAll<Board>("Objects/Boards/Basic").ToList();
             GameRam.ownedBoards.AddRange(Resources.LoadAll<Board>("Objects/Boards/Special"));
             GameRam.allBoards = GameRam.ownedBoards;
-            GameRam.allCharacters.AddRange(Resources.LoadAll<Character>("Objects/Characters"));
+            GameRam.allCharacters = Resources.LoadAll<Character>("Objects/Characters").ToList();
             GameRam.charForP = new int[4];
             GameRam.boardForP = new int[4];
-            //GameRam.inputDevice = new InputDevice[4];
-            //GameRam.controlp = new int[4];
+            GameRam.inputDevice = new InputDevice[4];
+            GameRam.controlp = new int[4];
             GameRam.itemsOn = true;
             GameRam.coinsOn = true;
             GameRam.playerCount = demoPlayerCount;
@@ -78,7 +82,7 @@ public class TrackManager : MonoBehaviour
             {
                 GameRam.charForP[i] = demoChars[i].characterIndex;
                 GameRam.boardForP[i] = demoBoards[i].boardID;
-                //GameRam.controlp[i] = i;
+                GameRam.controlp[i] = i;
             }
             for (int i = 0; i < demoPlayerCount; i++)
             {
@@ -114,10 +118,10 @@ public class TrackManager : MonoBehaviour
             aiControls[i] = player[i].GetComponent<AIControls>();
             //aiControls[i].startWaypoint = courseSettings.startWaypoint;
             playerUI[i] = player[i].GetComponent<PlayerUI>();
+            playerUI[i].forwardVCam = forwardCams[i];
+            playerUI[i].reverseVCam = reverseCams[i];
+            playerUI[i].playerCamera = cameras[i];
             playerRaceControls[i] = player[i].GetComponent<PlayerRaceControls>();
-            playerUI[i].reverseVCam.gameObject.layer = 13 + i;
-            playerUI[i].forwardVCam.gameObject.layer = 13 + i;
-            //cameras[i] = player[i];
         }
 
         //Remove all other racers in Challenge Mode.
@@ -134,6 +138,7 @@ public class TrackManager : MonoBehaviour
         {
             foreach (PlayerUI ui in playerUI)
             {
+                ui.canvas.enabled = true;
                 ui.playerCamera.gameObject.SetActive(true);
             }
         }
@@ -143,6 +148,7 @@ public class TrackManager : MonoBehaviour
             for (int i = GameRam.playerCount; i < 4; i++)
             {
                 playerUI[i].playerCamera.gameObject.SetActive(false);
+                cameras[i].gameObject.SetActive(false);
             }
         }
 

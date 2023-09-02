@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 public class HubUIBridge : MonoBehaviour
@@ -212,14 +210,14 @@ public class HubUIBridge : MonoBehaviour
         newNameField = dataRoot.Q<TextField>("NewName");
         newNameField.Focus();
         dataRoot.Q<VisualElement>("NamingRoot").ToggleInClassList("hidden");
-        dataRoot.Q<Button>("SubmitName").clickable.clicked += OnButtonClicked;
+        dataRoot.Q<Button>("SubmitName").clickable.clicked += NewNameSubmit;
     }
 
-    void OnButtonClicked()
+    void NewNameSubmit()
     {
         if (newNameField.value == "")
         {
-            Debug.Log("Name cannot be blank.");
+            Debug.Log("File name cannot be blank.");
             return;
         }
         VisualElement dataRoot = uiDoc.rootVisualElement.Q<VisualElement>("File" + newFileSlot);
@@ -227,7 +225,7 @@ public class HubUIBridge : MonoBehaviour
         dataRoot.Q<Label>("FileName").ToggleInClassList("hidden");
         newNameField = dataRoot.Q<TextField>("NewName");
         dataRoot.Q<VisualElement>("NamingRoot").ToggleInClassList("hidden");
-        GetComponent<HubFileSelect>().NameNewSave(newNameField.text);
+        GetComponent<HubFileSelect>().NameNewSave(newNameField.value);
     }
 
     public void UpdatePlayer(int index)

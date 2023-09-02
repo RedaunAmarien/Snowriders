@@ -1,6 +1,5 @@
 ﻿using Cinemachine.Utility;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Splines;
@@ -96,20 +95,17 @@ public class AIControls : MonoBehaviour
         //splinePoint = racerCore.nearestSplineTime;
         //if (splinePoint >= 1)
         //    splinePoint = 1;
+        //racerCore.aiSplinePath.Evaluate(splinePoint, out Unity.Mathematics.float3 pos, out Unity.Mathematics.float3 tan, out Unity.Mathematics.float3 up);
+        //Vector3 tangentTarget = Vector3.Normalize(tan) + transform.position;
+        //Vector3 positionTarget = (Vector3)pos + Vector3.Normalize(tan) * 5;
+        //float factor = Mathf.InverseLerp(minNavRange, maxNavRange, racerCore.distanceFromSpline);
+        ////float factor = Mathf.Lerp(0, racerCore.speed, racerCore.relativeVelocity.z);
+        //turnAngleTarget = Vector3.Lerp(tangentTarget, positionTarget, factor);
+        ////distanceFromTarget = Vector3.Distance(transform.position, turnAngleTarget);
+        //Debug.DrawLine(transform.position, turnAngleTarget, Color.yellow);
+        //turnAngle = Vector3.SignedAngle(turnAngleTarget - transform.position, transform.forward, transform.up);
 
-            //racerCore.aiSplinePath.Evaluate(splinePoint, out Unity.Mathematics.float3 pos, out Unity.Mathematics.float3 tan, out Unity.Mathematics.float3 up);
-
-            //Vector3 tangentTarget = Vector3.Normalize(tan) + transform.position;
-            //Vector3 positionTarget = (Vector3)pos + Vector3.Normalize(tan)*5;
-            //float factor = Mathf.InverseLerp(minNavRange, maxNavRange, racerCore.distanceFromSpline);
-            ////float factor = Mathf.Lerp(0, racerCore.speed, racerCore.relativeVelocity.z);
-
-            //turnAngleTarget = Vector3.Lerp(tangentTarget, positionTarget, factor);
-            ////distanceFromTarget = Vector3.Distance(transform.position, turnAngleTarget);
-            //Debug.DrawLine(transform.position, turnAngleTarget, Color.yellow);
-            //turnAngle = Vector3.SignedAngle(turnAngleTarget - transform.position, transform.forward, transform.up);
-
-            //Decide current Priority
+        //Decide current Priority
         if (Mathf.Abs(turnAngle) > 60)
             currentPriority = Priority.Steering;
         else if (racerCore.relativeVelocity.z <= racerCore.speed * 0.01f)
@@ -141,11 +137,19 @@ public class AIControls : MonoBehaviour
             case Priority.Steering:
                 bool leftTurn = turnAngle > 0 ? true : false;
                 if (Mathf.Abs(turnAngle) > 45)
-                    targetTurn = leftTurn ? new Vector2(-1, -1).normalized : new Vector2(1, -1).normalized;
+                {
+                    float lerp = Mathf.InverseLerp(45, 90, Mathf.Abs(turnAngle));
+                    targetTurn = Vector2.Lerp(leftTurn ? Vector2.left : Vector2.right, leftTurn ? new Vector2(-1, -1).normalized : new Vector2(1, -1).normalized, lerp);
+                }
                 else if (Mathf.Abs(turnAngle) > 5)
-                    targetTurn = leftTurn ? Vector2.left : Vector2.right;
+                {
+                    float lerp = Mathf.InverseLerp(5, 45, Mathf.Abs(turnAngle));
+                    targetTurn = Vector2.Lerp(Vector2.zero, leftTurn ? Vector2.left : Vector2.right, lerp);
+                }
                 else
+                {
                     targetTurn = Vector2.zero;
+                }
                 break;
             case Priority.Combos:
                 float dropDist = racerCore.navPath.corners[1].y - racerCore.navPath.corners[2].y;

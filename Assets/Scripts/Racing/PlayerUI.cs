@@ -17,8 +17,8 @@ public class PlayerUI : MonoBehaviour
     public float camSmoothTime;
     public Canvas canvas;
     public TextMeshProUGUI lapText, coinText, shotsText, trickText, timeText, lapTimeDisplay, placementText;
-    public GameObject reverseView;
-    public RenderTexture[] reverseViews;
+    //public GameObject reverseView;
+    //public RenderTexture[] reverseViews;
     public Color[] placementColor;
     public System.TimeSpan[] lapTime;
     public System.TimeSpan lapStartTime;
@@ -28,8 +28,10 @@ public class PlayerUI : MonoBehaviour
     public EventSystem events;
     public StandaloneInputModule inputMod;
     public GameObject itemDisplay;
+    public bool isReversed;
     public Camera playerCamera;
-    public CinemachineVirtualCamera forwardVCam, reverseVCam;
+    public CinemachineVirtualCamera forwardVCam;
+    public CinemachineVirtualCamera reverseVCam;
     public Sprite[] itemSprite, weaponSprite, placeSprite;
     public bool finished;
     RacerCore racerCore;
@@ -39,26 +41,25 @@ public class PlayerUI : MonoBehaviour
     void Start()
     {
         // Find objects.
-        // corCon = GameObject.Find("CourseSettings").GetComponent<CourseControl>();
         racerCore = GetComponent<RacerCore>();
-        //reverseCam = GameObject.Find("Reverse Camera " + playerNum).GetComponent<Camera>();
-        //reverseView.GetComponent<RawImage>().texture = reverseViews[playerNum];
-        //reverseView.SetActive(false);
+        playerCamera = GameObject.Find("PlayerCam" + racerCore.playerNum).GetComponent<Camera>();
+        forwardVCam = GameObject.Find("ForwardVCam" + racerCore.playerNum).GetComponent<CinemachineVirtualCamera>();
+        forwardVCam.LookAt = transform;
+        forwardVCam.Follow = transform;
+        reverseVCam = GameObject.Find("ReverseVCam" + racerCore.playerNum).GetComponent<CinemachineVirtualCamera>();
+        reverseVCam.LookAt = transform;
+        reverseVCam.Follow = transform;
         events = GameObject.Find("EventSystem").GetComponent<EventSystem>();
         inputMod = GameObject.Find("EventSystem").GetComponent<StandaloneInputModule>();
         lapTime = new System.TimeSpan[racerCore.totalLaps];
-        // Initialize camera
-        //playerCamera.transform.SetPositionAndRotation(transform.position, transform.rotation);
-        //reverseCam.transform.SetPositionAndRotation(transform.position, transform.rotation);
-        // subCam.transform.position = transform.position + camOffset;
-        //playerCamera.transform.LookAt(transform.position + camAngle);
-        //reverseCam.transform.LookAt(transform.position + camAngle);
-        if (GameRam.gameMode == GameMode.Challenge) placementText.gameObject.SetActive(false);
-        if (!GameRam.itemsOn) itemDisplay.SetActive(false);
+
+        if (GameRam.gameMode == GameMode.Challenge)
+            placementText.gameObject.SetActive(false);
+        if (!GameRam.itemsOn)
+            itemDisplay.SetActive(false);
+
         //Are these canvas assignments correct??
         canvas.worldCamera = playerCamera.GetComponent<Camera>();
-        // if (GameRam.playerCount == 1) canvas.worldCamera = GameObject.Find("Main Camera 0").GetComponent<Camera>();
-        // if (GameRam.playerCount >= 2) canvas.worldCamera = GameObject.Find("Main Camera "+playerNum).GetComponent<Camera>();
         canvas.planeDistance = .5f;
 
         switch (racerCore.playerNum)
@@ -138,6 +139,14 @@ public class PlayerUI : MonoBehaviour
         // Update collectItem and weapon displays.
         blueItem.sprite = itemSprite[(int)racerCore.currentItem];
         redItem.sprite = weaponSprite[(int)racerCore.currentWeapon];
+    }
+
+    public void ReverseCams()
+    {
+        isReversed = !isReversed;
+        forwardVCam.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.z = -forwardVCam.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.z;
+        reverseVCam.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.z = -reverseVCam.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.z;
+        reverseVCam.GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.z = -reverseVCam.GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.z;
     }
 
     public void Pause(int option)

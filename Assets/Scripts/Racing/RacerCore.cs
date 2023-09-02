@@ -42,6 +42,8 @@ public class RacerCore : MonoBehaviour
     public ItemProjectile.ItemType currentItem;
     public ItemProjectile.WeaponType currentWeapon;
     public int weaponAmmo;
+    public enum DefenseStatus { Normal, BoostLow, BoostHigh, Parachuting, Ice, Snow, Rolling, Tripped, Flattened, OOB };
+    public DefenseStatus status;
     [SerializeField] int statusTime;
     [SerializeField] int rollTime;
     [SerializeField] int standTime;
@@ -50,9 +52,12 @@ public class RacerCore : MonoBehaviour
     [SerializeField] Vector3 rocket2;
     [SerializeField] Vector3 highJumpForce;
     [SerializeField] float moneyBoardTime;
+    [SerializeField] float statusTimer;
+    [SerializeField] float iceTimer;
 
     [Header("Physics")]
     public Vector3 relativeVelocity;
+    public float turnFactor;
     public bool grounded;
     [SerializeField] bool boostOn;
     [SerializeField] float boostForce;
@@ -133,7 +138,7 @@ public class RacerCore : MonoBehaviour
 
         rigid = gameObject.GetComponent<Rigidbody>();
         finished = false;
-        rigid.maxAngularVelocity = 0.05f;
+        //rigid.maxAngularVelocity = 0.05f;
 
         // Initialize items.
         currentWeapon = ItemProjectile.WeaponType.None;
@@ -150,8 +155,8 @@ public class RacerCore : MonoBehaviour
 
     public void Initialize(bool demoMode = false)
     {
-        if (!demoMode && playerNum == 0)
-            gameObject.GetComponentInChildren<AudioListener>().enabled = true;
+        //if (!demoMode && playerNum == 0)
+        //    playerUI.playerCamera.GetComponent<AudioListener>().enabled = true;
 
         // Become character.
         headSprite.sprite = character.charSprite;
@@ -184,17 +189,17 @@ public class RacerCore : MonoBehaviour
         //StartCoroutine(DelayStart());
     }
 
-    IEnumerator DelayStart()
-    {
-        yield return new WaitForEndOfFrame();
+    //IEnumerator DelayStart()
+    //{
+    //    yield return new WaitForEndOfFrame();
 
-        //Choose Path
-        aiSpline = GameObject.Find("AI Path").GetComponent<SplineContainer>();
-        var manager = aiSpline.GetComponent<AIPathManager>();
-        int route = Random.Range(0, manager.routes.Count);
-        aiSplinePath = manager.routes[route].path;
-        splineLength = aiSplinePath.GetLength();
-    }
+    //    //Choose Path
+    //    aiSpline = GameObject.Find("AI Path").GetComponent<SplineContainer>();
+    //    var manager = aiSpline.GetComponent<AIPathManager>();
+    //    int route = Random.Range(0, manager.routes.Count);
+    //    aiSplinePath = manager.routes[route].path;
+    //    splineLength = aiSplinePath.GetLength();
+    //}
 
     void Update()
     {
@@ -215,6 +220,16 @@ public class RacerCore : MonoBehaviour
             UpdateNav();
             timer = 0;
         }
+
+        //Update status timers.
+        if (statusTimer > 0)
+        {
+            statusTimer -= Time.deltaTime;
+        }
+        else
+        {
+            ClearStatuses();
+        }
     }
 
     void UpdateNav()
@@ -231,8 +246,10 @@ public class RacerCore : MonoBehaviour
         }
 
         ////Spline
+        //await Awaitable.BackgroundThreadAsync();
         //distanceFromSpline = SplineUtility.GetNearestPoint(aiSplinePath, transform.position, out nearestSplinePoint, out nearestSplineTime, 2, 2);
         //distanceToLift = splineLength - nearestSplineTime * splineLength;
+        //await Awaitable.MainThreadAsync();
     }
 
     void FixedUpdate()
@@ -242,64 +259,86 @@ public class RacerCore : MonoBehaviour
 
         // Get relative velocity.
         relativeVelocity = new Vector3(Vector3.Dot(transform.right, rigid.velocity), Vector3.Dot(-transform.up, rigid.velocity), Vector3.Dot(transform.forward, rigid.velocity));
+        //relVel2 = rigid.GetRelativePointVelocity(transform.TransformPoint(transform.position));
 
         // Slow down player when finished.
         if (finished)
         {
             rigid.AddRelativeForce(-relativeVelocity * 2, ForceMode.Acceleration);
+            if (relativeVelocity.magnitude < 0.01f)
+                rigid.isKinematic = true;
+            return;
         }
 
         // Control player when not finished.
+
+        // Slowdown from other players.
+        if (!boostOn && Mathf.Abs(relativeVelocity.z) > speed / (slows + 1))
+            rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
+        if (boostOn && Mathf.Abs(relativeVelocity.z) > (speed + boostAddSpeed) / (slows + 1))
+            rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
+
+        if (slows > 0)
+            slowed.SetActive(true);
+        else
+            slowed.SetActive(false);
+
+        // Use rockets and fans.
+        if (boostOn)
+        {
+            rigid.AddRelativeForce(0, 0, boostForce, ForceMode.Acceleration);
+            if (Mathf.Abs(relativeVelocity.z) > speed + boostAddSpeed)
+                rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
+        }
+
+        // Keep player below max speeds.
+        if (Mathf.Abs(relativeVelocity.x) > speed)
+            rigid.AddRelativeForce(-relativeVelocity.x, 0, 0, ForceMode.Acceleration);
+        if (Mathf.Abs(relativeVelocity.z) > speed && !boostOn)
+            rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
+        if (spotLock)
+            rigid.AddRelativeForce(-relativeVelocity.x, 0, -relativeVelocity.z, ForceMode.VelocityChange);
+
+        if (grounded)
+        {
+            // Slow horizontal movement.
+            rigid.AddRelativeForce(traction * -relativeVelocity.x, 0, 0, ForceMode.VelocityChange);
+            rigid.MoveRotation(rigid.rotation * Quaternion.Euler(0, turnFactor * turnSpeed * Time.fixedDeltaTime, 0));
+
+            // Turn around when going backwards.
+            if ((relativeVelocity.z < -1 && !playerUI.isReversed) || (relativeVelocity.z > 1 && playerUI.isReversed))
+            {
+                playerUI.ReverseCams();
+            }
+
+        }
         else
         {
-            // Slowdown from other players.
-            if (!boostOn && relativeVelocity.z > speed / (slows + 1)) rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
-            if (boostOn && relativeVelocity.z > (speed + boostAddSpeed) / (slows + 1)) rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
-            if (slows > 0) slowed.SetActive(true);
-            else slowed.SetActive(false);
-
-            // Use rockets and fans.
-            if (boostOn)
+            // Apply feather board
+            if (board.boardName == "Pound of Feather")
             {
-                rigid.AddRelativeForce(0, 0, boostForce, ForceMode.Acceleration);
-                if (relativeVelocity.z > speed + boostAddSpeed) rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
-            }
-
-            // Keep player below max speeds.
-            if (relativeVelocity.x > Mathf.Abs(speed)) rigid.AddRelativeForce(-relativeVelocity.x, 0, 0, ForceMode.Acceleration);
-            if (relativeVelocity.z > speed && !boostOn) rigid.AddRelativeForce(0, 0, -relativeVelocity.z, ForceMode.Acceleration);
-            if (spotLock) rigid.AddRelativeForce(-relativeVelocity.x, 0, -relativeVelocity.z, ForceMode.VelocityChange);
-
-            if (grounded)
-            {
-                // Slow horizontal movement.
-                rigid.AddRelativeForce(traction * -relativeVelocity.x, 0, 0, ForceMode.VelocityChange);
-
-                // Turn board around when going backwards.
-                if (relativeVelocity.z < -1) transform.Rotate(0, 180, 0);
-            }
-            else
-            {
-                // Apply feather board
-                if (board.boardName == "Pound of Feather")
-                {
-                    rigid.AddRelativeForce(-Physics.gravity / 2f);
-                }
+                rigid.AddRelativeForce(-Physics.gravity / 2f);
             }
         }
-    }
 
-    void LateUpdate()
-    {
-        if (!initialized)
-            return;
-
-        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0);
-        if (Mathf.Abs(transform.localEulerAngles.x) > 60)
+        rigid.MoveRotation(Quaternion.Euler(rigid.rotation.eulerAngles.x, rigid.rotation.eulerAngles.y, 0));
+        if (Mathf.Abs(rigid.rotation.eulerAngles.x) > 60)
         {
-            transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, transform.localEulerAngles.z);
+            rigid.MoveRotation(Quaternion.Euler(0, rigid.rotation.eulerAngles.y, 0));
         }
     }
+
+    //void LateUpdate()
+    //{
+    //    if (!initialized)
+    //        return;
+
+    //    transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0);
+    //    if (Mathf.Abs(rigid.rotation.eulerAngles.x) > 60)
+    //    {
+    //        transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, transform.localEulerAngles.z);
+    //    }
+    //}
 
     void OnCollisionEnter(Collision other)
     {
@@ -342,21 +381,26 @@ public class RacerCore : MonoBehaviour
         }
     }
 
-    void OnCollisionExit(Collision other)
-    {
-        if (other.gameObject.CompareTag("Track") || other.gameObject.CompareTag("OutofBounds"))
-        {
-            grounded = false;
-            animator.SetBool("Grounded", false);
-        }
-    }
-
     void OnCollisionStay(Collision other)
     {
         if (other.gameObject.CompareTag("OutofBounds"))
         {
             // Speed down player.
             rigid.AddRelativeForce(-relativeVelocity, ForceMode.Acceleration);
+        }
+
+        else if (other.gameObject.CompareTag("Track"))
+        {
+            rigid.MoveRotation(Quaternion.RotateTowards(rigid.rotation, rigid.rotation * Quaternion.Euler(Vector3.SignedAngle(transform.up, other.contacts[0].normal, transform.right), 0, 0), 1));
+        }
+    }
+
+    void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject.CompareTag("Track") || other.gameObject.CompareTag("OutofBounds"))
+        {
+            grounded = false;
+            animator.SetBool("Grounded", false);
         }
     }
 
@@ -716,7 +760,7 @@ public class RacerCore : MonoBehaviour
                     switch (projectile.weaponType)
                     {
                         case ItemProjectile.WeaponType.Ice:
-                            StartCoroutine(Ice());
+                            Ice();
                             break;
                         case ItemProjectile.WeaponType.Parachute:
                             StartCoroutine(Parachute());
@@ -725,7 +769,7 @@ public class RacerCore : MonoBehaviour
                             StartCoroutine(Bomb());
                             break;
                         case ItemProjectile.WeaponType.Snowman:
-                            StartCoroutine(Snowman());
+                            Snowman();
                             break;
                         case ItemProjectile.WeaponType.Tornado:
                             StartCoroutine(Tornado());
@@ -787,6 +831,7 @@ public class RacerCore : MonoBehaviour
         invisible = false;
         characterModel.SetActive(true);
         rigid.velocity = Vector3.zero;
+        turnFactor = 0;
         playerRaceControls.lockControls = true;
         spotLock = true;
         lockParticles.SetActive(true);
@@ -802,6 +847,7 @@ public class RacerCore : MonoBehaviour
         boostOn = false;
         invisible = false;
         characterModel.SetActive(true);
+        turnFactor = 0;
         playerRaceControls.lockControls = true;
         lockParticles.SetActive(true);
         yield return new WaitForSeconds(rollTime);
@@ -823,7 +869,7 @@ public class RacerCore : MonoBehaviour
             respawning = true;
             playerRaceControls.lockControls = true;
             yield return new WaitForSeconds(3);
-            transform.SetPositionAndRotation(respawnPosition,respawnRotation);
+            transform.SetPositionAndRotation(respawnPosition, respawnRotation);
             rigid.velocity = Vector3.zero;
             playerRaceControls.lockControls = false;
             respawning = false;
@@ -974,27 +1020,28 @@ public class RacerCore : MonoBehaviour
     }
 
     // Get affected by Red Weapons.
-    IEnumerator Ice()
+    void Ice()
     {
+        if (status == DefenseStatus.Ice)
+            return;
         iceCube.SetActive(true);
         boostOn = false;
+        turnFactor = 0;
         playerRaceControls.lockControls = true;
         rigid.velocity = Vector3.zero;
         spotLock = true;
-        yield return new WaitForSeconds(statusTime);
-        playerRaceControls.lockControls = false;
-        spotLock = false;
-        iceCube.SetActive(false);
+        statusTimer = statusTime;
         StartCoroutine(Trip());
     }
 
-    IEnumerator Snowman()
+    void Snowman()
     {
+        if (status == DefenseStatus.Snow)
+            return;
         snowman.SetActive(true);
+        turnFactor = 0;
         playerRaceControls.lockControls = true;
-        yield return new WaitForSeconds(statusTime);
-        playerRaceControls.lockControls = false;
-        snowman.SetActive(false);
+        statusTimer = statusTime;
     }
 
     IEnumerator Tornado()
@@ -1002,9 +1049,10 @@ public class RacerCore : MonoBehaviour
         if (!finished)
         {
             boostOn = false;
+            turnFactor = 0;
             playerRaceControls.lockControls = true;
             rigid.velocity = Vector3.zero;
-            rigid.AddRelativeForce(0, jumpForce.y * 2, 0);
+            rigid.AddRelativeForce(0, jumpForce.y * 2, 0, ForceMode.Acceleration);
             yield return new WaitForSeconds(.25f);
             while (!grounded)
             {
@@ -1023,10 +1071,11 @@ public class RacerCore : MonoBehaviour
         if (!finished)
         {
             boostOn = false;
+            turnFactor = 0;
             playerRaceControls.lockControls = true;
             balloon.SetActive(true);
             rigid.velocity = Vector3.zero;
-            rigid.AddRelativeForce(0, jumpForce.y * 2, 0);
+            rigid.AddRelativeForce(0, jumpForce.y * 2, 0, ForceMode.Acceleration);
             yield return new WaitForSeconds(.25f);
             rigid.useGravity = false;
             while (!grounded)
@@ -1043,10 +1092,12 @@ public class RacerCore : MonoBehaviour
     }
     IEnumerator Bomb()
     {
+        status = DefenseStatus.Rolling;
         boostOn = false;
+        turnFactor = 0;
         playerRaceControls.lockControls = true;
         rigid.velocity = Vector3.zero;
-        rigid.AddExplosionForce(jumpForce.y, transform.forward, 3);
+        rigid.AddExplosionForce(jumpForce.y, transform.position, 3, 3, ForceMode.Acceleration);
         while (!grounded)
         {
             yield return null;
@@ -1057,6 +1108,7 @@ public class RacerCore : MonoBehaviour
 
     void Slapstick()
     {
+        status = DefenseStatus.Rolling;
         StartCoroutine(Roll());
         Vector3 midcoin = new(0, 0.5f, -1.5f);
         Vector3 leftcoin = new(-.75f, 0.5f, -0.5f);
@@ -1065,6 +1117,18 @@ public class RacerCore : MonoBehaviour
         if (coins >= 200) Instantiate(dropCoin, transform.TransformPoint(leftcoin), transform.rotation);
         if (coins >= 300) Instantiate(dropCoin, transform.TransformPoint(rightcoin), transform.rotation);
         coins -= 300;
+    }
+    void ClearStatuses(bool tripAfter = false)
+    {
+        status = DefenseStatus.Normal;
+        playerRaceControls.lockControls = false;
+        spotLock = false;
+        snowman.SetActive(false);
+        iceCube.SetActive(false);
+        if (tripAfter)
+        {
+            StartCoroutine(Trip());
+        }
     }
 
     // Get affected by Blue Items.
@@ -1117,11 +1181,11 @@ public class RacerCore : MonoBehaviour
 
     public IEnumerator GetSlowed()
     {
-        if (slows == 0) slowed.SetActive(true);
+        if (slows >= 0) slowed.SetActive(true);
         slows++;
         yield return new WaitForSeconds(statusTime);
         slows--;
-        if (slows == 0) slowed.SetActive(false);
+        if (slows <= 0) slowed.SetActive(false);
     }
 
     void UseHighJump()
@@ -1146,4 +1210,11 @@ public class RacerCore : MonoBehaviour
         coins++;
         StartCoroutine(Wealth());
     }
+
+    //private void OnDrawGizmosSelected()
+    //{
+    //    rigid = GetComponent<Rigidbody>();
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireSphere(rigid.centerOfMass, 0.25f);
+    //}
 }

@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
-using UnityEngine.UI;
 using Cinemachine;
-using UnityEditor.TextCore.Text;
-using System.Linq;
 using System;
 
 public class HubTownControls : MonoBehaviour

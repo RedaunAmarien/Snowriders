@@ -41,13 +41,11 @@ public class PlayerRaceControls : MonoBehaviour
                 {
                     if (lStickPos.y >= 0)
                     {
-                        float t = lStickPos.x * racerCore.turnSpeed * Time.deltaTime;
-                        transform.Rotate(0, t, 0);
+                        racerCore.turnFactor = lStickPos.x;
                     }
                     else
                     {
-                        float t = lStickPos.x * racerCore.turnSpeed * Time.deltaTime;
-                        transform.Rotate(0, t + (t * Mathf.Abs(lStickPos.y)), 0);
+                        racerCore.turnFactor = lStickPos.x + (lStickPos.x * Mathf.Abs(lStickPos.y));
                     }
                     if (lStickPos.x < 0)
                     {
@@ -72,7 +70,8 @@ public class PlayerRaceControls : MonoBehaviour
                 if (!racerCore.tricking)
                 {
                     var t = lStickPos.x * racerCore.turnSpeed * Time.deltaTime;
-                    transform.Rotate(0, t / 2, 0);
+                    //transform.Rotate(0, t / 2, 0);
+                    rigid.AddRelativeTorque(0, t / 2, 0, ForceMode.Acceleration);
                 }
             }
 
