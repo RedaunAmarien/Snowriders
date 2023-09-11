@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee24f8c4e8a0a25428cdf59076279896, type: 3}
+  m_Name: 14Brad
+  m_EditorClassIdentifier: 
+  characterName: Brad
+  characterFullName: 
+  characterIndex: 0
+  creator: Atlus/Racjin
+  speed: 4
+  turn: 2
+  jump: 3
+  isCustom: 0
+  isSecret: 0
+  charSprite: {fileID: -725800720, guid: 5a308d72ced9db64d9393a8e8d3fd4c8, type: 3}

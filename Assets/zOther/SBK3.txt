@@ -1,0 +1,118 @@
+﻿SBK 3
+
+All previous characters available for unlocking. Begin with main 5 (Slash, Jam, Tommy, Nancy, and Linda). Earn the rest by battling them.
+X- Character/board stats match SBK2 - ?/5 for Characters, ?/10 for boards. -X
+Point/upgrade system to boards?
+
+New Snow Town city map for all modes? (Or update of old one.)
+Menu over top, zooms to each option.
+
+In the square:
+	School House - Main Menu/Profile/Character Select
+	Option House - Changes Multiplayer Options
+	Board Shop - Buy and paint boards. Build custom boards?
+	Library - Replaces Wendy's Internet from SBK2 - Stats for Characters, Boards, and Courses, plus hints and rumors.
+	Lift goes to Story Mode/races.
+	Two bulletin boards?
+		Current Character Rankings
+		Online and Offline Competitions/Multiplayer
+Around Town:
+	GUI Marquee announces CPU challenges and race results.
+	Characters wander to say hi and challenge each other.
+		Chatting with them lets them say random things, sometimes rumors and hints.
+			React to having been beaten or not?
+		Can challenge to a VS race, T.Trial, or Trick Game. Bets may be placed?
+	Character houses, for characters not nearby?
+
+=Characters:
+	RETURNING:
+	Slash Kamei
+		stj one 2.0 2.0 2.0
+		stj two 3 3 3 (?)
+
+	Linda Maltinie
+		stj one 2.5 1.5 1.5
+		stj two 4 2 2 (?)
+
+	Nancy Neil
+		stj one 1.0 3.0 3.0
+		stj two 1 5 5 (?)
+
+	Wendy Rain/Lane
+		stj one 1.0 3.0 3.0 (?)
+		stj two 1 5 5
+
+	Jam Kuehnemund
+		stj one 1.5 2.5 2.5
+		stj two 2 4 4 (?)
+
+	Tommy Parsy
+		stj one 3.0 1.0 1.0
+		stj two 5 1 1 (?)
+
+	Damien
+		stj two 4 4 1 / 2.5 1.0 3.0 (?)
+
+	? Ruby Green
+		stj one 3.0 1.0 1.5
+
+	? Nicole Couch
+		stj one 2.5 1.5 1.5
+
+	? Pamela Rasteri
+		stj one 2.0 3.0 1.5
+
+	? Kaede
+		stj one 2.5 2.5 2.5
+
+	? Shinobin
+		stj one 2.5 2.5 2.5
+
+	Mr. Dog
+		stj two 6 1 1
+
+	Coach
+		stj two 1 6 6
+	
+	NEWCOMERS:
+	???
+	
+=Boards:
+
+Speed/Alpine
+	stj two 4/6/8 3 3
+	stj one	3 1 1
+
+Balance/All-Around
+	stj two 3/5/7 4 4
+	stj one 2 2 2
+
+Trick/Free Style
+	stj two 2/4/6 5 5
+	stj one 1 3 3
+
+=Special Boards:
+
+	all stj two
+Star		8 5 5 (stj one 3 3 3)
+Feather		6 5 10
+Ice			7 1 4
+Charm		7 4 4
+Poverty		3 4 4
+Rich		7 4 4
+Ninja		1 5 5
+High-Tech	9 4 4
+Dragon		10 1 10
+
+=Achievements
+	Finish in 1st with zero coins.
+	Finish a race on the Dragon Board without touching any walls.
+	Finish Normal Mode.
+	Finish Hard Mode.
+	Hit an opponent with a red item while they're getting back up.
+	Hit an opponent with a red item while getting on the lift.
+	Unlock all boards.
+	Unlock all characters.
+	Lap an opponent in Story Mode.
+	Win all mini-games.
+	Win a race with every character.

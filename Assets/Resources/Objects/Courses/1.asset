@@ -19,10 +19,10 @@ MonoBehaviour:
   defaultLapCount: 3
   courseLength: 850
   defaultCpu:
-  - {fileID: 11400000, guid: be0dd09675e96fb419aae61bd4acaff2, type: 2}
-  - {fileID: 11400000, guid: 69532b60c268730448e67c97842de0a9, type: 2}
-  - {fileID: 11400000, guid: 481d7a099e9f09f4e8f9b319aa55bcb9, type: 2}
-  - {fileID: 11400000, guid: e71d156a354e0364d853d4ef6211ddb9, type: 2}
+  - {fileID: 11400000, guid: e1d3e1557da25854ab85f420d7ef7aa6, type: 2}
+  - {fileID: 11400000, guid: 7b503a44d43321c4e9d2144df354f39a, type: 2}
+  - {fileID: 11400000, guid: 2ff7c17a14c379f4abae80c5ad168340, type: 2}
+  - {fileID: 11400000, guid: 6b083c20b7fd98844b5864258220d25a, type: 2}
   defaultCpuBoard:
   - {fileID: 11400000, guid: ac98f3420e649cf46978bb91acc82b71, type: 2}
   - {fileID: 11400000, guid: 2d65d6b8063cf0a44bee3919db524117, type: 2}

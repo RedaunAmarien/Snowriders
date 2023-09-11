@@ -44,8 +44,8 @@ public class CharacterEditor : MonoBehaviour {
         currentCharData.speed = (int)speedSl.value;
         currentCharData.turn = (int)turnSl.value;
         currentCharData.jump = (int)jumpSl.value;
-        currentCharData.skinCol = (int)skinSL.value;
-        currentCharData.custom = true;
+        //currentCharData.skinCol = (int)skinSL.value;
+        currentCharData.isCustom = true;
     }
 
     void UpdateLoadList() {
@@ -106,7 +106,7 @@ public class CharacterEditor : MonoBehaviour {
                 }
                 else {
                     currentCharData.creator = GameRam.currentSaveFile.fileName;
-                    currentCharData.updateTimeStamp = System.DateTime.Now.ToString();
+                    //currentCharData.updateTimeStamp = System.DateTime.Now.ToString();
                     SaveChar(currentCharData, charDataPath);
                     print ("Successfully saved " + currentCharData.characterName);
                     UpdateLoadList();
