@@ -12,22 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee24f8c4e8a0a25428cdf59076279896, type: 3}
   m_Name: 16Redaun
   m_EditorClassIdentifier: 
-  name: Redaun
+  characterName: Redaun
+  characterFullName: "Redaun Amari\xE9n"
+  characterIndex: 16
   creator: "Amari\xE9n Games"
-  updateTimeStamp: 
-  charSpriteIndex: 0
   speed: 3
   turn: 3
   jump: 3
-  special: 0
-  skinCol: 0
-  head: 0
-  hairStyle: 0
-  hairCol: 0
-  top: 0
-  bottom: 0
-  shoe: 0
-  custom: 0
+  isCustom: 0
+  isSecret: 0
   charSprite: {fileID: 5817664494667083883, guid: 562b0f12a84600f4e9354958ab4218d6,
     type: 3}
-  charColor: {r: 0, g: 0, b: 0, a: 0}

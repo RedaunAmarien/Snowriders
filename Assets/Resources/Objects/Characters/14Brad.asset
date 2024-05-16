@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 14Brad
   m_EditorClassIdentifier: 
   characterName: Brad
-  characterFullName: 
-  characterIndex: 0
+  characterFullName: Brad Maltinie
+  characterIndex: 14
   creator: Atlus/Racjin
   speed: 4
   turn: 2

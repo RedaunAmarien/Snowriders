@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Mr. Dog
   characterFullName: Mr. Dog
-  characterIndex: 0
+  characterIndex: 13
   creator: Atlus/Racjin
   speed: 6
   turn: 1
   jump: 1
-  custom: 0
+  isCustom: 0
+  isSecret: 0
   charSprite: {fileID: 0}

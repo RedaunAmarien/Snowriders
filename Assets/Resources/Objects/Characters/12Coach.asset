@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Coach
   characterFullName: Coach
-  characterIndex: 0
+  characterIndex: 12
   creator: Atlus/Racjin
   speed: 1
   turn: 4

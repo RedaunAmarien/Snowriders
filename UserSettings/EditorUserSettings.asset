@@ -21,19 +21,19 @@ EditorUserSettings:
       value: 5009515756025d5e0c0f5b7a16205c4440151c7e7e29243579781b6ae6b56c69
       flags: 0
     RecentlyUsedSceneGuid-5:
-      value: 5602010257570a0e595b5d7612220b44434f1d2b797023627b701b30e6b16561
-      flags: 0
-    RecentlyUsedSceneGuid-6:
       value: 5a0906570700590d55575824117b07444f154a2b782e23662e2f4536bae53069
       flags: 0
+    RecentlyUsedSceneGuid-6:
+      value: 5a5556050154505e0858597614270e44444e4a2f2e71736129711832e0e5306f
+      flags: 0
     RecentlyUsedSceneGuid-7:
-      value: 050901025d075f085f5f5f7242225b44424e4d7e79702735797b4b6bb6b2636b
+      value: 5602010257570a0e595b5d7612220b44434f1d2b797023627b701b30e6b16561
       flags: 0
     RecentlyUsedSceneGuid-8:
-      value: 520605525300515f5e0c5d7044705d444e4f4f787c2b22317f781831e6e3663e
+      value: 050901025d075f085f5f5f7242225b44424e4d7e79702735797b4b6bb6b2636b
       flags: 0
     RecentlyUsedSceneGuid-9:
-      value: 5a5556050154505e0858597614270e44444e4a2f2e71736129711832e0e5306f
+      value: 520605525300515f5e0c5d7044705d444e4f4f787c2b22317f781831e6e3663e
       flags: 0
     RecentlyUsedScenePath-0:
       value: 22424703114646680e0b0227036c7c1f03050b2f3f67123520391132f6e50b1bedf224fae2742a323016f6
@@ -77,3 +77,4 @@ EditorUserSettings:
   m_VCOtherOverlayIcons: 1
   m_VCAllowAsyncUpdate: 0
   m_ArtifactGarbageCollection: 1
+  m_CompressAssetsOnImport: 1

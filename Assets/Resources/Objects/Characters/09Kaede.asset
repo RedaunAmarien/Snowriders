@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Kaede
   characterFullName: Kaede
-  characterIndex: 0
+  characterIndex: 9
   creator: Atlus/Racjin
   speed: 4
   turn: 1

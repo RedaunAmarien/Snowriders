@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Shinobin
   characterFullName: Shinobin
-  characterIndex: 0
+  characterIndex: 5
   creator: Atlus/Racjin
   speed: 4
   turn: 4

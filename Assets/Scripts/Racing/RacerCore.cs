@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -115,6 +116,8 @@ public class RacerCore : MonoBehaviour
     bool replayCamOn;
     float timer = 0;
 
+    public static event Action<int> tripleStop;
+
     void Start()
     {
         // Initialize Objects and Stats
@@ -151,6 +154,18 @@ public class RacerCore : MonoBehaviour
         liftPosition = GameObject.Find("Lift").transform.position;
         navPath = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, liftPosition, NavMesh.AllAreas, navPath);
+    }
+
+    private void OnEnable()
+    {
+        TrackManager.raceStart += StartRace;
+        RacerCore.tripleStop += GetStopped;
+    }
+
+    private void OnDisable()
+    {
+        TrackManager.raceStart -= StartRace;
+        RacerCore.tripleStop -= GetStopped;
     }
 
     public void Initialize(bool demoMode = false)
@@ -376,7 +391,7 @@ public class RacerCore : MonoBehaviour
         }
         if (other.gameObject.CompareTag("Rock"))
         {
-            StartCoroutine(Trip());
+            Trip();
             Destroy(other.gameObject);
         }
     }
@@ -483,7 +498,7 @@ public class RacerCore : MonoBehaviour
                 coins -= 100;
                 StartCoroutine(other.GetComponent<CoinSpin>().Respawn());
                 audioMaker.Play("collectItem");
-                int val = Mathf.RoundToInt(Random.value * 100);
+                int val = Mathf.RoundToInt(UnityEngine.Random.value * 100);
                 switch (place)
                 {
                     case 1:
@@ -641,7 +656,7 @@ public class RacerCore : MonoBehaviour
                 coins -= 100;
                 StartCoroutine(other.GetComponent<CoinSpin>().Respawn());
                 audioMaker.Play("collectItem");
-                int val = Mathf.RoundToInt(Random.value * 100);
+                int val = Mathf.RoundToInt(UnityEngine.Random.value * 100);
                 switch (place)
                 {
                     case 1:
@@ -785,7 +800,7 @@ public class RacerCore : MonoBehaviour
     }
 
     // Start race.
-    public void SetGo()
+    void StartRace()
     {
         if (playerUI != null)
             playerUI.timerOn = true;
@@ -824,7 +839,12 @@ public class RacerCore : MonoBehaviour
         }
     }
 
-    public IEnumerator Trip()
+    public void Trip()
+    {
+        StartCoroutine(TripCoroutine());
+    }
+
+    public IEnumerator TripCoroutine()
     {
         animator.SetTrigger("Trip");
         boostOn = false;
@@ -1001,7 +1021,8 @@ public class RacerCore : MonoBehaviour
                 Instantiate(rock, rockSpawn.transform.position, rockSpawn.transform.rotation);
                 break;
             case ItemProjectile.ItemType.TripleRock:
-                trackManager.UseTripleStop(playerNum);
+                //trackManager.UseTripleStop(playerNum);
+                tripleStop?.Invoke(playerNum);
                 break;
             case ItemProjectile.ItemType.Steal:
                 trackManager.UseSteal(playerNum);
@@ -1019,6 +1040,12 @@ public class RacerCore : MonoBehaviour
         currentItem = ItemProjectile.ItemType.None;
     }
 
+    void GetStopped(int i)
+    {
+        if (i != playerNum)
+            Trip();
+    }
+    
     // Get affected by Red Weapons.
     void Ice()
     {
@@ -1031,7 +1058,7 @@ public class RacerCore : MonoBehaviour
         rigid.velocity = Vector3.zero;
         spotLock = true;
         statusTimer = statusTime;
-        StartCoroutine(Trip());
+        Trip();
     }
 
     void Snowman()
@@ -1118,6 +1145,7 @@ public class RacerCore : MonoBehaviour
         if (coins >= 300) Instantiate(dropCoin, transform.TransformPoint(rightcoin), transform.rotation);
         coins -= 300;
     }
+
     void ClearStatuses(bool tripAfter = false)
     {
         status = DefenseStatus.Normal;
@@ -1127,7 +1155,7 @@ public class RacerCore : MonoBehaviour
         iceCube.SetActive(false);
         if (tripAfter)
         {
-            StartCoroutine(Trip());
+            Trip();
         }
     }
 

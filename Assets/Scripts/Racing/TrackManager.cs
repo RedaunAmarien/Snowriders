@@ -58,6 +58,8 @@ public class TrackManager : MonoBehaviour
     public Board[] demoBoards;
     public string demoLayout;
 
+    public static event Action raceStart;
+
     void Awake()
     {
         fadePanel.gameObject.SetActive(true);
@@ -415,13 +417,7 @@ public class TrackManager : MonoBehaviour
 
         //Kickoff
         mapPanel.gameObject.SetActive(true);
-        racerCore[0].SetGo();
-        if (GameRam.gameMode != GameMode.Challenge)
-        {
-            racerCore[1].SetGo();
-            racerCore[2].SetGo();
-            racerCore[3].SetGo();
-        }
+        raceStart?.Invoke();
         timerOn = true;
         yield return new WaitForSeconds(1);
         readySetSet.SetActive(false);
@@ -498,13 +494,13 @@ public class TrackManager : MonoBehaviour
         racerCore[userIndex].coins += coinTotal;
     }
 
-    public void UseTripleStop(int userIndex)
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            if (i != userIndex) StartCoroutine(racerCore[i].Trip());
-        }
-    }
+    //public void UseTripleStop(int userIndex)
+    //{
+    //    for (int i = 0; i < 4; i++)
+    //    {
+    //        if (i != userIndex) racerCore[i].Trip();
+    //    }
+    //}
 
     public void UseSlow(int userIndex)
     {

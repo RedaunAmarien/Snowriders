@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Wendy
   characterFullName: Wendy Lane
-  characterIndex: 0
+  characterIndex: 10
   creator: Atlus/Racjin
   speed: 1
   turn: 3
   jump: 5
-  custom: 0
+  isCustom: 0
+  isSecret: 0
   charSprite: {fileID: -807946382, guid: 5a308d72ced9db64d9393a8e8d3fd4c8, type: 3}

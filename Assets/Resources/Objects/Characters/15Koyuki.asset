@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Koyuki
   characterFullName: Koyuki Tanaka
-  characterIndex: 0
+  characterIndex: 15
   creator: Atlus/Racjin
   speed: 1
   turn: 3

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Nicole
   characterFullName: Nicole Couch
-  characterIndex: 0
+  characterIndex: 7
   creator: Atlus/Racjin
   speed: 4
   turn: 3

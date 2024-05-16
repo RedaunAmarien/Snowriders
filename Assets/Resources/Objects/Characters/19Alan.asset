@@ -13,21 +13,13 @@ MonoBehaviour:
   m_Name: 19Alan
   m_EditorClassIdentifier: 
   characterName: Alan
-  characterIndex: 3
+  characterFullName: Park Alan Kim
+  characterIndex: 19
   creator: "Amari\xE9n Games"
-  updateTimeStamp: 
   speed: 4
   turn: 4
   jump: 1
-  special: 0
-  skinCol: 0
-  head: 0
-  hairStyle: 0
-  hairCol: 0
-  top: 0
-  bottom: 0
-  shoe: 0
-  custom: 0
+  isCustom: 0
+  isSecret: 0
   charSprite: {fileID: 542338062910532158, guid: 562b0f12a84600f4e9354958ab4218d6,
     type: 3}
-  charColor: {r: 0, g: 0, b: 0, a: 0}

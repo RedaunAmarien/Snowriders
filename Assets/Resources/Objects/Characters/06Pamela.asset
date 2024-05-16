@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Pamela
   characterFullName: Pamela Rasteri
-  characterIndex: 0
+  characterIndex: 6
   creator: Atlus/Racjin
   speed: 3
   turn: 4

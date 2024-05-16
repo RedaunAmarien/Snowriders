@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Ruby
   characterFullName: Ruby Green
-  characterIndex: 0
+  characterIndex: 8
   creator: Atlus/Racjin
   speed: 5
   turn: 1

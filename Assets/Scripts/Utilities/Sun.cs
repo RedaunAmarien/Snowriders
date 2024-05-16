@@ -18,7 +18,7 @@ public class Sun : MonoBehaviour {
 
     DateTime staticTime; 
     void Start() {
-        child = transform.Find("Directional Light").gameObject;
+        child = transform.GetChild(0).gameObject;
         if (child == null) Debug.LogErrorFormat("Sun child object was not found. Make sure scene sun has been replaced with LightRoot prefab.");
         Reset();
     }

@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Tommy
   characterFullName: Tommy Parsy
-  characterIndex: 0
+  characterIndex: 2
   creator: Atlus/Racjin
   speed: 5
   turn: 2
   jump: 2
-  custom: 0
+  isCustom: 0
+  isSecret: 0
   charSprite: {fileID: -2024787776, guid: 5a308d72ced9db64d9393a8e8d3fd4c8, type: 3}

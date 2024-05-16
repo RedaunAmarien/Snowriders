@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Damien
   characterFullName: Damien
-  characterIndex: 0
+  characterIndex: 11
   creator: Atlus/Racjin
   speed: 4
   turn: 2
