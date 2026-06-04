@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using TMPro;
-using Cinemachine;
+using Unity.Cinemachine;
 
 public class PlayerUI : MonoBehaviour
 {
@@ -30,8 +30,8 @@ public class PlayerUI : MonoBehaviour
     public GameObject itemDisplay;
     public bool isReversed;
     public Camera playerCamera;
-    public CinemachineVirtualCamera forwardVCam;
-    public CinemachineVirtualCamera reverseVCam;
+    public CinemachineCamera forwardVCam;
+    public CinemachineCamera reverseVCam;
     public Sprite[] itemSprite, weaponSprite, placeSprite;
     public bool finished;
     RacerCore racerCore;
@@ -43,12 +43,12 @@ public class PlayerUI : MonoBehaviour
         // Find objects.
         racerCore = GetComponent<RacerCore>();
         playerCamera = GameObject.Find("PlayerCam" + racerCore.playerNum).GetComponent<Camera>();
-        forwardVCam = GameObject.Find("ForwardVCam" + racerCore.playerNum).GetComponent<CinemachineVirtualCamera>();
-        forwardVCam.LookAt = transform;
-        forwardVCam.Follow = transform;
-        reverseVCam = GameObject.Find("ReverseVCam" + racerCore.playerNum).GetComponent<CinemachineVirtualCamera>();
-        reverseVCam.LookAt = transform;
-        reverseVCam.Follow = transform;
+        forwardVCam = GameObject.Find("ForwardVCam" + racerCore.playerNum).GetComponent<CinemachineCamera>();
+        forwardVCam.Target.TrackingTarget = transform;
+        forwardVCam.Target.LookAtTarget = transform;
+        reverseVCam = GameObject.Find("ReverseVCam" + racerCore.playerNum).GetComponent<CinemachineCamera>();
+        reverseVCam.Target.TrackingTarget = transform;
+        reverseVCam.Target.LookAtTarget = transform;
         events = GameObject.Find("EventSystem").GetComponent<EventSystem>();
         inputMod = GameObject.Find("EventSystem").GetComponent<StandaloneInputModule>();
         lapTime = new System.TimeSpan[racerCore.totalLaps];
@@ -144,9 +144,9 @@ public class PlayerUI : MonoBehaviour
     public void ReverseCams()
     {
         isReversed = !isReversed;
-        forwardVCam.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.z = -forwardVCam.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.z;
-        reverseVCam.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.z = -reverseVCam.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.z;
-        reverseVCam.GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.z = -reverseVCam.GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset.z;
+        //forwardVCam.GetCinemachineComponent<CinemachineFollow>().m_FollowOffset.z = -forwardVCam.GetCinemachineComponent<CinemachineFollow>().m_FollowOffset.z;
+        //reverseVCam.GetCinemachineComponent<CinemachineFollow>().m_FollowOffset.z = -reverseVCam.GetCinemachineComponent<CinemachineFollow>().m_FollowOffset.z;
+        //reverseVCam.GetCinemachineComponent<CinemachineRotationComposer>().m_TrackedObjectOffset.z = -reverseVCam.GetCinemachineComponent<CinemachineRotationComposer>().m_TrackedObjectOffset.z;
     }
 
     public void Pause(int option)

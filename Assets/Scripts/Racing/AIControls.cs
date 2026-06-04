@@ -1,4 +1,4 @@
-﻿using Cinemachine.Utility;
+﻿//using Unity.Cinemachine;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -114,8 +114,8 @@ public class AIControls : MonoBehaviour
             currentPriority = Priority.Steering;
         else if (racerCore.relativeVelocity.z <= racerCore.speed * 0.5f)
             currentPriority = Priority.Speed;
-        else if (cornerCount > 2 && racerCore.navPath.corners[1].y - racerCore.navPath.corners[2].y > 5)
-            currentPriority = Priority.Combos;
+        else if (racerCore.navPath.corners.Length > 2 && racerCore.navPath.corners[1].y - racerCore.navPath.corners[2].y > 5)
+                currentPriority = Priority.Combos;
 
         else if (racerCore.currentWeapon != ItemProjectile.WeaponType.None)
             currentPriority = Priority.AttackRed;

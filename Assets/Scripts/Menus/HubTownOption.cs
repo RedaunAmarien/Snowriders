@@ -1,4 +1,4 @@
-using Cinemachine;
+using Unity.Cinemachine;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -11,7 +11,7 @@ public class HubTownOption
     public string optionDescription;
     public bool isAvailable = true;
     //public int currentChoice;
-    public CinemachineVirtualCamera camera;
+    public CinemachineCamera camera;
     public DoorOpener door;
     public UnityEvent events;
     public List<HubTownOption> subOptions;

@@ -273,7 +273,8 @@ public class RacerCore : MonoBehaviour
             return;
 
         // Get relative velocity.
-        relativeVelocity = new Vector3(Vector3.Dot(transform.right, rigid.velocity), Vector3.Dot(-transform.up, rigid.velocity), Vector3.Dot(transform.forward, rigid.velocity));
+        //relativeVelocity = new Vector3(Vector3.Dot(transform.right, rigid.velocity), Vector3.Dot(-transform.up, rigid.velocity), Vector3.Dot(transform.forward, rigid.velocity));
+        relativeVelocity = transform.InverseTransformDirection(rigid.linearVelocity);
         //relVel2 = rigid.GetRelativePointVelocity(transform.TransformPoint(transform.position));
 
         // Slow down player when finished.
@@ -850,7 +851,7 @@ public class RacerCore : MonoBehaviour
         boostOn = false;
         invisible = false;
         characterModel.SetActive(true);
-        rigid.velocity = Vector3.zero;
+        rigid.linearVelocity = Vector3.zero;
         turnFactor = 0;
         playerRaceControls.lockControls = true;
         spotLock = true;
@@ -890,7 +891,7 @@ public class RacerCore : MonoBehaviour
             playerRaceControls.lockControls = true;
             yield return new WaitForSeconds(3);
             transform.SetPositionAndRotation(respawnPosition, respawnRotation);
-            rigid.velocity = Vector3.zero;
+            rigid.linearVelocity = Vector3.zero;
             playerRaceControls.lockControls = false;
             respawning = false;
             animator.SetBool("OOB", false);
@@ -1055,7 +1056,7 @@ public class RacerCore : MonoBehaviour
         boostOn = false;
         turnFactor = 0;
         playerRaceControls.lockControls = true;
-        rigid.velocity = Vector3.zero;
+        rigid.linearVelocity = Vector3.zero;
         spotLock = true;
         statusTimer = statusTime;
         Trip();
@@ -1078,7 +1079,7 @@ public class RacerCore : MonoBehaviour
             boostOn = false;
             turnFactor = 0;
             playerRaceControls.lockControls = true;
-            rigid.velocity = Vector3.zero;
+            rigid.linearVelocity = Vector3.zero;
             rigid.AddRelativeForce(0, jumpForce.y * 2, 0, ForceMode.Acceleration);
             yield return new WaitForSeconds(.25f);
             while (!grounded)
@@ -1086,7 +1087,7 @@ public class RacerCore : MonoBehaviour
                 yield return null;
             }
             spotLock = true;
-            rigid.velocity = Vector3.zero;
+            rigid.linearVelocity = Vector3.zero;
             yield return new WaitForSeconds(2);
             playerRaceControls.lockControls = false;
             spotLock = false;
@@ -1101,7 +1102,7 @@ public class RacerCore : MonoBehaviour
             turnFactor = 0;
             playerRaceControls.lockControls = true;
             balloon.SetActive(true);
-            rigid.velocity = Vector3.zero;
+            rigid.linearVelocity = Vector3.zero;
             rigid.AddRelativeForce(0, jumpForce.y * 2, 0, ForceMode.Acceleration);
             yield return new WaitForSeconds(.25f);
             rigid.useGravity = false;
@@ -1111,7 +1112,7 @@ public class RacerCore : MonoBehaviour
                 yield return null;
             }
             rigid.useGravity = true;
-            rigid.velocity = Vector3.zero;
+            rigid.linearVelocity = Vector3.zero;
             yield return new WaitForSeconds(2);
             balloon.SetActive(false);
             playerRaceControls.lockControls = false;
@@ -1123,7 +1124,7 @@ public class RacerCore : MonoBehaviour
         boostOn = false;
         turnFactor = 0;
         playerRaceControls.lockControls = true;
-        rigid.velocity = Vector3.zero;
+        rigid.linearVelocity = Vector3.zero;
         rigid.AddExplosionForce(jumpForce.y, transform.position, 3, 3, ForceMode.Acceleration);
         while (!grounded)
         {

@@ -8,7 +8,7 @@ using TMPro;
 using System.Linq;
 using System;
 using UnityEngine.Animations;
-using Cinemachine;
+using Unity.Cinemachine;
 
 public class TrackManager : MonoBehaviour
 {
@@ -21,8 +21,8 @@ public class TrackManager : MonoBehaviour
     int playersFinished, totalFinished;
     public GameObject playerPrefab;
     public GameObject[] player;
-    public CinemachineVirtualCamera[] forwardCams;
-    public CinemachineVirtualCamera[] reverseCams;
+    //public CinemachineCamera[] forwardCams;
+    //public CinemachineCamera[] reverseCams;
     public Camera[] cameras;
     public List<PlayerPosition> playerPosition = new();
     GameObject[] items, weapons, coins;
@@ -120,8 +120,8 @@ public class TrackManager : MonoBehaviour
             aiControls[i] = player[i].GetComponent<AIControls>();
             //aiControls[i].startWaypoint = courseSettings.startWaypoint;
             playerUI[i] = player[i].GetComponent<PlayerUI>();
-            playerUI[i].forwardVCam = forwardCams[i];
-            playerUI[i].reverseVCam = reverseCams[i];
+            //playerUI[i].forwardVCam = forwardCams[i];
+            //playerUI[i].reverseVCam = reverseCams[i];
             playerUI[i].playerCamera = cameras[i];
             playerRaceControls[i] = player[i].GetComponent<PlayerRaceControls>();
         }

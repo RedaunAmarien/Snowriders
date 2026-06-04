@@ -37,7 +37,7 @@ public class ItemProjectile : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector3 vel = new(Vector3.Dot(transform.right, rigid.velocity), Vector3.Dot(-transform.up, rigid.velocity), Vector3.Dot(transform.forward, rigid.velocity));
+        Vector3 vel = new(Vector3.Dot(transform.right, rigid.linearVelocity), Vector3.Dot(-transform.up, rigid.linearVelocity), Vector3.Dot(transform.forward, rigid.linearVelocity));
         rigid.AddRelativeForce(-vel.x, 0, speed - vel.z, ForceMode.VelocityChange);
         rigid.AddForce(0, -gravity, 0);
     }

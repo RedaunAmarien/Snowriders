@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 using System;
 
 public class HubTownControls : MonoBehaviour
@@ -217,7 +217,7 @@ public class HubTownControls : MonoBehaviour
         uiBridge.FadeIn();
     }
 
-    void ToggleCam(CinemachineVirtualCamera camera = null, DoorOpener door = null, bool activate = true)
+    void ToggleCam(CinemachineCamera camera = null, DoorOpener door = null, bool activate = true)
     {
         if (activate)
         {

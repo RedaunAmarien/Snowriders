@@ -1,17 +1,18 @@
-using Cinemachine;
+using Unity.Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Splines;
 public class Lift : Checkpoint
 {
     public float cooldownTime;
     public bool onCooldown;
     Collider thisCollider;
-    CinemachineSmoothPath path;
+    SplineContainer path;
 
     private void Start()
     {
-        path = GetComponent<CinemachineSmoothPath>();
+        path = GetComponent<SplineContainer>();
         thisCollider = GetComponent<Collider>();
         type = CheckpointType.Lift;
     }
@@ -38,14 +39,14 @@ public class Lift : Checkpoint
 
     public IEnumerator Animate(Rigidbody player)
     {
-        float scale = 0;
+        //float scale = 0;
         player.GetComponent<RacerCore>().isOnLift = true;
-        while (scale < path.MaxPos)
-        {
+        //while (scale < path.Spline.Knots[path.Spline.Count].)
+        //{
             yield return null;
-            player.transform.position = path.EvaluatePosition(scale);
-            scale += Time.deltaTime;
-        }
+        //    player.transform.position = path.EvaluatePosition(scale);
+        //    scale += Time.deltaTime;
+        //}
         player.isKinematic = false;
         player.transform.SetPositionAndRotation(player.GetComponent<RacerCore>().playerStartPoint.position, player.GetComponent<RacerCore>().playerStartPoint.rotation);
         player.AddRelativeForce(new Vector3(0, 0, player.GetComponent<RacerCore>().jumpForce.z * 2));
