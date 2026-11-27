@@ -64,46 +64,46 @@ public class AIControls : MonoBehaviour
             return;
 
         //NavMesh Navigation
-        if (racerCore.navPath != null && racerCore.navPath.corners.Length > 1)
-        {
-            distFromDest = Vector3.Distance(racerCore.navPath.corners[0], racerCore.navPath.corners[1]);
-            cornerCount = racerCore.navPath.corners.Length;
-            if (racerCore.navPath.corners.Length > 2)
-            {
-                for (int i = 1; i < racerCore.navPath.corners.Length - 1; i++)
-                {
-                    distFromDest += Vector3.Distance(racerCore.navPath.corners[i], racerCore.navPath.corners[i + 1]);
-                }
-            }
-            nextCorner = racerCore.navPath.corners[1];
-        }
-        else
-        {
-            if (racerCore.distanceToLift < 15)
-            {
-                nextCorner = racerCore.liftPosition;
-            }
-            else
-            {
-                nextCorner = transform.position + transform.forward * 10;
-            }
-        }
-        turnAngle = Vector3.SignedAngle(nextCorner - transform.position, transform.forward, transform.up);
-        Debug.DrawLine(transform.position, nextCorner, Color.green);
+        //if (racerCore.navPath != null && racerCore.navPath.corners.Length > 1)
+        //{
+        //    distFromDest = Vector3.Distance(racerCore.navPath.corners[0], racerCore.navPath.corners[1]);
+        //    cornerCount = racerCore.navPath.corners.Length;
+        //    if (racerCore.navPath.corners.Length > 2)
+        //    {
+        //        for (int i = 1; i < racerCore.navPath.corners.Length - 1; i++)
+        //        {
+        //            distFromDest += Vector3.Distance(racerCore.navPath.corners[i], racerCore.navPath.corners[i + 1]);
+        //        }
+        //    }
+        //    nextCorner = racerCore.navPath.corners[1];
+        //}
+        //else
+        //{
+        //    if (racerCore.distanceToLift < 15)
+        //    {
+        //        nextCorner = racerCore.liftPosition;
+        //    }
+        //    else
+        //    {
+        //        nextCorner = transform.position + transform.forward * 10;
+        //    }
+        //}
+        //turnAngle = Vector3.SignedAngle(nextCorner - transform.position, transform.forward, transform.up);
+        //Debug.DrawLine(transform.position, nextCorner, Color.green);
 
         ////Spline Navigation
-        //splinePoint = racerCore.nearestSplineTime;
-        //if (splinePoint >= 1)
-        //    splinePoint = 1;
-        //racerCore.aiSplinePath.Evaluate(splinePoint, out Unity.Mathematics.float3 pos, out Unity.Mathematics.float3 tan, out Unity.Mathematics.float3 up);
-        //Vector3 tangentTarget = Vector3.Normalize(tan) + transform.position;
-        //Vector3 positionTarget = (Vector3)pos + Vector3.Normalize(tan) * 5;
-        //float factor = Mathf.InverseLerp(minNavRange, maxNavRange, racerCore.distanceFromSpline);
-        ////float factor = Mathf.Lerp(0, racerCore.speed, racerCore.relativeVelocity.z);
-        //turnAngleTarget = Vector3.Lerp(tangentTarget, positionTarget, factor);
-        ////distanceFromTarget = Vector3.Distance(transform.position, turnAngleTarget);
-        //Debug.DrawLine(transform.position, turnAngleTarget, Color.yellow);
-        //turnAngle = Vector3.SignedAngle(turnAngleTarget - transform.position, transform.forward, transform.up);
+        splinePoint = racerCore.nearestSplineTime;
+        if (splinePoint >= 1)
+            splinePoint = 1;
+        racerCore.aiSplinePath.Evaluate(splinePoint, out Unity.Mathematics.float3 pos, out Unity.Mathematics.float3 tan, out Unity.Mathematics.float3 up);
+        Vector3 tangentTarget = Vector3.Normalize(tan) + transform.position;
+        Vector3 positionTarget = (Vector3)pos + Vector3.Normalize(tan) * 5;
+        float factor = Mathf.InverseLerp(minNavRange, maxNavRange, racerCore.distanceFromSpline);
+        //float factor = Mathf.Lerp(0, racerCore.speed, racerCore.relativeVelocity.z);
+        turnAngleTarget = Vector3.Lerp(tangentTarget, positionTarget, factor);
+        //distanceFromTarget = Vector3.Distance(transform.position, turnAngleTarget);
+        Debug.DrawLine(transform.position, turnAngleTarget, Color.yellow);
+        turnAngle = Vector3.SignedAngle(turnAngleTarget - transform.position, transform.forward, transform.up);
 
         //Decide current Priority
         if (Mathf.Abs(turnAngle) > 60)

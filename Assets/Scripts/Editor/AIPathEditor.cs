@@ -19,18 +19,32 @@ public class AIPathEditor : Editor
 
     void Draw()
     {
+        Handles.color = Color.yellow;
         for (int i = 0; i < manager.waypoints.Length; i++)
         {
-            Vector3 newPos = Handles.FreeMoveHandle(manager.waypoints[i].position, 1, Vector3.zero, Handles.DotHandleCap);
-            if (manager.waypoints[i].position != newPos)
+            Vector3 newPos = Handles.FreeMoveHandle(manager.waypoints[i].Position, 1, Vector3.zero, Handles.DotHandleCap);
+            if (manager.waypoints[i].Position != newPos)
             {
                 Undo.RecordObject(manager, "Move Waypoint");
-                manager.waypoints[i].position = newPos;
+                manager.waypoints[i].Position = newPos;
             }
         }
-        for (int i = 0; i < manager.waypoints.Length -1; i++)
+
+        Handles.color = Color.blue;
+        for (int i = 0; i < manager.waypoints.Length; i++)
         {
-            Handles.DrawLine(manager.waypoints[i].position, manager.waypoints[i + 1].position);
+            float newRad = Handles.RadiusHandle(Quaternion.identity, manager.waypoints[i].Position, manager.waypoints[i].Radius);
+            if (manager.waypoints[i].Radius != newRad)
+            {
+                Undo.RecordObject(manager, "Change Radius");
+                manager.waypoints[i].Radius = newRad;
+            }
+        }
+
+        Handles.color = Color.green;
+        for (int i = 0; i < manager.waypoints.Length - 1; i++)
+        {
+            Handles.DrawLine(manager.waypoints[i].Position, manager.waypoints[i + 1].Position);
         }
     }
 }
